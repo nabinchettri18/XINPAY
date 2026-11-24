@@ -54,7 +54,7 @@ async function getOrder(req:Request,env:Env,id:string,origin:string){const token
 async function adminOrders(req:Request,env:Env,origin:string){const identity=await requireAdmin(req,env);if(!identity)return response({error:"Unauthorized"},401,origin,env);const rows=await env.DB.prepare("SELECT id,provider_order_id,purpose,amount_minor,currency,status,provider_status,expires_at,created_at,updated_at FROM payment_orders ORDER BY created_at DESC LIMIT 100").all();return response({orders:rows.results||[],admin:identity.email},200,origin,env);}
 async function cashfreeWebhook(req:Request,env:Env){
  if(!env.CASHFREE_WEBHOOK_SECRET)return new Response("Webhook not configured",{status:503,headers:SECURITY_HEADERS});
- const raw=await req.text(),timestamp=req.headers.get("x-webhook-timestamp")||"",signature=req.headers.get("x-webhook-signature")||"";
+ if(Number(req.headers.get("Content-Length")||0)>1048576)return new Response("Payload too large",{status:413,headers:SECURITY_HEADERS});const raw=await req.text();if(enc.encode(raw).length>1048576)return new Response("Payload too large",{status:413,headers:SECURITY_HEADERS});const timestamp=req.headers.get("x-webhook-timestamp")||"",signature=req.headers.get("x-webhook-signature")||"";
  if(!timestamp||!signature||Math.abs(Date.now()-Number(timestamp))>5*60*1000)return new Response("Invalid timestamp",{status:400,headers:SECURITY_HEADERS});
  const key=await crypto.subtle.importKey("raw",enc.encode(env.CASHFREE_WEBHOOK_SECRET),{name:"HMAC",hash:"SHA-256"},false,["sign"]);
  const signed=await crypto.subtle.sign("HMAC",key,enc.encode(timestamp+raw)),expected=b64(signed);if(expected!==signature)return new Response("Invalid signature",{status:401,headers:SECURITY_HEADERS});
