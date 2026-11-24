@@ -18,6 +18,17 @@ function mapRow(row:any):Config{return {upiId:row.receiving_upi_id||"",beneficia
 async function readConfig(env:Env){const row=await env.DB.prepare("SELECT * FROM payment_config WHERE id='primary'").first<any>();return row?mapRow(row):DEFAULT;}
 async function ensureRow(env:Env){await env.DB.prepare("INSERT OR IGNORE INTO payment_config (id,enabled,receiving_upi_id,beneficiary_display_name,instructions,qr_mode,version) VALUES ('primary',0,'','','','generated',0)").run();}
 function publicConfig(config:Config){return {upiId:config.upiId,beneficiary:config.beneficiary,instructions:config.instructions,enabled:config.enabled};}
+async function rateLimitAdminWrite(req:Request,env:Env){
+ const ip=req.headers.get("CF-Connecting-IP")||"unknown";
+ const digest=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(ip));
+ const ipHash=[...new Uint8Array(digest)].map(b=>b.toString(16).padStart(2,"0")).join("");
+ const window=Math.floor(Date.now()/600000), key=ipHash+":"+window;
+ const result=await env.DB.prepare("INSERT INTO rate_limit_buckets(bucket_key,hits,window_started) VALUES(?,1,CURRENT_TIMESTAMP) ON CONFLICT(bucket_key) DO UPDATE SET hits=hits+1 RETURNING hits").bind(key).first<{hits:number}>();
+ if(!result)throw new Error("Rate limiter unavailable");
+ if(result.hits>20)return false;
+ if(window%6===0)await env.DB.prepare("DELETE FROM rate_limit_buckets WHERE window_started < datetime('now','-2 hours')").run();
+ return true;
+}
 function corsHeaders(origin:string,env:Env){return {...headers(origin,env),"Access-Control-Allow-Methods":"GET, PUT, OPTIONS","Access-Control-Allow-Headers":"Content-Type, Authorization","Access-Control-Max-Age":"600"};}
 export default { async fetch(req:Request,env:Env){
  const url=new URL(req.url), origin=req.headers.get("Origin")||"", allowed=env.ALLOWED_ORIGIN||"", isApi=url.pathname.startsWith("/api/");
@@ -27,6 +38,8 @@ export default { async fetch(req:Request,env:Env){
  if(url.pathname==="/api/payment-config"){
   if(req.method==="GET"){try{return json(publicConfig(await readConfig(env)),200,origin,env)}catch{return json({error:"Configuration unavailable"},500,origin,env)}}
   if(req.method!=="PUT")return json({error:"Method not allowed"},405,origin,env);
+  let rateAllowed:boolean;try{rateAllowed=await rateLimitAdminWrite(req,env)}catch{return json({error:"Security service unavailable; try again later"},503,origin,env)}
+  if(!rateAllowed)return json({error:"Too many attempts. Try again later."},429,origin,env);
   const auth=req.headers.get("Authorization")||"";
   if(!env.ADMIN_TOKEN||!auth.startsWith("Bearer ")||!constantTimeEqual(auth.slice(7),env.ADMIN_TOKEN))return json({error:"Unauthorized"},401,origin,env);
   let raw:string;try{raw=await req.text()}catch{return json({error:"Invalid request"},400,origin,env)}
