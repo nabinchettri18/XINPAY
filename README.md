@@ -4,7 +4,7 @@ XinPay is being developed as a secure payment-operations dashboard foundation.
 
 ## Current status
 
-**Prototype only.** This initial commit contains a responsive UI shell and illustrative sample data. It does not process payments, store customer financial data, initiate settlements, or change bank/payment destinations.
+**Prototype only — not production payment software.** The interface contains sample data and a limited UPI display-configuration API. It does not process or verify payments, maintain a real wallet/ledger, initiate settlements, or change bank/payment destinations. Do not use it to collect or represent real money as paid.
 
 ## Stack
 
