@@ -68,7 +68,7 @@ async function cashfreeWebhook(req:Request,env:Env){
  try{await env.DB.batch([
  env.DB.prepare("INSERT OR IGNORE INTO payment_events(id,order_id,provider,provider_event_id,provider_reference,event_type,amount_minor,currency,verification_state,payload_hash) VALUES(?,?,?,?,?,?,?,?,?,?)").bind(eventId,row.id,"cashfree",data?.event_id||null,reference||null,eventType,amt?minor(Number(amt)):null,currency,state,hash),
  env.DB.prepare("UPDATE payment_orders SET provider_status=?,status=CASE WHEN ?='SUCCESS' AND ?=1 THEN 'paid' WHEN ? IN ('FAILED','USER_DROPPED') THEN 'failed' ELSE 'review' END,updated_at=CURRENT_TIMESTAMP WHERE id=? AND status!='paid'").bind(status,status,verified?1:0,status,row.id),
- ...(status==="SUCCESS"&&verified?[env.DB.prepare("INSERT OR IGNORE INTO ledger_entries(id,order_id,entry_type,amount_minor,currency,source_event_id) VALUES(?,?,'payment_received',?,'INR',?)").bind(crypto.randomUUID(),row.id,row.amount_minor,eventId)]:[])
+ ...(status==="SUCCESS"&&verified?[env.DB.prepare("INSERT OR IGNORE INTO ledger_entries(id,order_id,entry_type,amount_minor,currency,source_event_id) VALUES(?,?,'payment_received',?,'INR',(SELECT id FROM payment_events WHERE payload_hash=?))").bind(crypto.randomUUID(),row.id,row.amount_minor,hash)]:[])
  ]);}catch{return new Response("Webhook persistence error",{status:500,headers:SECURITY_HEADERS});}
  return new Response("OK",{status:200,headers:SECURITY_HEADERS});
 }
