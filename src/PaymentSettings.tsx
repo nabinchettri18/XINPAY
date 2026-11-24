@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { QRCodeSVG } from "qrcode.react";
-import { loadPaymentConfig, savePaymentConfig, getAdminToken, setAdminToken, type PaymentConfig } from "./paymentConfig";
+import { loadPaymentConfig, savePaymentConfig, type PaymentConfig } from "./paymentConfig";
 import "./payment-settings.css";
 import { AlertTriangle, Save, ShieldCheck, ToggleLeft, ToggleRight } from "lucide-react";
 
@@ -12,7 +12,7 @@ export default function PaymentSettings() {
   const [enabled,setEnabled]=useState(defaults.enabled);
   const [saved,setSaved]=useState(false);
   const [message,setMessage]=useState("");
-  const [adminToken,setToken]=useState(getAdminToken());
+  const [adminToken,setToken]=useState("");
   const [loading,setLoading]=useState(true);
   useEffect(()=>{loadPaymentConfig().then(c=>{setUpiId(c.upiId);setBeneficiary(c.beneficiary);setInstructions(c.instructions);setEnabled(c.enabled)}).finally(()=>setLoading(false))},[]);
   async function saveSettings(){
@@ -21,7 +21,7 @@ export default function PaymentSettings() {
     if(v&&!valid){setSaved(false);setMessage("Enter a valid UPI ID format.");return}
     if(!adminToken.trim()){setSaved(false);setMessage("Enter the admin API token.");return}
     const next:PaymentConfig={upiId:v,beneficiary:beneficiary.trim(),instructions,enabled};
-    try{const result=await savePaymentConfig(next,adminToken.trim());setAdminToken(adminToken.trim());setUpiId(result.upiId);setBeneficiary(result.beneficiary);setInstructions(result.instructions);setEnabled(result.enabled);setSaved(true);setMessage("Payment configuration saved to backend.");}
+    try{const result=await savePaymentConfig(next,adminToken.trim());setUpiId(result.upiId);setBeneficiary(result.beneficiary);setInstructions(result.instructions);setEnabled(result.enabled);setSaved(true);setMessage("Payment configuration saved to backend.");}
     catch(e){setSaved(false);setMessage(e instanceof Error?e.message:"Unable to save settings.")}
   }
   const qrValue=upiId.trim()&&beneficiary.trim()?"upi://pay?pa="+encodeURIComponent(upiId.trim())+"&pn="+encodeURIComponent(beneficiary.trim())+"&cu=INR":"";
