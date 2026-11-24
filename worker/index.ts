@@ -15,9 +15,9 @@ export default { async fetch(req:Request,env:Env){
  if(req.method==="GET"){try{return json(await readConfig(env),200,origin,env)}catch{return json({error:"Configuration unavailable"},500,origin,env)}}
  if(req.method!=="PUT")return json({error:"Method not allowed"},405,origin,env);
  const auth=req.headers.get("Authorization")||"";
- if(!auth.startsWith("Bearer ")||!constantTimeEqual(auth.slice(7),env.ADMIN_TOKEN))return json({error:"Unauthorized"},401,origin,env);
+ if(!env.ADMIN_TOKEN||!auth.startsWith("Bearer ")||!constantTimeEqual(auth.slice(7),env.ADMIN_TOKEN))return json({error:"Unauthorized"},401,origin,env);
  let body:any;try{body=await req.json()}catch{return json({error:"Invalid JSON"},400,origin,env)}
- const upiId=String(body.upiId||"").trim(), beneficiary=String(body.beneficiary||"").trim(), instructions=String(body.instructions||"").trim().slice(0,1000), enabled=!!body.enabled;
+ const upiId=String(body.upiId||"").trim(), beneficiary=String(body.beneficiary||"").trim().slice(0,200), instructions=String(body.instructions||"").trim().slice(0,1000), enabled=body.enabled===true;
  const valid=/^[a-zA-Z0-9._-]{2,256}@[a-zA-Z]{2,64}$/.test(upiId);
  if(enabled&&(!valid||!beneficiary))return json({error:"A valid UPI ID and payee name are required to enable collection"},400,origin,env);
  if(upiId&&!valid)return json({error:"Invalid UPI ID format"},400,origin,env);
