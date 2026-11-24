@@ -25,13 +25,8 @@ export default function CustomerApp() {
   const [filter,setFilter] = useState("All");
   const [selected,setSelected] = useState<Tx|null>(null);
   const [mobileNav,setMobileNav] = useState(false);
-  const [paymentConfig,setPaymentConfig] = useState(getPaymentConfig());
-  useEffect(()=>subscribePaymentConfig(()=>setPaymentConfig(getPaymentConfig())),[]);
-  const upiId = paymentConfig.upiId;
-  const upiName = paymentConfig.beneficiary;
-  const validUpi = /^[a-zA-Z0-9._-]{2,256}@[a-zA-Z]{2,64}$/.test(upiId.trim());
-  const [paymentConfig,setPaymentConfig] = useState(getPaymentConfig());
-  useEffect(()=>subscribePaymentConfig(()=>setPaymentConfig(getPaymentConfig())),[]);
+  const [paymentConfig,setPaymentConfig] = useState({upiId:"",beneficiary:"",instructions:"",enabled:false});
+  useEffect(()=>{const refresh=()=>loadPaymentConfig().then(setPaymentConfig);refresh();return subscribePaymentConfig(refresh)},[]);
   const upiId = paymentConfig.upiId;
   const upiName = paymentConfig.beneficiary;
   const validUpi = /^[a-zA-Z0-9._-]{2,256}@[a-zA-Z]{2,64}$/.test(upiId.trim());
