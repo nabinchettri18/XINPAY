@@ -33,7 +33,7 @@ test("admin transaction endpoint is Access protected",()=>{
 
 test("direct UPI is independently feature-gated and creates pending QR orders",()=>{
  assert.match(worker,/DIRECT_UPI_ENABLED!=="true"/);
- assert.match(worker,/provider","direct_upi"/);
+ assert.match(worker,/bind\(id,"direct_upi"/);
  assert.match(worker,/upi:\/\/pay\?pa=/);
  assert.match(worker,/verification:"manual"/);
 });
