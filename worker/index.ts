@@ -20,7 +20,7 @@ async function accessIdentity(req:Request,env:Env):Promise<{email:string}|null>{
  const parts=jwt.split(".");if(parts.length!==3)return null;
  try{
   const header=JSON.parse(new TextDecoder().decode(b64uDecode(parts[0]))),claims=JSON.parse(new TextDecoder().decode(b64uDecode(parts[1])));
-  const issuer="https://"+env.CF_ACCESS_TEAM_DOMAIN.replace(/^https?:\\/\\//,"").replace(/\\/$/,"");
+  const issuer="https://"+env.CF_ACCESS_TEAM_DOMAIN.replace(/^https?:\/\//,"").replace(/\/$/,"");
   if(header.alg!=="RS256"||claims.iss!==issuer||!Array.isArray(claims.aud)||!claims.aud.includes(env.CF_ACCESS_AUD)||!claims.exp||claims.exp<=Date.now()/1000||claims.nbf&&claims.nbf>Date.now()/1000)return null;
   const jwks=await fetch(issuer+"/cdn-cgi/access/certs",{headers:{Accept:"application/json"},cf:{cacheTtl:300} as any});if(!jwks.ok)return null;
   const keys=(await jwks.json() as any).keys as JsonWebKey[];const jwk=keys.find(k=>(k as any).kid===header.kid);if(!jwk)return null;
