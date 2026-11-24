@@ -11,3 +11,5 @@ migrations_dir = "database/migrations"
 
 [vars]
 ALLOWED_ORIGIN = "https://REPLACE_WITH_YOUR_FRONTEND_DOMAIN"
+
+[previews]
