@@ -4,6 +4,7 @@ import {readFile} from "node:fs/promises";
 const worker=await readFile(new URL("../worker/index.ts",import.meta.url),"utf8");
 const migration=await readFile(new URL("../database/migrations/0003_transactions.sql",import.meta.url),"utf8");
 const migration4=await readFile(new URL("../database/migrations/0004_order_access.sql",import.meta.url),"utf8");
+const migration5=await readFile(new URL("../database/migrations/0005_ledger_idempotency.sql",import.meta.url),"utf8");
 test("payments default to disabled and production mode is blocked",()=>{
  assert.match(worker,/PAYMENTS_ENABLED!=="true"/);
  assert.match(worker,/CASHFREE_ENV==="production"/);
@@ -23,6 +24,7 @@ test("webhook validates signature, timestamp, amount, currency and deduplicates"
 test("ledger rows only originate from successful verified webhook branch",()=>{
  assert.match(worker,/status==="SUCCESS"&&verified/);
  assert.match(migration,/ledger_entries/);
+ assert.match(migration5,/ledger_source_event_unique/);
 });
 test("admin transaction endpoint is Access protected",()=>{
  assert.match(worker,/path==="\/api\/admin\/orders"/);
