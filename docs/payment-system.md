@@ -12,7 +12,7 @@ Prototype-only. No live payment collection, settlement changes, or automatic ver
 - Admin audit events
 - Sensitive changes require re-authentication
 
-The frontend prototype stores configuration only in component state. It is not persistent and must not be used for live payments.
+The current prototype stores configuration in browser localStorage. Admin and customer pages on the same browser/origin share the settings; it is not cross-device or backend persistence. Do not use for live payments.
 
 ## Suggested data model
 
