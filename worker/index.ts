@@ -74,7 +74,7 @@ async function adminVerifyDirectUpi(req:Request,env:Env,origin:string,id:string)
  if(!order)return response({error:"Direct UPI order not found"},404,origin,env);
  if(order.status==="paid")return response({error:"Order is already paid"},409,origin,env);
  if(order.status!=="pending"&&order.status!=="review")return response({error:"Only pending/review orders can be reconciled"},409,origin,env);
- if(minor(body.verifiedAmount)!==order.amount_minor)return response({error:"Bank credit amount does not exactly match the order"},409,origin,env);
+ if(minor(body.verifiedAmount)!==order.amount_minor)return response({error:"Bank credit amount does not exactly match the order"},409,origin,env);\n const creditedAt=Date.parse(bankTime),createdAt=Date.parse(order.created_at+"Z"),expiry=order.expires_at?Date.parse(order.expires_at):Date.now();if(creditedAt>Date.now()+5*60*1000||creditedAt<createdAt||creditedAt>expiry+24*60*60*1000)return response({error:"Bank transaction time is outside the allowed order reconciliation window"},409,origin,env);
  const eventId=crypto.randomUUID(),hash=await sha256(JSON.stringify({order:id,reference,amount:order.amount_minor,bankTime,admin:identity.email}));
  const before={status:order.status,amountMinor:order.amount_minor,provider:order.provider};
  const after={status:"paid",amountMinor:order.amount_minor,provider:order.provider,bankReference:reference,bankTime,verifiedBy:identity.email,verificationMethod:"manual_bank_reconciliation"};
