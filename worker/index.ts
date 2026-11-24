@@ -74,7 +74,8 @@ async function adminVerifyDirectUpi(req:Request,env:Env,origin:string,id:string)
  if(!order)return response({error:"Direct UPI order not found"},404,origin,env);
  if(order.status==="paid")return response({error:"Order is already paid"},409,origin,env);
  if(order.status!=="pending"&&order.status!=="review")return response({error:"Only pending/review orders can be reconciled"},409,origin,env);
- if(minor(body.verifiedAmount)!==order.amount_minor)return response({error:"Bank credit amount does not exactly match the order"},409,origin,env);\n const creditedAt=Date.parse(bankTime),createdAt=Date.parse(order.created_at+"Z"),expiry=order.expires_at?Date.parse(order.expires_at):Date.now();if(creditedAt>Date.now()+5*60*1000||creditedAt<createdAt||creditedAt>expiry+24*60*60*1000)return response({error:"Bank transaction time is outside the allowed order reconciliation window"},409,origin,env);
+ if(minor(body.verifiedAmount)!==order.amount_minor)return response({error:"Bank credit amount does not exactly match the order"},409,origin,env);
+ const creditedAt=Date.parse(bankTime),createdAt=Date.parse(order.created_at+"Z"),expiry=order.expires_at?Date.parse(order.expires_at):Date.now();if(creditedAt>Date.now()+5*60*1000||creditedAt<createdAt||creditedAt>expiry+24*60*60*1000)return response({error:"Bank transaction time is outside the allowed order reconciliation window"},409,origin,env);
  const eventId=crypto.randomUUID(),hash=await sha256(JSON.stringify({order:id,reference,amount:order.amount_minor,bankTime,admin:identity.email}));
  const before={status:order.status,amountMinor:order.amount_minor,provider:order.provider};
  const after={status:"paid",amountMinor:order.amount_minor,provider:order.provider,bankReference:reference,bankTime,verifiedBy:identity.email,verificationMethod:"manual_bank_reconciliation"};
@@ -120,9 +121,11 @@ export default {async fetch(req:Request,env:Env){
   if(path==="/api/health"&&req.method==="GET")return response({ok:true,mode:"sandbox",paymentsEnabled:env.PAYMENTS_ENABLED==="true"&&env.CASHFREE_ENV!=="production"},200,origin,env);
   if(path==="/api/payment-config"&&req.method==="GET")return response({upiId:(await getConfig(env)).upiId,beneficiary:(await getConfig(env)).beneficiary,instructions:(await getConfig(env)).instructions,enabled:false},200,origin,env);
   if(path==="/api/payment-config"&&req.method==="PUT")return adminConfig(req,env,origin);
-  if(path==="/api/orders"&&req.method==="POST")return createOrder(req,env,origin);\n  if(path==="/api/direct-upi/orders"&&req.method==="POST")return createDirectUpiOrder(req,env,origin);
+  if(path==="/api/orders"&&req.method==="POST")return createOrder(req,env,origin);
+  if(path==="/api/direct-upi/orders"&&req.method==="POST")return createDirectUpiOrder(req,env,origin);
   const match=path.match(/^\/api\/orders\/([A-Za-z0-9_-]+)$/);if(match&&req.method==="GET")return getOrder(req,env,match[1],origin);
-  if(path==="/api/admin/orders"&&req.method==="GET")return adminOrders(req,env,origin);\n  const verifyMatch=path.match(/^\\/api\\/admin\\/orders\\/([A-Za-z0-9_-]+)\\/verify-direct-upi$/);if(verifyMatch&&req.method==="POST")return adminVerifyDirectUpi(req,env,origin,verifyMatch[1]);
+  if(path==="/api/admin/orders"&&req.method==="GET")return adminOrders(req,env,origin);
+  const verifyMatch=path.match(/^\/api\/admin\/orders\/([A-Za-z0-9_-]+)\/verify-direct-upi$/);if(verifyMatch&&req.method==="POST")return adminVerifyDirectUpi(req,env,origin,verifyMatch[1]);
   if(path==="/api/webhooks/cashfree"&&req.method==="POST")return cashfreeWebhook(req,env);
   if(path.startsWith("/api/"))return response({error:"Not found"},404,origin,env);
   const asset=await env.ASSETS.fetch(req);const h=new Headers(asset.headers);for(const [k,v] of Object.entries(SECURITY_HEADERS))h.set(k,v);return new Response(asset.body,{status:asset.status,headers:h});
