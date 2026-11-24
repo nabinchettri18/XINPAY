@@ -62,10 +62,10 @@ The Admin sidebar now includes **Payment Settings**. This UI is prototype-only:
 - Edit a UPI ID and beneficiary display name
 - Edit customer instructions
 - Toggle the payment-details display
-- Upload a QR image for local preview
+- Generate a live preview QR from the configured UPI ID and payee name
 - Preview the customer-facing details
 - See the planned verification stages
 
-Settings are kept in component state for the current browser session. They are not persisted to a backend and do not publish a receiving destination. Payment verification is not connected.
+Settings are saved to this browser's localStorage and are shared between the Admin and Customer portal on the same browser/origin. They are not synced across devices and are not stored in a backend. This is prototype-only; payment verification is not connected.
 
 See [docs/payment-system.md](docs/payment-system.md) and [database/schema.sql](database/schema.sql) for the architecture and draft schema. Do not enable live payment state until a trusted, authorized payment confirmation source and backend security controls are implemented.
