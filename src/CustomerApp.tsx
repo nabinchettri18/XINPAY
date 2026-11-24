@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ArrowDownLeft, ArrowUpRight, Bell, ChevronRight, CircleHelp, CreditCard, Eye, EyeOff, Home, LogOut, Plus, Settings, ShieldCheck, Wallet } from "lucide-react";
+import { Activity, ArrowDownLeft, ArrowUpRight, Bell, ChevronRight, CircleHelp, CreditCard, Eye, EyeOff, Home, LogOut, Plus, Settings, ShieldCheck, Wallet } from "lucide-react";
 
 type Section = "Home" | "Activity" | "Cards" | "Profile";
 const activity = [
