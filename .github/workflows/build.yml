@@ -1,7 +1,7 @@
 name: Build and security checks
 on:
   push:
-    branches: [main, production-readiness-phase-2-6]
+    branches: [main, production-readiness-phase-2-6, direct-upi-manual-reconciliation]
   pull_request:
     branches: [main, production-readiness-phase-2-6]
 concurrency:
