@@ -14,7 +14,7 @@ These values are already configured in `wrangler.toml`.
 
 ## D1 schema
 
-The migration at `database/migrations/0001_payment_config.sql` has been applied to the production D1 database.
+The migrations at `database/migrations/` must be applied to the production D1 database, including the admin write rate-limit table in `0002_rate_limits.sql`.
 
 If recreating the database:
 
@@ -51,6 +51,7 @@ The Cloudflare Git build settings use `npm run build` and `npx wrangler deploy` 
 - `PUT /api/payment-config`: requires `Authorization: Bearer <ADMIN_TOKEN>`; validates payload types and size, validates UPI ID, and logs config changes.
 - Unknown `/api/*` paths return JSON 404 instead of falling through to the frontend.
 - API and static responses include security headers; API responses are not cached.
+- Admin configuration writes are rate-limited to 20 attempts per IP-hash per 10-minute window. If the rate-limit table is missing, admin writes fail closed.
 - Cross-origin API requests are rejected unless the request Origin matches `ALLOWED_ORIGIN`.
 
 **Routes are not secrets.** Browser-facing API URLs can be discovered in DevTools/network requests. Security comes from server-side authorization, validation, rate limiting, and limiting returned data—not hiding the URL.
