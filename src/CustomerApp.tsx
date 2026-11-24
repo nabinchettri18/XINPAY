@@ -1,5 +1,7 @@
-import { useEffect, useMemo, useState } from "react";\nimport { getPaymentConfig, subscribePaymentConfig } from "./paymentConfig";
-import { Activity, ArrowDownLeft, ArrowUpRight, Bell, ChevronRight, CircleHelp, CreditCard, Eye, EyeOff, Home, LogOut, Plus, Search, Settings, ShieldCheck, Wallet, X, Menu, ReceiptText, Clock3 } from "lucide-react";\nimport { QRCodeSVG } from "qrcode.react";
+import { useEffect, useMemo, useState } from "react";
+import { getPaymentConfig, subscribePaymentConfig } from "./paymentConfig";
+import { Activity, ArrowDownLeft, ArrowUpRight, Bell, ChevronRight, CircleHelp, CreditCard, Eye, EyeOff, Home, LogOut, Plus, Search, Settings, ShieldCheck, Wallet, X, Menu, ReceiptText, Clock3 } from "lucide-react";
+import { QRCodeSVG } from "qrcode.react";
 
 type Section = "Overview" | "Transactions" | "Payments" | "Payment methods" | "Profile" | "Help";
 type Tx = { id: string; name: string; detail: string; date: string; amount: number; status: "Completed" | "Pending" | "Failed"; kind: "Credit" | "Debit"; icon: string };
@@ -23,10 +25,22 @@ export default function CustomerApp() {
   const [filter,setFilter] = useState("All");
   const [selected,setSelected] = useState<Tx|null>(null);
   const [mobileNav,setMobileNav] = useState(false);
-  const [paymentConfig,setPaymentConfig] = useState(getPaymentConfig());\n  useEffect(()=>subscribePaymentConfig(()=>setPaymentConfig(getPaymentConfig())),[]);\n  const upiId = paymentConfig.upiId;\n  const upiName = paymentConfig.beneficiary;\n  const validUpi = /^[a-zA-Z0-9.\\-_]{2,256}@[a-zA-Z]{2,64}$/.test(upiId.trim());\n  const [paymentAmount,setPaymentAmount] = useState("");
+  const [paymentConfig,setPaymentConfig] = useState(getPaymentConfig());
+  useEffect(()=>subscribePaymentConfig(()=>setPaymentConfig(getPaymentConfig())),[]);
+  const upiId = paymentConfig.upiId;
+  const upiName = paymentConfig.beneficiary;
+  const validUpi = /^[a-zA-Z0-9.\\-_]{2,256}@[a-zA-Z]{2,64}$/.test(upiId.trim());
+  const [paymentConfig,setPaymentConfig] = useState(getPaymentConfig());
+  useEffect(()=>subscribePaymentConfig(()=>setPaymentConfig(getPaymentConfig())),[]);
+  const upiId = paymentConfig.upiId;
+  const upiName = paymentConfig.beneficiary;
+  const validUpi = /^[a-zA-Z0-9.\\-_]{2,256}@[a-zA-Z]{2,64}$/.test(upiId.trim());
+  const [paymentAmount,setPaymentAmount] = useState("");
   const [paymentPurpose,setPaymentPurpose] = useState("");
   const [paymentStep,setPaymentStep] = useState(0);
-  const upiUri = useMemo(()=>`upi://pay?pa=${encodeURIComponent(upiId)}&pn=${encodeURIComponent(upiName)}&am=${encodeURIComponent(paymentAmount)}&cu=INR&tn=${encodeURIComponent(paymentPurpose)}`,[upiId,upiName,paymentAmount,paymentPurpose]);\n  const showToast=(m:string)=>{setToast(m);window.setTimeout(()=>setToast(""),2600)};
+  const upiUri = useMemo(()=>`upi://pay?pa=${encodeURIComponent(upiId)}&pn=${encodeURIComponent(upiName)}&am=${encodeURIComponent(paymentAmount)}&cu=INR&tn=${encodeURIComponent(paymentPurpose)}`,[upiId,upiName,paymentAmount,paymentPurpose]);
+  const upiUri = useMemo(()=>`upi://pay?pa=${encodeURIComponent(upiId)}&pn=${encodeURIComponent(upiName)}&am=${encodeURIComponent(paymentAmount)}&cu=INR&tn=${encodeURIComponent(paymentPurpose)}`,[upiId,upiName,paymentAmount,paymentPurpose]);
+  const showToast=(m:string)=>{setToast(m);window.setTimeout(()=>setToast(""),2600)};
   const go=(s:Section)=>{setSection(s);setMobileNav(false);setSearch("");};
   const filtered=useMemo(()=>transactions.filter(t=>(filter==="All"||t.kind===filter)&&((t.name+" "+t.detail+" "+t.id).toLowerCase().includes(search.toLowerCase()))),[filter,search]);
   return <div className="xp-shell">
