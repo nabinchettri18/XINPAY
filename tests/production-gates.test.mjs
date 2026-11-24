@@ -10,7 +10,7 @@ test("payments default to disabled and production mode is blocked",()=>{
  assert.match(worker,/CASHFREE_ENV==="production"/);
 });
 test("Access JWT validation checks issuer, audience, expiry, signature and admin allowlist",()=>{
- for(const term of ["claims.iss!==issuer","claims.aud","claims.exp","crypto.subtle.verify","ADMIN_EMAILS"])assert.ok(worker.includes(term),term);
+ for(const term of ["claims.iss!==issuer","replace(/^https?:\\/\\//","claims.aud","claims.exp","crypto.subtle.verify","ADMIN_EMAILS"])assert.ok(worker.includes(term),term);
 });
 test("orders use INR and integer minor units and store hashed customer access",()=>{
  assert.match(worker,/currency:"INR"/);
