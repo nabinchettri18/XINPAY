@@ -6,8 +6,8 @@ const endpoint = API_BASE + "/api/payment-config";
 export async function loadPaymentConfig():Promise<PaymentConfig>{
  try{const res=await fetch(endpoint,{headers:{Accept:"application/json"},cache:"no-store"});if(!res.ok)throw new Error("API unavailable");const data=await res.json();return {...DEFAULTS,...data}}catch{return DEFAULTS}
 }
-export async function savePaymentConfig(config:PaymentConfig,token:string):Promise<PaymentConfig>{
- const res=await fetch(endpoint,{method:"PUT",headers:{"Content-Type":"application/json",Authorization:"Bearer "+token},body:JSON.stringify(config),cache:"no-store"});
+export async function savePaymentConfig(config:PaymentConfig):Promise<PaymentConfig>{
+ const res=await fetch(endpoint,{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify(config),cache:"no-store"});
  const data=await res.json().catch(()=>({}));
  if(!res.ok)throw new Error(data.error||"Could not save payment settings");
  window.dispatchEvent(new Event("xinpay-payment-config-updated"));
