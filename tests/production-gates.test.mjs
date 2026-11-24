@@ -18,7 +18,7 @@ test("orders use INR and integer minor units and store hashed customer access",(
  assert.match(migration4,/customer_access_hash TEXT/);
 });
 test("webhook validates signature, timestamp, amount, currency and deduplicates",()=>{
- for(const term of ["x-webhook-signature","x-webhook-timestamp","HMAC","payload_hash","verification_state","currency===\\\"INR\\\"","INSERT OR IGNORE"])assert.ok(worker.includes(term),term);
+ for(const term of ["x-webhook-signature","x-webhook-timestamp","HMAC","payload_hash","verification_state",`currency==="INR"`,"INSERT OR IGNORE"])assert.ok(worker.includes(term),term);
 });
 test("ledger rows only originate from successful verified webhook branch",()=>{
  assert.match(worker,/status==="SUCCESS"&&verified/);
