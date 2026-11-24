@@ -3,7 +3,7 @@ export interface Env {
  ADMIN_TOKEN?: string; // legacy; disabled when Access auth is configured
  CF_ACCESS_TEAM_DOMAIN?: string; CF_ACCESS_AUD?: string; ADMIN_EMAILS?: string;
  CASHFREE_CLIENT_ID?: string; CASHFREE_CLIENT_SECRET?: string; CASHFREE_WEBHOOK_SECRET?: string;
- CASHFREE_ENV?: string; PAYMENTS_ENABLED?: string; PUBLIC_BASE_URL?: string;
+ CASHFREE_ENV?: string; PAYMENTS_ENABLED?: string; DIRECT_UPI_ENABLED?: string; PUBLIC_BASE_URL?: string;
 }
 type Config={upiId:string;beneficiary:string;instructions:string;enabled:boolean;version:number;updatedAt:string};
 const DEFAULT:Config={upiId:"",beneficiary:"",instructions:"Use the payment details shown here and keep your transaction reference for your records.",enabled:false,version:0,updatedAt:""};
@@ -52,7 +52,45 @@ async function createOrder(req:Request,env:Env,origin:string){
  return response({orderId,orderToken:accessToken,status:"pending",amount:body.amount,currency:"INR",checkoutUrl:cf.payment_link||null,paymentSessionId:cf.payment_session_id||null,expiresAt:expires},201,origin,env);
 }
 async function getOrder(req:Request,env:Env,id:string,origin:string){const token=req.headers.get("Authorization")?.replace(/^Bearer /,"")||"";const row=await env.DB.prepare("SELECT id,status,amount_minor,currency,purpose,expires_at,created_at,updated_at FROM payment_orders WHERE id=?").bind(id).first<any>();if(!row)return response({error:"Order not found"},404,origin,env);const stored=await env.DB.prepare("SELECT customer_access_hash FROM payment_orders WHERE id=?").bind(id).first<any>();if(!token||!stored?.customer_access_hash||await sha256(token)!==stored.customer_access_hash)return response({error:"Unauthorized"},401,origin,env);return response({...row,amount:row.amount_minor/100},200,origin,env);}
-async function adminOrders(req:Request,env:Env,origin:string){if(!(await rateLimit(req,env,"admin",60)))return response({error:"Rate limit exceeded"},429,origin,env);const identity=await requireAdmin(req,env);if(!identity)return response({error:"Unauthorized"},401,origin,env);const rows=await env.DB.prepare("SELECT id,provider_order_id,purpose,amount_minor,currency,status,provider_status,expires_at,created_at,updated_at FROM payment_orders ORDER BY created_at DESC LIMIT 100").all();return response({orders:rows.results||[],admin:identity.email},200,origin,env);}
+async function createDirectUpiOrder(req:Request,env:Env,origin:string){
+ if(env.DIRECT_UPI_ENABLED!=="true")return response({error:"Direct UPI is disabled"},503,origin,env);
+ if(!(await rateLimit(req,env,"direct-orders",8)))return response({error:"Rate limit exceeded"},429,origin,env);
+ let body:any;try{body=await req.json()}catch{return response({error:"Invalid JSON"},400,origin,env);}
+ if(!body||!validAmount(body.amount)||typeof body.purpose!=="string"||!body.purpose.trim()||body.purpose.length>100)return response({error:"Valid amount and purpose are required"},400,origin,env);
+ const cfg=await getConfig(env);if(!cfg.enabled||!cfg.upiId||!cfg.beneficiary)return response({error:"Direct UPI collection is not configured"},503,origin,env);
+ const id="upi_"+crypto.randomUUID().replace(/-/g,"").slice(0,24),token=b64(await crypto.getRandomValues(new Uint8Array(32))),tokenHash=await sha256(token),expires=new Date(Date.now()+30*60*1000).toISOString();
+ const upiUri="upi://pay?pa="+encodeURIComponent(cfg.upiId)+"&pn="+encodeURIComponent(cfg.beneficiary)+"&am="+encodeURIComponent(body.amount.toFixed(2))+"&cu=INR&tn="+encodeURIComponent("XinPay "+id);
+ await env.DB.prepare("INSERT INTO payment_orders(id,provider,purpose,amount_minor,currency,status,customer_access_hash,destination_config_version,destination_snapshot,expires_at) VALUES(?,?,?,?,'INR','pending',?,?,?,?)").bind(id,"direct_upi",body.purpose.trim().slice(0,100),minor(body.amount),tokenHash,cfg.version,JSON.stringify({upiId:cfg.upiId,beneficiary:cfg.beneficiary}),expires).run();
+ return response({orderId:id,orderToken:token,status:"pending",amount:body.amount,currency:"INR",upiUri,upiId:cfg.upiId,beneficiary:cfg.beneficiary,expiresAt:expires,verification:"manual"},201,origin,env);
+}
+async function adminVerifyDirectUpi(req:Request,env:Env,origin:string,id:string){
+ if(!(await rateLimit(req,env,"admin-verify",15)))return response({error:"Rate limit exceeded"},429,origin,env);
+ const identity=await requireAdmin(req,env);if(!identity)return response({error:"Unauthorized"},401,origin,env);
+ let body:any;try{body=await req.json()}catch{return response({error:"Invalid JSON"},400,origin,env);}
+ const reference=typeof body?.bankReference==="string"?body.bankReference.trim():"";
+ const bankTime=typeof body?.bankTime==="string"?body.bankTime.trim():"";
+ if(!body?.confirmBankCredit||reference.length<6||reference.length>100||!/^\d{4,100}$/.test(reference.replace(/[^\d]/g,""))||!bankTime||!Number.isFinite(Date.parse(bankTime))||!validAmount(body?.verifiedAmount))return response({error:"Provide the bank reference, transaction time, exact credited amount, and explicit bank-credit confirmation"},400,origin,env);
+ const order=await env.DB.prepare("SELECT * FROM payment_orders WHERE id=? AND provider='direct_upi'").bind(id).first<any>();
+ if(!order)return response({error:"Direct UPI order not found"},404,origin,env);
+ if(order.status==="paid")return response({error:"Order is already paid"},409,origin,env);
+ if(order.status!=="pending"&&order.status!=="review")return response({error:"Only pending/review orders can be reconciled"},409,origin,env);
+ if(minor(body.verifiedAmount)!==order.amount_minor)return response({error:"Bank credit amount does not exactly match the order"},409,origin,env);
+ const eventId=crypto.randomUUID(),hash=await sha256(JSON.stringify({order:id,reference,amount:order.amount_minor,bankTime,admin:identity.email}));
+ const before={status:order.status,amountMinor:order.amount_minor,provider:order.provider};
+ const after={status:"paid",amountMinor:order.amount_minor,provider:order.provider,bankReference:reference,bankTime,verifiedBy:identity.email,verificationMethod:"manual_bank_reconciliation"};
+ try{
+  const results=await env.DB.batch([
+   env.DB.prepare("INSERT INTO payment_events(id,order_id,provider,provider_reference,event_type,amount_minor,currency,verification_state,payload_hash) SELECT ?,id,'direct_upi',?,'admin_manual_verification',?,'INR','verified',? FROM payment_orders WHERE id=? AND provider='direct_upi' AND status IN ('pending','review') AND amount_minor=?").bind(eventId,reference,order.amount_minor,hash,id,order.amount_minor),
+   env.DB.prepare("UPDATE payment_orders SET status='paid',provider_status='MANUALLY_VERIFIED',updated_at=CURRENT_TIMESTAMP WHERE id=? AND provider='direct_upi' AND status IN ('pending','review') AND amount_minor=? AND EXISTS(SELECT 1 FROM payment_events WHERE id=? AND verification_state='verified')").bind(id,order.amount_minor,eventId),
+   env.DB.prepare("INSERT OR IGNORE INTO ledger_entries(id,order_id,entry_type,amount_minor,currency,source_event_id) SELECT ?,?, 'payment_received',?,'INR',id FROM payment_events WHERE id=? AND verification_state='verified' AND EXISTS(SELECT 1 FROM payment_orders WHERE id=? AND status='paid')").bind(crypto.randomUUID(),id,order.amount_minor,eventId,id),
+   env.DB.prepare("INSERT INTO audit_logs(id,actor_id,action,target,before_snapshot,after_snapshot) SELECT ?,?,?,?, ?,? WHERE EXISTS(SELECT 1 FROM payment_events WHERE id=? AND verification_state='verified')").bind(crypto.randomUUID(),identity.email,"payment.manual_verified","payment_order:"+id,JSON.stringify(before),JSON.stringify(after),eventId)
+  ]);
+  if(!results[0]?.meta?.changes)return response({error:"Could not record verification. The reference may already be used or order state changed."},409,origin,env);
+ }catch{return response({error:"Verification could not be saved. Check reference uniqueness and order status."},409,origin,env);}
+ const updated=await env.DB.prepare("SELECT id,status,amount_minor,currency,provider_status,updated_at FROM payment_orders WHERE id=?").bind(id).first<any>();
+ return response({success:true,order:updated,manualVerification:true,warning:"This status records an administrator's bank reconciliation; it is not an automated bank/provider confirmation."},200,origin,env);
+}
+async function adminOrders(req:Request,env:Env,origin:string){if(!(await rateLimit(req,env,"admin",60)))return response({error:"Rate limit exceeded"},429,origin,env);const identity=await requireAdmin(req,env);if(!identity)return response({error:"Unauthorized"},401,origin,env);const rows=await env.DB.prepare("SELECT id,provider,provider_order_id,purpose,amount_minor,currency,status,provider_status,expires_at,created_at,updated_at FROM payment_orders ORDER BY created_at DESC LIMIT 100").all();return response({orders:rows.results||[],admin:identity.email},200,origin,env);}
 async function cashfreeWebhook(req:Request,env:Env){
  if(!env.CASHFREE_WEBHOOK_SECRET)return new Response("Webhook not configured",{status:503,headers:SECURITY_HEADERS});
  if(Number(req.headers.get("Content-Length")||0)>1048576)return new Response("Payload too large",{status:413,headers:SECURITY_HEADERS});const raw=await req.text();if(enc.encode(raw).length>1048576)return new Response("Payload too large",{status:413,headers:SECURITY_HEADERS});const timestamp=req.headers.get("x-webhook-timestamp")||"",signature=req.headers.get("x-webhook-signature")||"";
@@ -82,9 +120,9 @@ export default {async fetch(req:Request,env:Env){
   if(path==="/api/health"&&req.method==="GET")return response({ok:true,mode:"sandbox",paymentsEnabled:env.PAYMENTS_ENABLED==="true"&&env.CASHFREE_ENV!=="production"},200,origin,env);
   if(path==="/api/payment-config"&&req.method==="GET")return response({upiId:(await getConfig(env)).upiId,beneficiary:(await getConfig(env)).beneficiary,instructions:(await getConfig(env)).instructions,enabled:false},200,origin,env);
   if(path==="/api/payment-config"&&req.method==="PUT")return adminConfig(req,env,origin);
-  if(path==="/api/orders"&&req.method==="POST")return createOrder(req,env,origin);
+  if(path==="/api/orders"&&req.method==="POST")return createOrder(req,env,origin);\n  if(path==="/api/direct-upi/orders"&&req.method==="POST")return createDirectUpiOrder(req,env,origin);
   const match=path.match(/^\/api\/orders\/([A-Za-z0-9_-]+)$/);if(match&&req.method==="GET")return getOrder(req,env,match[1],origin);
-  if(path==="/api/admin/orders"&&req.method==="GET")return adminOrders(req,env,origin);
+  if(path==="/api/admin/orders"&&req.method==="GET")return adminOrders(req,env,origin);\n  const verifyMatch=path.match(/^\\/api\\/admin\\/orders\\/([A-Za-z0-9_-]+)\\/verify-direct-upi$/);if(verifyMatch&&req.method==="POST")return adminVerifyDirectUpi(req,env,origin,verifyMatch[1]);
   if(path==="/api/webhooks/cashfree"&&req.method==="POST")return cashfreeWebhook(req,env);
   if(path.startsWith("/api/"))return response({error:"Not found"},404,origin,env);
   const asset=await env.ASSETS.fetch(req);const h=new Headers(asset.headers);for(const [k,v] of Object.entries(SECURITY_HEADERS))h.set(k,v);return new Response(asset.body,{status:asset.status,headers:h});
