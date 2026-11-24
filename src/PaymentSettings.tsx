@@ -1,4 +1,5 @@
-import { useState } from "react";\nimport "./payment-settings.css";
+import { useState } from "react";
+import "./payment-settings.css";
 import { AlertTriangle, ImagePlus, Save, ShieldCheck, ToggleLeft, ToggleRight, Upload, X } from "lucide-react";
 
 export default function PaymentSettings() {
