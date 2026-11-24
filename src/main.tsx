@@ -1,10 +1,11 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App";
+import CustomerApp from "./CustomerApp";
 import "./styles.css";
+import "./customer.css";
 
+const isCustomer = window.location.pathname.startsWith("/customer");
 ReactDOM.createRoot(document.getElementById("root")!).render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
+  <React.StrictMode>{isCustomer ? <CustomerApp /> : <App />}</React.StrictMode>
 );
