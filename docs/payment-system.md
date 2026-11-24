@@ -12,7 +12,7 @@ Prototype-only. No live payment collection, settlement changes, or automatic ver
 - Admin audit events
 - Sensitive changes require re-authentication
 
-The current prototype stores configuration in browser localStorage. Admin and customer pages on the same browser/origin share the settings; it is not cross-device or backend persistence. Do not use for live payments.
+The UPI display configuration is now stored in Cloudflare D1 through the Worker API when deployed. Admin writes use a shared Worker secret token in this prototype; replace this with proper admin authentication before production. Payment verification is not connected.
 
 ## Suggested data model
 
@@ -83,7 +83,7 @@ User-submitted screenshots, UTR strings, or "I paid" buttons are not proof. Unma
 - Never store UPI PINs, OTPs, banking passwords, or card PINs.
 
 ## Suggested API
-- GET /api/payment-config/public
+- GET /api/payment-config (public display config)\n- PUT /api/payment-config (admin-token protected config update)
 - POST /api/payment-orders
 - GET /api/payment-orders/:id
 - POST /api/payment-events (trusted source only; signature validation)
