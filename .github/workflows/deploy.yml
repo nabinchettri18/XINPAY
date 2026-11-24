@@ -18,14 +18,18 @@ jobs:
         with:
           node-version: 24
 
-      - name: Normalize Cloudflare token secret
+      - name: Validate and normalize Cloudflare API token
         shell: bash
         env:
           RAW_CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
         run: |
           TOKEN="$(printf '%s' "$RAW_CLOUDFLARE_API_TOKEN" | tr -d '\r\n')"
           if [ -z "$TOKEN" ]; then
-            echo "CLOUDFLARE_API_TOKEN secret is empty."
+            echo "::error::CLOUDFLARE_API_TOKEN secret is empty."
+            exit 1
+          fi
+          if [[ "$TOKEN" =~ [[:space:]] ]]; then
+            echo "::error::CLOUDFLARE_API_TOKEN contains whitespace. Recreate the token and paste only the token string into GitHub Secrets."
             exit 1
           fi
           echo "CLOUDFLARE_API_TOKEN=$TOKEN" >> "$GITHUB_ENV"
