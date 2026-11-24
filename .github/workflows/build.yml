@@ -1,7 +1,7 @@
 name: Build and security checks
 on:
   push:
-    branches: [main]
+    branches: [main, production-readiness-phase-2-6]
   pull_request:
     branches: [main]
 concurrency:
