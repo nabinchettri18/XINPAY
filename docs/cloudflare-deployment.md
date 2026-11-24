@@ -75,6 +75,10 @@ Open **Admin → Payment Settings**, enter the Worker admin token in the Admin A
 
 Customer portal requests the public configuration from the API and builds the UPI QR / intent from it. The same config is shared across users and devices.
 
+## Admin access protection (required before production)
+
+The admin dashboard itself is a static frontend and is not authenticated by the Worker. The token protects only configuration writes. Before production, protect the admin surface with Cloudflare Access (prefer a separate admin hostname) and allow only named administrators. Do not expose an admin dashboard on the same public host without an identity gate. This setup must be completed in the Cloudflare dashboard; it is not configured by repository code.
+
 ## Security limitations / production checklist
 
 - This prototype uses one shared admin token. Replace it with real admin authentication, role-based authorization, short-lived sessions, CSRF protection where cookie auth is used, and audit identity before production.
