@@ -39,7 +39,6 @@ export default function CustomerApp() {
   const [paymentPurpose,setPaymentPurpose] = useState("");
   const [paymentStep,setPaymentStep] = useState(0);
   const upiUri = useMemo(()=>`upi://pay?pa=${encodeURIComponent(upiId)}&pn=${encodeURIComponent(upiName)}&am=${encodeURIComponent(paymentAmount)}&cu=INR&tn=${encodeURIComponent(paymentPurpose)}`,[upiId,upiName,paymentAmount,paymentPurpose]);
-  const upiUri = useMemo(()=>`upi://pay?pa=${encodeURIComponent(upiId)}&pn=${encodeURIComponent(upiName)}&am=${encodeURIComponent(paymentAmount)}&cu=INR&tn=${encodeURIComponent(paymentPurpose)}`,[upiId,upiName,paymentAmount,paymentPurpose]);
   const showToast=(m:string)=>{setToast(m);window.setTimeout(()=>setToast(""),2600)};
   const go=(s:Section)=>{setSection(s);setMobileNav(false);setSearch("");};
   const filtered=useMemo(()=>transactions.filter(t=>(filter==="All"||t.kind===filter)&&((t.name+" "+t.detail+" "+t.id).toLowerCase().includes(search.toLowerCase()))),[filter,search]);
