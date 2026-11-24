@@ -43,6 +43,19 @@ npm run build
 npx wrangler deploy
 ```
 
+Before deploying, apply the new migration to production D1:
+
+```bash
+npx wrangler d1 migrations apply xinpay --remote
+```
+
+Then deploy:
+
+```bash
+npm run build
+npx wrangler deploy
+```
+
 The Cloudflare Git build settings use `npm run build` and `npx wrangler deploy` from repository root. The Worker production origin is configured in `ALLOWED_ORIGIN`.
 
 ## API
@@ -58,7 +71,7 @@ The Cloudflare Git build settings use `npm run build` and `npx wrangler deploy` 
 
 ## Configure UPI
 
-Open **Admin → Payment Settings**, enter the Worker admin token in the Admin API token field, configure the receiving UPI ID and payee name, and save. The token is kept in sessionStorage for that browser session.
+Open **Admin → Payment Settings**, enter the Worker admin token in the Admin API token field, configure the receiving UPI ID and payee name, and save. The token is held in page memory only; reload the page and you must enter it again. Do not paste it into a shared computer or expose it in screenshots.
 
 Customer portal requests the public configuration from the API and builds the UPI QR / intent from it. The same config is shared across users and devices.
 
