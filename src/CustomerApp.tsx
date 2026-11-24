@@ -27,6 +27,7 @@ export default function CustomerApp() {
   const [mobileNav,setMobileNav] = useState(false);
   const [paymentConfig,setPaymentConfig] = useState({upiId:"",beneficiary:"",instructions:"",enabled:false});
   useEffect(()=>{const refresh=()=>loadPaymentConfig().then(setPaymentConfig);refresh();return subscribePaymentConfig(refresh)},[]);
+  useEffect(()=>{const orderId=new URLSearchParams(window.location.search).get("order_id");if(!orderId)return;const token=sessionStorage.getItem("xinpay_order_token:"+orderId);if(!token){setReturnStatus("Order created. Please wait for server-side payment verification.");return;}let cancelled=false;const check=async()=>{try{const r=await fetch("/api/orders/"+encodeURIComponent(orderId),{headers:{Authorization:"Bearer "+token},cache:"no-store"});if(!r.ok)throw new Error();const d=await r.json();if(!cancelled)setReturnStatus("Order "+orderId+" status: "+d.status.toUpperCase()+" — only verified server events can confirm payment.");}catch{if(!cancelled)setReturnStatus("We could not verify this order status. Please contact support with order ID "+orderId+".");}};void check();return()=>{cancelled=true}},[]);
   const upiId = paymentConfig.upiId;
   const upiName = paymentConfig.beneficiary;
   const validUpi = /^[a-zA-Z0-9._-]{2,256}@[a-zA-Z]{2,64}$/.test(upiId.trim());
@@ -36,6 +37,7 @@ export default function CustomerApp() {
   const [paymentStep,setPaymentStep] = useState(0);
   const [checkoutBusy,setCheckoutBusy] = useState(false);
   const [checkoutError,setCheckoutError] = useState("");
+  const [returnStatus,setReturnStatus] = useState("");
   const upiUri = useMemo(()=>`upi://pay?pa=${encodeURIComponent(upiId)}&pn=${encodeURIComponent(upiName)}&am=${encodeURIComponent(paymentAmount)}&cu=INR&tn=${encodeURIComponent(paymentPurpose)}`,[upiId,upiName,paymentAmount,paymentPurpose]);
   async function startCashfreeCheckout(){
     setCheckoutBusy(true);setCheckoutError("");
@@ -43,6 +45,7 @@ export default function CustomerApp() {
       const response=await fetch("/api/orders",{method:"POST",headers:{"Content-Type":"application/json","Accept":"application/json"},body:JSON.stringify({amount:Number(paymentAmount),purpose:paymentPurpose||"XinPay payment"})});
       const data=await response.json().catch(()=>({}));
       if(!response.ok)throw new Error(data.error||"Checkout is currently unavailable");
+      if(data.orderId&&data.orderToken)sessionStorage.setItem("xinpay_order_token:"+data.orderId,data.orderToken);
       if(!data.paymentSessionId)throw new Error("Payment session was created but checkout session is missing.");
       const w=window as any;
       if(!w.Cashfree){
@@ -66,7 +69,7 @@ export default function CustomerApp() {
     <main className="xp-main">
       <header className="xp-topbar"><button className="xp-mobile-menu" onClick={()=>setMobileNav(!mobileNav)}><Menu size={19}/></button><div className="xp-breadcrumb"><span>Customer portal</span><ChevronRight size={14}/><strong>{section}</strong></div><div className="xp-top-actions"><span className="xp-demo-pill"><i/> DEMO</span><button className="xp-icon-button" onClick={()=>showToast("You're all caught up.")} aria-label="Notifications"><Bell size={18}/></button><div className="xp-avatar small">DC</div></div></header>
       {mobileNav&&<div className="xp-mobile-drawer">{nav.map(({name,icon:Icon})=><button key={name} onClick={()=>go(name)} className={section===name?"active":""}><Icon size={18}/>{name}</button>)}</div>}
-      <div className="xp-content">
+      <div className="xp-content">{returnStatus&&<div className="xp-demo-banner"><ShieldCheck size={17}/><div><strong>Payment status</strong><span>{returnStatus}</span></div><button onClick={()=>{setReturnStatus("");const u=new URL(window.location.href);u.searchParams.delete("order_id");window.history.replaceState({}, "",u.toString())}} aria-label="Dismiss"><X size={16}/></button></div>
         {notice&&<div className="xp-demo-banner"><ShieldCheck size={17}/><div><strong>Preview environment</strong><span>Sample balances and transactions. No real money or payment actions are available.</span></div><button onClick={()=>setNotice(false)} aria-label="Dismiss"><X size={16}/></button></div>}
         {section==="Overview"&&<>
           <div className="xp-page-heading"><div><p className="xp-eyebrow">MONDAY, 24 NOVEMBER</p><h1>Welcome back, Demo Customer</h1><p className="xp-subtitle">Here's a snapshot of your account.</p></div></div>
