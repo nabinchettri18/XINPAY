@@ -29,12 +29,12 @@ export default function CustomerApp() {
   useEffect(()=>subscribePaymentConfig(()=>setPaymentConfig(getPaymentConfig())),[]);
   const upiId = paymentConfig.upiId;
   const upiName = paymentConfig.beneficiary;
-  const validUpi = /^[a-zA-Z0-9.\\-_]{2,256}@[a-zA-Z]{2,64}$/.test(upiId.trim());
+  const validUpi = /^[a-zA-Z0-9.\_-]{2,256}@[a-zA-Z]{2,64}$/.test(upiId.trim());
   const [paymentConfig,setPaymentConfig] = useState(getPaymentConfig());
   useEffect(()=>subscribePaymentConfig(()=>setPaymentConfig(getPaymentConfig())),[]);
   const upiId = paymentConfig.upiId;
   const upiName = paymentConfig.beneficiary;
-  const validUpi = /^[a-zA-Z0-9.\\-_]{2,256}@[a-zA-Z]{2,64}$/.test(upiId.trim());
+  const validUpi = /^[a-zA-Z0-9.\_-]{2,256}@[a-zA-Z]{2,64}$/.test(upiId.trim());
   const [paymentAmount,setPaymentAmount] = useState("");
   const [paymentPurpose,setPaymentPurpose] = useState("");
   const [paymentStep,setPaymentStep] = useState(0);
