@@ -1,4 +1,5 @@
-import { useState } from "react";\nimport PaymentSettings from "./PaymentSettings";
+import { useState } from "react";
+import PaymentSettings from "./PaymentSettings";
 import {
   Activity, ArrowDownLeft, ArrowUpRight, Bell, Building2, ChevronDown,
   CircleHelp, CreditCard, LayoutDashboard, LockKeyhole, Menu, Search,
@@ -12,7 +13,8 @@ const navItems: { label: NavKey; icon: typeof LayoutDashboard }[] = [
   { label: "Settlements", icon: Wallet },
   { label: "Accounts", icon: Building2 },
   { label: "Customers", icon: CreditCard },
-  { label: "Support", icon: CircleHelp },\n  { label: "Payment Settings", icon: Wallet },
+  { label: "Support", icon: CircleHelp },
+  { label: "Payment Settings", icon: Wallet },
   { label: "Settings", icon: Settings }
 ];
 const transactions = [
