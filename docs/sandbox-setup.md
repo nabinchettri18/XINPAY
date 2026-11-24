@@ -1,6 +1,6 @@
 # Sandbox configuration checklist
 
-This feature branch intentionally does not enable payment processing.
+This feature branch intentionally keeps payment processing disabled by default. Direct UPI can be enabled separately for manual-reconciliation testing.
 
 ## Worker variables (Cloudflare)
 Set the following only after creating a Cloudflare Access application for the admin interface:
@@ -8,7 +8,7 @@ Set the following only after creating a Cloudflare Access application for the ad
 - `CF_ACCESS_AUD`: Access application audience tag
 - `ADMIN_EMAILS`: comma-separated exact admin email addresses
 - `CASHFREE_ENV`: `sandbox`
-- `PAYMENTS_ENABLED`: leave `false` until sandbox credentials and webhook verification have been tested
+- `PAYMENTS_ENABLED`: leave `false` until sandbox credentials and webhook verification have been tested\n- `DIRECT_UPI_ENABLED`: leave `false`; only enable after manual-reconciliation UI/API tests and an approved receiving account are ready
 - `PUBLIC_BASE_URL`: public XinPay origin
 
 ## Worker secrets
@@ -32,3 +32,4 @@ Add these as encrypted Worker secrets, never as frontend `VITE_*` variables:
 
 ## Feature flag
 Only enable `PAYMENTS_ENABLED=true` for sandbox after the above checks. Production mode is hard-blocked in this implementation. Do not enable real money payments until merchant approval, compliance, legal terms, reconciliation and independent security review are completed.
+\n## Direct UPI manual reconciliation (experimental)\n\nDirect UPI orders use a dynamic QR/UPI Intent and remain `pending`. They do not use the unofficial Paytm Business status endpoint or scrape SMS/email. The admin reconciliation action requires Cloudflare Access and records the bank reference, exact credited amount, transaction timestamp, administrator identity, an audit record, and one ledger posting. The admin must independently inspect the actual bank/UPI account; customer screenshots or submitted references alone are not evidence.\n\nEnable only with Worker variable `DIRECT_UPI_ENABLED=true` after tests. Production payments remain disabled and must not be represented as automatically verified. The manual process is an administrator attestation, not a bank API integration.\n

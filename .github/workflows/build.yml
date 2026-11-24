@@ -1,9 +1,9 @@
 name: Build and security checks
 on:
   push:
-    branches: [main]
+    branches: [main, production-readiness-phase-2-6, direct-upi-manual-reconciliation]
   pull_request:
-    branches: [main]
+    branches: [main, production-readiness-phase-2-6]
 concurrency:
   group: xinpay-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true

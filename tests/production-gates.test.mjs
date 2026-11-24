@@ -30,3 +30,20 @@ test("admin transaction endpoint is Access protected",()=>{
  assert.match(worker,/path==="\/api\/admin\/orders"/);
  assert.match(worker,/const identity=await requireAdmin/);
 });
+
+test("direct UPI is independently feature-gated and creates pending QR orders",()=>{
+ assert.match(worker,/DIRECT_UPI_ENABLED!=="true"/);
+ assert.match(worker,/bind\(id,"direct_upi"/);
+ assert.match(worker,/upi:\/\/pay\?pa=/);
+ assert.match(worker,/verification:"manual"/);
+});
+test("manual reconciliation is Access protected, amount/reference/time bound and audited",()=>{
+ assert.match(worker,/requireAdmin\(req,env\)/);
+ assert.match(worker,/confirmBankCredit/);
+ assert.match(worker,/minor\(body\.verifiedAmount\)!==order\.amount_minor/);
+ assert.match(worker,/bankReference/);
+ assert.match(worker,/bankTime/);
+ assert.match(worker,/payment\.manual_verified/);
+ assert.match(worker,/ledger_entries/);
+ assert.match(worker,/verification_state='verified'/);
+});
