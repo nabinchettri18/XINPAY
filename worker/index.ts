@@ -1,4 +1,4 @@
-export interface Env { DB: D1Database; ADMIN_TOKEN: string; ALLOWED_ORIGIN?: string; }
+export interface Env { DB: D1Database; ADMIN_TOKEN?: string; ALLOWED_ORIGIN?: string; ASSETS: Fetcher; }
 type Config = { upiId:string; beneficiary:string; instructions:string; enabled:boolean; version:number; updatedAt:string };
 const DEFAULT: Config = { upiId:"", beneficiary:"", instructions:"Use the payment details shown here and keep your transaction reference for your records.", enabled:false, version:0, updatedAt:"" };
 const headers=(origin:string,env:Env)=>({ "Content-Type":"application/json; charset=utf-8", "Access-Control-Allow-Origin": env.ALLOWED_ORIGIN||origin||"*", "Access-Control-Allow-Methods":"GET, PUT, OPTIONS", "Access-Control-Allow-Headers":"Content-Type, Authorization", "Vary":"Origin" });
@@ -9,7 +9,7 @@ async function readConfig(env:Env){const row=await env.DB.prepare("SELECT * FROM
 async function ensureRow(env:Env){await env.DB.prepare("INSERT OR IGNORE INTO payment_config (id,enabled,receiving_upi_id,beneficiary_display_name,instructions,qr_mode,version) VALUES ('primary',0,'','','','generated',0)").run();}
 export default { async fetch(req:Request,env:Env){
  const origin=req.headers.get("Origin")||"";
- if(req.method==="OPTIONS")return new Response(null,{status:204,headers:headers(origin,env)});
+ if(req.method==="OPTIONS"&&new URL(req.url).pathname.startsWith("/api/"))return new Response(null,{status:204,headers:headers(origin,env)});
  const url=new URL(req.url);
  if(url.pathname!=="/api/payment-config")return json({error:"Not found"},404,origin,env);
  if(req.method==="GET"){try{return json(await readConfig(env),200,origin,env)}catch{return json({error:"Configuration unavailable"},500,origin,env)}}
