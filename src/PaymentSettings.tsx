@@ -12,16 +12,14 @@ export default function PaymentSettings() {
   const [enabled,setEnabled]=useState(defaults.enabled);
   const [saved,setSaved]=useState(false);
   const [message,setMessage]=useState("");
-  const [adminToken,setToken]=useState("");
   const [loading,setLoading]=useState(true);
   useEffect(()=>{loadPaymentConfig().then(c=>{setUpiId(c.upiId);setBeneficiary(c.beneficiary);setInstructions(c.instructions);setEnabled(c.enabled)}).finally(()=>setLoading(false))},[]);
   async function saveSettings(){
     const v=upiId.trim(),valid=/^[a-zA-Z0-9._-]{2,256}@[a-zA-Z]{2,64}$/.test(v);
     if(enabled&&(!valid||!beneficiary.trim())){setSaved(false);setMessage("A valid UPI ID and payee name are required to enable collection.");return}
     if(v&&!valid){setSaved(false);setMessage("Enter a valid UPI ID format.");return}
-    if(!adminToken.trim()){setSaved(false);setMessage("Enter the admin API token.");return}
     const next:PaymentConfig={upiId:v,beneficiary:beneficiary.trim(),instructions,enabled};
-    try{const result=await savePaymentConfig(next,adminToken.trim());setUpiId(result.upiId);setBeneficiary(result.beneficiary);setInstructions(result.instructions);setEnabled(result.enabled);setSaved(true);setMessage("Payment configuration saved to backend.");}
+    try{const result=await savePaymentConfig(next);setUpiId(result.upiId);setBeneficiary(result.beneficiary);setInstructions(result.instructions);setEnabled(result.enabled);setSaved(true);setMessage("Payment configuration saved to backend.");}
     catch(e){setSaved(false);setMessage(e instanceof Error?e.message:"Unable to save settings.")}
   }
   const qrValue=upiId.trim()&&beneficiary.trim()?"upi://pay?pa="+encodeURIComponent(upiId.trim())+"&pn="+encodeURIComponent(beneficiary.trim())+"&cu=INR":"";
@@ -31,7 +29,7 @@ export default function PaymentSettings() {
     <div className="payment-settings-grid">
       <div className="payment-settings-card">
         <div className="settings-card-title"><div><h3>Receiving details</h3><p>Configure the destination shown to customers.</p></div></div>
-        <label className="settings-label">Admin API token<input type="password" value={adminToken} onChange={e=>setToken(e.target.value)} placeholder="Worker admin token" autoComplete="off"/></label>
+        <div className="payment-warning"><ShieldCheck size={16}/><div><strong>Admin identity protected</strong><span>Saving requires an authenticated Cloudflare Access administrator session.</span></div></div>
         <label className="settings-label">UPI ID<input value={upiId} onChange={e=>{setUpiId(e.target.value);setSaved(false)}} placeholder="name@bank" autoComplete="off"/></label>
         <label className="settings-label">Beneficiary / display name<input value={beneficiary} onChange={e=>{setBeneficiary(e.target.value);setSaved(false)}} placeholder="Account holder or business name"/></label>
         <label className="settings-label">Customer instructions<textarea rows={4} value={instructions} onChange={e=>{setInstructions(e.target.value);setSaved(false)}}/></label>
