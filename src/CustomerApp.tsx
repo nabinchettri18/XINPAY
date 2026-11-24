@@ -37,7 +37,8 @@ export default function CustomerApp() {
   const [paymentStep,setPaymentStep] = useState(0);
   const [checkoutBusy,setCheckoutBusy] = useState(false);
   const [checkoutError,setCheckoutError] = useState("");
-  const [returnStatus,setReturnStatus] = useState("");\n  const [directOrder,setDirectOrder] = useState<any>(null);
+  const [returnStatus,setReturnStatus] = useState("");
+  const [directOrder,setDirectOrder] = useState<any>(null);
   const upiUri = useMemo(()=>`upi://pay?pa=${encodeURIComponent(upiId)}&pn=${encodeURIComponent(upiName)}&am=${encodeURIComponent(paymentAmount)}&cu=INR&tn=${encodeURIComponent(paymentPurpose)}`,[upiId,upiName,paymentAmount,paymentPurpose]);
   async function startCashfreeCheckout(){
     setCheckoutBusy(true);setCheckoutError("");
