@@ -1,15 +1,18 @@
-name = "xinpay-config-api"
+name = "xinpay"
 main = "worker/index.ts"
 compatibility_date = "2026-11-25"
 workers_dev = true
 
+[assets]
+directory = "./dist"
+binding = "ASSETS"
+run_worker_first = ["/api/*"]
+
 [[d1_databases]]
 binding = "DB"
 database_name = "xinpay"
-database_id = "REPLACE_WITH_D1_DATABASE_ID"
+database_id = "01a0150b-0688-42f7-89b7-8e305ae5f48c"
 migrations_dir = "database/migrations"
 
 [vars]
-ALLOWED_ORIGIN = "https://REPLACE_WITH_YOUR_FRONTEND_DOMAIN"
-
-[previews]
+ALLOWED_ORIGIN = "https://xinpay.nabinchettri0007.workers.dev"
