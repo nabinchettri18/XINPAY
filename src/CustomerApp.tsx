@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { getPaymentConfig, subscribePaymentConfig } from "./paymentConfig";
+import { loadPaymentConfig, subscribePaymentConfig } from "./paymentConfig";
 import { Activity, ArrowDownLeft, ArrowUpRight, Bell, ChevronRight, CircleHelp, CreditCard, Eye, EyeOff, Home, LogOut, Plus, Search, Settings, ShieldCheck, Wallet, X, Menu, ReceiptText, Clock3 } from "lucide-react";
 import { QRCodeSVG } from "qrcode.react";
 
