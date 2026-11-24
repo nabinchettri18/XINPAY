@@ -6,7 +6,10 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc --noEmit && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "worker:dev": "wrangler dev",
+    "worker:deploy": "wrangler deploy",
+    "d1:migrate": "wrangler d1 migrations apply xinpay --remote"
   },
   "dependencies": {
     "lucide-react": "^0.468.0",
@@ -19,6 +22,7 @@
     "@types/react-dom": "^18.3.1",
     "@vitejs/plugin-react": "^4.3.4",
     "typescript": "~5.6.3",
-    "vite": "^6.0.1"
+    "vite": "^6.0.1",
+    "wrangler": "^4.50.0"
   }
 }
