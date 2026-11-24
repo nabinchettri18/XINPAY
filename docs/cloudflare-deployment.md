@@ -47,8 +47,13 @@ The Cloudflare Git build settings use `npm run build` and `npx wrangler deploy` 
 
 ## API
 
-- `GET /api/payment-config`: public read of the UPI collection display configuration.
-- `PUT /api/payment-config`: requires `Authorization: Bearer <ADMIN_TOKEN>`; validates UPI ID and logs config changes.
+- `GET /api/payment-config`: public read of only the customer-facing UPI display fields. No internal audit metadata is returned.
+- `PUT /api/payment-config`: requires `Authorization: Bearer <ADMIN_TOKEN>`; validates payload types and size, validates UPI ID, and logs config changes.
+- Unknown `/api/*` paths return JSON 404 instead of falling through to the frontend.
+- API and static responses include security headers; API responses are not cached.
+- Cross-origin API requests are rejected unless the request Origin matches `ALLOWED_ORIGIN`.
+
+**Routes are not secrets.** Browser-facing API URLs can be discovered in DevTools/network requests. Security comes from server-side authorization, validation, rate limiting, and limiting returned data—not hiding the URL.
 
 ## Configure UPI
 
