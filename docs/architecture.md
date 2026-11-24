@@ -6,7 +6,7 @@ The frontend is a Vite-built React application deployed to Cloudflare Pages. It 
 
 ## Planned API
 
-A separately deployed Cloudflare Worker will provide the API boundary. It will validate requests, authenticate users, enforce roles, and call provider integrations. API secrets must live in Worker secrets, never in the browser.
+A separately deployed Cloudflare Worker provides the UPI configuration API. The current prototype supports public reads and admin-token-protected writes to D1. API secrets must live in Worker secrets, never in the browser. Full user authentication and role-based access are still planned.
 
 ## Planned D1 data domains
 
@@ -26,4 +26,4 @@ A separately deployed Cloudflare Worker will provide the API boundary. It will v
 5. Database records the authoritative state.
 6. Reconciliation jobs compare internal records with provider reports.
 
-No payment or settlement functionality is active in this repository foundation.
+UPI display configuration API is implemented in prototype code; actual payment and settlement functionality remains inactive.

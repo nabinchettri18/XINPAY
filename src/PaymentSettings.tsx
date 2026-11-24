@@ -1,61 +1,50 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { QRCodeSVG } from "qrcode.react";
+import { loadPaymentConfig, savePaymentConfig, getAdminToken, setAdminToken, type PaymentConfig } from "./paymentConfig";
 import "./payment-settings.css";
-import { AlertTriangle, ImagePlus, Save, ShieldCheck, ToggleLeft, ToggleRight, Upload, X } from "lucide-react";
+import { AlertTriangle, Save, ShieldCheck, ToggleLeft, ToggleRight } from "lucide-react";
 
 export default function PaymentSettings() {
-  const [upiId, setUpiId] = useState("");
-  const [beneficiary, setBeneficiary] = useState("");
-  const [instructions, setInstructions] = useState("Use the payment details shown here and keep your transaction reference for your records.");
-  const [enabled, setEnabled] = useState(false);
-  const [qrUrl, setQrUrl] = useState("");
-  const [qrFileName, setQrFileName] = useState("");
-  const [saved, setSaved] = useState(false);
-  const [message, setMessage] = useState("");
-
-  function onFile(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    if (!file.type.startsWith("image/")) { setMessage("Please select an image file."); return; }
-    if (file.size > 3 * 1024 * 1024) { setMessage("Image must be 3 MB or smaller."); return; }
-    const next = URL.createObjectURL(file);
-    if (qrUrl.startsWith("blob:")) URL.revokeObjectURL(qrUrl);
-    setQrUrl(next); setQrFileName(file.name); setSaved(false); setMessage("");
+  const defaults: PaymentConfig = { upiId:"", beneficiary:"", instructions:"Use the payment details shown here and keep your transaction reference for your records.", enabled:false };
+  const [upiId,setUpiId]=useState(defaults.upiId);
+  const [beneficiary,setBeneficiary]=useState(defaults.beneficiary);
+  const [instructions,setInstructions]=useState(defaults.instructions);
+  const [enabled,setEnabled]=useState(defaults.enabled);
+  const [saved,setSaved]=useState(false);
+  const [message,setMessage]=useState("");
+  const [adminToken,setToken]=useState(getAdminToken());
+  const [loading,setLoading]=useState(true);
+  useEffect(()=>{loadPaymentConfig().then(c=>{setUpiId(c.upiId);setBeneficiary(c.beneficiary);setInstructions(c.instructions);setEnabled(c.enabled)}).finally(()=>setLoading(false))},[]);
+  async function saveSettings(){
+    const v=upiId.trim(),valid=/^[a-zA-Z0-9._-]{2,256}@[a-zA-Z]{2,64}$/.test(v);
+    if(enabled&&(!valid||!beneficiary.trim())){setSaved(false);setMessage("A valid UPI ID and payee name are required to enable collection.");return}
+    if(v&&!valid){setSaved(false);setMessage("Enter a valid UPI ID format.");return}
+    if(!adminToken.trim()){setSaved(false);setMessage("Enter the admin API token.");return}
+    const next:PaymentConfig={upiId:v,beneficiary:beneficiary.trim(),instructions,enabled};
+    try{const result=await savePaymentConfig(next,adminToken.trim());setAdminToken(adminToken.trim());setUpiId(result.upiId);setBeneficiary(result.beneficiary);setInstructions(result.instructions);setEnabled(result.enabled);setSaved(true);setMessage("Payment configuration saved to backend.");}
+    catch(e){setSaved(false);setMessage(e instanceof Error?e.message:"Unable to save settings.")}
   }
-
-  function saveDemo() {
-    setSaved(true);
-    setMessage("Preview saved in this session only. Backend persistence and payment verification are not connected.");
-  }
-
+  const qrValue=upiId.trim()&&beneficiary.trim()?"upi://pay?pa="+encodeURIComponent(upiId.trim())+"&pn="+encodeURIComponent(beneficiary.trim())+"&cu=INR":"";
   return <section className="payment-settings-page">
-    <div className="payment-settings-head">
-      <div><p className="eyebrow">PAYMENT CONFIGURATION</p><h2>Payment settings</h2><p>Manage the payment details shown to customers. Live collection is not connected.</p></div>
-      <span className="prototype-tag"><ShieldCheck size={14}/> Prototype mode</span>
-    </div>
-    <div className="payment-warning"><AlertTriangle size={18}/><div><strong>Demo configuration only</strong><span>Changes below are session-only. They do not update a live destination, receive money, or verify payments.</span></div></div>
+    <div className="payment-settings-head"><div><p className="eyebrow">PAYMENT CONFIGURATION</p><h2>Payment settings</h2><p>Manage the payment destination displayed to customers.</p></div><span className="prototype-tag"><ShieldCheck size={14}/> API connected mode</span></div>
+    <div className="payment-warning"><AlertTriangle size={18}/><div><strong>UPI configuration is backend-managed</strong><span>Settings sync to customers across devices. Payment verification is not connected; do not treat QR scans or screenshots as proof of payment.</span></div></div>
     <div className="payment-settings-grid">
       <div className="payment-settings-card">
         <div className="settings-card-title"><div><h3>Receiving details</h3><p>Configure the destination shown to customers.</p></div></div>
+        <label className="settings-label">Admin API token<input type="password" value={adminToken} onChange={e=>setToken(e.target.value)} placeholder="Worker admin token" autoComplete="off"/></label>
         <label className="settings-label">UPI ID<input value={upiId} onChange={e=>{setUpiId(e.target.value);setSaved(false)}} placeholder="name@bank" autoComplete="off"/></label>
         <label className="settings-label">Beneficiary / display name<input value={beneficiary} onChange={e=>{setBeneficiary(e.target.value);setSaved(false)}} placeholder="Account holder or business name"/></label>
         <label className="settings-label">Customer instructions<textarea rows={4} value={instructions} onChange={e=>{setInstructions(e.target.value);setSaved(false)}}/></label>
-        <div className="settings-toggle-row"><div><strong>Collection display</strong><small>Toggle the payment details panel in this prototype.</small></div><button className={enabled?"settings-toggle on":"settings-toggle"} onClick={()=>{setEnabled(!enabled);setSaved(false)}} aria-label="Toggle collection display">{enabled?<ToggleRight size={24}/>:<ToggleLeft size={24}/>}<span>{enabled?"Enabled":"Disabled"}</span></button></div>
-        <button className="primary-settings-button" onClick={saveDemo}><Save size={16}/> Save preview settings</button>
+        <div className="settings-toggle-row"><div><strong>Collection display</strong><small>Show or hide UPI collection in customer portal.</small></div><button className={enabled?"settings-toggle on":"settings-toggle"} onClick={()=>{setEnabled(!enabled);setSaved(false)}} aria-label="Toggle collection display">{enabled?<ToggleRight size={24}/>:<ToggleLeft size={24}/>}<span>{enabled?"Enabled":"Disabled"}</span></button></div>
+        <button className="primary-settings-button" onClick={saveSettings} disabled={loading}><Save size={16}/> {loading?"Loading settings…":"Save payment settings"}</button>
         {message&&<p className={saved?"settings-message success":"settings-message"}>{message}</p>}
       </div>
-      <div className="payment-settings-card qr-settings-card">
-        <div className="settings-card-title"><div><h3>QR code</h3><p>Upload a QR image to preview how it will appear.</p></div></div>
-        <div className={qrUrl?"qr-preview has-image":"qr-preview"}>{qrUrl?<img src={qrUrl} alt="Uploaded payment QR preview"/>:<div className="qr-empty"><ImagePlus size={28}/><span>QR preview</span><small>No image uploaded</small></div>}</div>
-        <label className="upload-qr-button"><Upload size={16}/> {qrUrl?"Replace QR image":"Upload QR image"}<input type="file" accept="image/*" onChange={onFile}/></label>
-        {qrFileName&&<div className="qr-file-row"><span>{qrFileName}</span><button onClick={()=>{if(qrUrl.startsWith("blob:"))URL.revokeObjectURL(qrUrl);setQrUrl("");setQrFileName("");setSaved(false)}} aria-label="Remove QR"><X size={15}/></button></div>}
-        <div className="qr-preview-note"><ShieldCheck size={15}/> Uploaded image is only previewed locally and is not published.</div>
+      <div className="payment-settings-card qr-settings-card"><div className="settings-card-title"><div><h3>Dynamic UPI QR</h3><p>Preview generated from the receiving details.</p></div></div>
+        <div className="qr-preview">{qrValue?<QRCodeSVG value={qrValue} size={190} level="M" includeMargin/>:<div className="qr-empty"><span>QR preview</span><small>Enter UPI ID and payee name</small></div>}</div>
+        <div className="qr-preview-note"><ShieldCheck size={15}/> QR preview updates as you edit. Saved configuration is fetched by customers from the API.</div>
         <div className="payment-preview"><span className="preview-label">CUSTOMER PREVIEW</span><strong>{beneficiary||"Display name"}</strong><span>{upiId||"your-upi-id@bank"}</span><p>{instructions}</p></div>
       </div>
     </div>
-    <div className="payment-settings-card verification-card">
-      <div className="settings-card-title"><div><h3>Payment verification</h3><p>Verification source must be configured and authorized before live status updates can be enabled.</p></div><span className="verification-status">Not connected</span></div>
-      <div className="verification-steps"><div><span className="step-number">1</span><div><strong>Payment confirmation source</strong><small>Provider webhook or authorized reconciliation feed</small></div></div><div><span className="step-number">2</span><div><strong>Server-side validation</strong><small>Validate authenticity, amount, destination, reference and duplicate events</small></div></div><div><span className="step-number">3</span><div><strong>Ledger and audit trail</strong><small>Persist status transitions and administrative actions</small></div></div></div>
-      <div className="verification-footer"><AlertTriangle size={16}/> Payments must remain pending until a trusted source confirms receipt.</div>
-    </div>
+    <div className="payment-settings-card verification-card"><div className="settings-card-title"><div><h3>Payment verification</h3><p>Payment confirmation remains disabled until a trusted source is connected.</p></div><span className="verification-status">Not connected</span></div><div className="verification-steps"><div><span className="step-number">1</span><div><strong>Payment confirmation source</strong><small>Provider webhook or authorized reconciliation feed</small></div></div><div><span className="step-number">2</span><div><strong>Server-side validation</strong><small>Validate authenticity, amount, destination, reference and duplicate events</small></div></div><div><span className="step-number">3</span><div><strong>Ledger and audit trail</strong><small>Persist status transitions and administrative actions</small></div></div></div><div className="verification-footer"><AlertTriangle size={16}/> Payments must remain pending until a trusted source confirms receipt.</div></div>
   </section>;
 }

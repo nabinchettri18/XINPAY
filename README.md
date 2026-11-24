@@ -11,8 +11,8 @@ XinPay is being developed as a secure payment-operations dashboard foundation.
 - React + TypeScript
 - Vite
 - Cloudflare Pages for the static frontend
-- Cloudflare Workers for API services (planned)
-- Cloudflare D1 for relational storage (planned)
+- Cloudflare Workers for the UPI configuration API (prototype implementation added)
+- Cloudflare D1 for UPI configuration and audit records (migration added; deployment required)
 
 ## Local development
 
@@ -56,16 +56,15 @@ For a Pages project connected to this repository:
 - This UI is not a substitute for provider, legal, compliance, or security review.
 
 
-## Payment settings prototype
+## Admin-controlled UPI settings
 
-The Admin sidebar now includes **Payment Settings**. This UI is prototype-only:
-- Edit a UPI ID and beneficiary display name
-- Edit customer instructions
-- Toggle the payment-details display
-- Upload a QR image for local preview
-- Preview the customer-facing details
-- See the planned verification stages
+The Payment Settings admin module now uses the Cloudflare Worker API and D1 (once deployed) rather than browser localStorage:
+- Edit receiving UPI ID, beneficiary name, and instructions.
+- Enable/disable the customer-facing UPI collection display.
+- Generate QR preview dynamically.
+- Admin API writes require a Worker secret token.
+- Customer portal fetches the same public config across devices.
 
-Settings are kept in component state for the current browser session. They are not persisted to a backend and do not publish a receiving destination. Payment verification is not connected.
+**Still prototype-only:** payment receipt verification, ledger, and payment provider integration are not connected. A QR scan or screenshot is not proof of receipt.
 
-See [docs/payment-system.md](docs/payment-system.md) and [database/schema.sql](database/schema.sql) for the architecture and draft schema. Do not enable live payment state until a trusted, authorized payment confirmation source and backend security controls are implemented.
+Deployment instructions: [docs/cloudflare-deployment.md](docs/cloudflare-deployment.md). See also [docs/payment-system.md](docs/payment-system.md), [database/schema.sql](database/schema.sql), and [database/migrations/0001_payment_config.sql](database/migrations/0001_payment_config.sql).
