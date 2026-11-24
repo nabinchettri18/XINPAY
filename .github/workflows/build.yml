@@ -3,7 +3,7 @@ on:
   push:
     branches: [main, production-readiness-phase-2-6]
   pull_request:
-    branches: [main]
+    branches: [main, production-readiness-phase-2-6]
 concurrency:
   group: xinpay-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
