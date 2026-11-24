@@ -83,7 +83,7 @@ export default {async fetch(req:Request,env:Env){
   if(path==="/api/payment-config"&&req.method==="GET")return response({upiId:(await getConfig(env)).upiId,beneficiary:(await getConfig(env)).beneficiary,instructions:(await getConfig(env)).instructions,enabled:false},200,origin,env);
   if(path==="/api/payment-config"&&req.method==="PUT")return adminConfig(req,env,origin);
   if(path==="/api/orders"&&req.method==="POST")return createOrder(req,env,origin);
-  const match=path.match(/^\\/api\\/orders\\/([A-Za-z0-9_-]+)$/);if(match&&req.method==="GET")return getOrder(req,env,match[1],origin);
+  const match=path.match(/^\/api\/orders\/([A-Za-z0-9_-]+)$/);if(match&&req.method==="GET")return getOrder(req,env,match[1],origin);
   if(path==="/api/admin/orders"&&req.method==="GET")return adminOrders(req,env,origin);
   if(path==="/api/webhooks/cashfree"&&req.method==="POST")return cashfreeWebhook(req,env);
   if(path.startsWith("/api/"))return response({error:"Not found"},404,origin,env);
