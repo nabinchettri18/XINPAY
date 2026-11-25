@@ -26,6 +26,7 @@ function AdminAuth({ children }: { children: React.ReactNode }) {
   const [ready, setReady] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
@@ -62,12 +63,12 @@ function AdminAuth({ children }: { children: React.ReactNode }) {
             if (authError) setError(authError.message);
             setSubmitting(false);
           }}>
-            <div className="xp-mobile-brand"><span className="xp-logo-square">X</span><span className="xp-logo-type">xinpay<small>PAYMENT OPERATIONS</small></span></div>
+            <div className="xp-mobile-brand"><span className="xp-logo-square"><span className="xp-logo-glyph">x</span></span><span className="xp-logo-type">xinpay<small>PAYMENT OPERATIONS</small></span><span className="xp-brand-badge">ADMIN</span></div>
             <div className="xp-form-eyebrow">WELCOME BACK</div>
             <h1>Sign in to XinPay</h1>
             <p className="xp-form-intro">Enter your administrator credentials to continue.</p>
             <label className="xp-field">Email address<input type="email" autoComplete="username" placeholder="admin@yourcompany.com" required value={email} onChange={e=>setEmail(e.target.value)}/></label>
-            <label className="xp-field">Password<input type="password" autoComplete="current-password" placeholder="Enter your password" required value={password} onChange={e=>setPassword(e.target.value)}/></label>
+            <label className="xp-field">Password<div className="xp-password-wrap"><input type={showPassword ? "text" : "password"} autoComplete="current-password" placeholder="Enter your password" required value={password} onChange={e=>setPassword(e.target.value)}/><button className="xp-password-toggle" type="button" onClick={()=>setShowPassword(v=>!v)} aria-label={showPassword ? "Hide password" : "Show password"}>{showPassword ? "Hide" : "Show"}</button></div></label>
             <button className="xp-login-submit" type="submit" disabled={submitting}>{submitting ? "Authenticating…" : "Sign in to workspace"}<span>→</span></button>
             {error && <div className="xp-login-error" role="alert">{error}</div>}
             <div className="xp-login-note"><span className="xp-note-icon">⌑</span><span>Access is restricted to authorized XinPay administrators.</span></div>
