@@ -58,10 +58,10 @@ test("customer authentication uses a pinned Supabase client and public publishab
  for(const term of ["VITE_SUPABASE_URL","VITE_SUPABASE_PUBLISHABLE_KEY","persistSession: true","autoRefreshToken: true","detectSessionInUrl: true","flowType: \"pkce\""])assert.ok(supabaseClient.includes(term),term);
 });
 test("customer auth uses Supabase sign up, sign in, verification resend and password recovery",()=>{
- for(const term of ["supabase.auth.signUp","supabase.auth.signInWithPassword","supabase.auth.resend","supabase.auth.resetPasswordForEmail","supabase.auth.updateUser","emailRedirectTo","PASSWORD_RECOVERY"])assert.ok(customerAuth.includes(term),term);
+ for(const term of ["supabase.auth.signUp","supabase.auth.signInWithPassword","supabase.auth.resend","supabase.auth.resetPasswordForEmail","supabase.auth.updateUser","emailRedirectTo","PASSWORD_RECOVERY","signOutError"])assert.ok(customerAuth.includes(term),term);
 });
 test("customer dashboard derives the signed-in identity from Supabase session and signs out",()=>{
- for(const term of ["supabase.auth.getSession","supabase.auth.onAuthStateChange","supabase.auth.signOut","toAuthUser"])assert.ok(customerApp.includes(term),term);
+ for(const term of ["supabase.auth.getSession","supabase.auth.onAuthStateChange","supabase.auth.signOut","toAuthUser","isPasswordRecoveryRoute","/reset-password"])assert.ok(customerApp.includes(term),term);
 });
 test("Worker does not implement a second customer password/session store",()=>{
  for(const term of ["auth_users","auth_sessions","auth_email_tokens","/api/auth/register","AUTH_SESSION_SECONDS","RESEND_API_KEY"])assert.ok(!worker.includes(term),term);
