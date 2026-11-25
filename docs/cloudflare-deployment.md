@@ -76,36 +76,34 @@ Open **Admin → Payment Settings**, enter the Worker admin token in the Admin A
 Customer portal requests the public configuration from the API and builds the UPI QR / intent from it. The same config is shared across users and devices.
 
 
-## Customer sign-in and account creation
+## Customer sign-in and account creation (Vercel + Supabase Auth)
 
-Customer authentication uses the Worker and D1 database. It is separate from the admin Cloudflare Access identity gate.
+The Vercel-hosted React app uses Supabase Auth directly through the pinned `@supabase/supabase-js` client. Customer password hashes, verification links, recovery tokens and sessions are managed by Supabase Auth; do not add a parallel customer password store to the Worker or D1.
 
-Apply all D1 migrations, including `0007_customer_auth.sql`, before using authentication:
+Configure these Vercel project environment variables for **Development**, **Preview**, and **Production** as appropriate:
 
-```bash
-npx wrangler d1 migrations apply xinpay --remote
-```
+- `VITE_SUPABASE_URL`: the dedicated XinPay Supabase project URL.
+- `VITE_SUPABASE_PUBLISHABLE_KEY`: the project's publishable key (`sb_publishable_...`). A legacy anon key works for compatibility, but publishable keys are preferred.
 
-Configure a verified sender domain in Resend, then add these Worker secrets:
+These are browser-facing values by design. Never place a Supabase secret key or legacy `service_role` key in a `VITE_*` variable.
 
-```bash
-npx wrangler secret put RESEND_API_KEY
-npx wrangler secret put AUTH_EMAIL_FROM
-```
+In the Supabase Dashboard:
 
-Set `PUBLIC_BASE_URL` to the public customer-facing XinPay origin (for example, the HTTPS URL that serves the customer portal). The email verification and password-reset links are generated from this origin.
+1. Open **Authentication → URL Configuration**. Set the production Site URL and add the exact Vercel production domain, local development origin, and Vercel Preview URL/patterns to the Redirect URLs allowlist. The app uses `/customer` for email confirmation and `/customer/reset-password` for password recovery.
+2. Open **Authentication → Providers → Email** and keep email confirmations enabled.
+3. Configure branded confirmation and password-reset email templates.
+4. For customer-facing delivery, configure custom SMTP in **Project Settings → Authentication → SMTP Settings** (for example, Resend SMTP) and verify the sender domain with the SMTP provider. Supabase's default SMTP is intended for testing and is not suitable for general customer delivery.
 
-Customer auth endpoints:
-- `POST /api/auth/register`: create an unverified customer and email a verification link.
-- `POST /api/auth/verify-email`: consume the single-use verification token and create a session.
-- `POST /api/auth/login` and `POST /api/auth/logout`: issue and revoke customer sessions.
-- `GET /api/auth/me`: return the current verified customer identity.
-- `POST /api/auth/forgot-password` and `POST /api/auth/reset-password`: issue and consume single-use reset links.
-- `POST /api/auth/resend-verification`: resend a verification email without disclosing whether an address is registered.
+No Resend API key is required in Vercel when Resend is only being used as Supabase's SMTP provider; its SMTP credentials belong in the Supabase SMTP configuration.
 
-Passwords are stored as PBKDF2 hashes, never as plain text. Session tokens are random, stored only as hashes in D1, and delivered in Secure, HttpOnly, SameSite=Lax cookies. Verification and reset tokens expire after 30 minutes and are single-use. Auth mutation routes enforce an Origin check and use the existing IP-hash rate limiter.
+The customer portal uses Supabase Auth for:
+- `signUp` with full name in user metadata and email confirmation.
+- `signInWithPassword` and persistent, auto-refreshing browser sessions.
+- `resend` for a new signup confirmation email.
+- `resetPasswordForEmail` and `updateUser` for password recovery.
+- `onAuthStateChange` and `getSession` to keep the dashboard identity in sync.
 
-The login flow is not enabled until the D1 migration and Resend sender configuration are complete. Do not put the Resend key in a frontend `VITE_*` variable. This customer session layer does not authenticate the admin dashboard; keep the admin hostname/API behind Cloudflare Access as described below.
+The account/profile screen reads the authenticated user's email and full name from Supabase Auth. Do not treat user-editable metadata as an authorization role. Keep all admin authorization on the separate Cloudflare Access-protected admin API until that API is replatformed.
 
 ## Admin access protection (required before production)
 
