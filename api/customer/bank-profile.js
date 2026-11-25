@@ -53,7 +53,7 @@ export default async function handler(req, res) {
         bankName.length < 2 || bankName.length > 100 ||
         !/^[A-Z]{4}0[A-Z0-9]{6}$/.test(ifscCode) ||
         !/^\d{4}$/.test(accountLast4) ||
-        !/^[A-Za-z0-9._-]{2,256}@[A-Za-z]{2,64}$/.test(upiId)) {
+        !/^[A-Za-z0-9._-]{2,255}@[A-Za-z]{2,64}$/.test(upiId)) {
       return fail(res, 400, "Check the account holder, bank, IFSC, last four account digits and UPI ID.");
     }
     if (qrAssetKey && !qrAssetKey.startsWith(auth.user.id + "/profile/qr-")) {
