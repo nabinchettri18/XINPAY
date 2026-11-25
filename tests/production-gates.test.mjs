@@ -87,3 +87,8 @@ test("Cloudflare deployment and D1 worker runtime are removed from the active pr
   assert.ok(!buildWorkflow.includes("wrangler"));
   assert.ok(!buildWorkflow.toLowerCase().includes("cloudflare"));
 });
+
+test("API rate limiting is database-backed and scoped to the authenticated Supabase user",()=>{
+  assert.ok(server.includes('db.rpc("consume_rate_limit"'));
+  assert.ok(!server.includes("localRateBuckets"));
+});
