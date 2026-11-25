@@ -1,6 +1,6 @@
 import { context, fail, json, method, publicConfig, randomId, storagePublicUrl } from "../server/xinpay-api.js";
 
-const QR_KEY_PATTERN = /^payment-qr\/[a-f0-9-]{36}\.(png|jpe?g|webp)$/;
+const QR_KEY_PATTERN = /^payment-qr\/qr-[A-Za-z0-9_-]+\.(png|jpe?g|webp)$/;
 
 export default async function handler(req, res) {
   if (req.method === "GET") {
@@ -41,7 +41,7 @@ export default async function handler(req, res) {
       return fail(res, 400, "Upload a PNG, JPG or WebP QR image before saving.");
     }
 
-    const { data, error } = await auth.db.rpc("admin_update_payment_config_v2", {
+    const { data, error } = await auth.db.rpc("admin_update_payment_config_with_qr", {
       p_upi_id: upiId,
       p_beneficiary: beneficiary,
       p_instructions: instructions,
