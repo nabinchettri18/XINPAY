@@ -2,6 +2,7 @@ import { supabase } from "./lib/supabase";
 import { useMemo, useState } from "react";
 import PaymentSettings from "./PaymentSettings";
 import AdminTransactions from "./AdminTransactions";
+import AdminSubscriptionRequests from "./AdminSubscriptionRequests";
 import {
   Activity, AlertCircle, ArrowDownLeft, ArrowLeftRight, ArrowUpRight, Bell,
   Building2, CheckCircle2, ChevronDown, ChevronRight, CircleHelp,
@@ -9,10 +10,11 @@ import {
   Search, Settings, ShieldCheck, Wallet, X, LogOut
 } from "lucide-react";
 
-type NavKey = "Overview" | "Transactions" | "Settlements" | "Accounts" | "Customers" | "Support" | "Payment Settings" | "Settings";
+type NavKey = "Overview" | "Transactions" | "Subscription Requests" | "Settlements" | "Accounts" | "Customers" | "Support" | "Payment Settings" | "Settings";
 const navItems: { label: NavKey; icon: typeof LayoutDashboard }[] = [
   { label: "Overview", icon: LayoutDashboard },
   { label: "Transactions", icon: Activity },
+  { label: "Subscription Requests", icon: ShieldCheck },
   { label: "Settlements", icon: Wallet },
   { label: "Accounts", icon: Building2 },
   { label: "Customers", icon: CreditCard },
@@ -37,7 +39,7 @@ const quickActions: { label: string; description: string; icon: typeof Activity;
 ];
 
 export default function App() {
-  const [active, setActive] = useState<NavKey>("Overview");
+  const [active, setActive] = useState<NavKey>("Subscription Requests");
   const [mobileOpen, setMobileOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [showNotice, setShowNotice] = useState(true);
@@ -104,7 +106,7 @@ export default function App() {
             <div>
               <p className="eyebrow">PAYMENT OPERATIONS · WORKSPACE</p>
               <h1>{active==="Overview"?"Welcome back, Admin":active}</h1>
-              <p className="subheading">{active==="Overview"?"Here's an overview of your XinPay payment activity.":"Monitor activity and manage your payment operations."}</p>
+              <p className="subheading">{active==="Overview"?"Here's an overview of your XinPay payment activity.":"Review customer plan payments and manage your payment operations."}</p>
             </div>
             {active==="Overview"&&<div className="welcome-actions">
               <button className="welcome-secondary" onClick={()=>go("Transactions")}><RefreshCw size={15}/> Reconcile</button>
@@ -198,7 +200,7 @@ export default function App() {
                 <div className="movement-note"><AlertCircle size={15}/><span>These counts describe the demo rows above, not live payment records.</span></div>
               </div>
             </section>
-          </> : active==="Payment Settings" ? <PaymentSettings/> : active==="Transactions" ? <AdminTransactions/> :
+          </> : active==="Payment Settings" ? <PaymentSettings/> : active==="Transactions" ? <AdminTransactions/> : active==="Subscription Requests" ? <AdminSubscriptionRequests/> :
             <section className="panel section-panel">
               <div className="empty-icon">{navItems.find(n=>n.label===active)?.icon && (()=>{const I=navItems.find(n=>n.label===active)!.icon;return <I size={24}/>})()}</div>
               <h2>{active} module</h2>
