@@ -29,7 +29,7 @@ export default async function handler(req, res) {
       expires_at: expiresAt,
     });
     if (error) throw error;
-    return json(res, 201, { orderId: id, orderToken, status: "pending", amount: body.amount, currency: "INR", upiUri, upiId: config.upiId, beneficiary: config.beneficiary, expiresAt, verification: "manual" });
+    return json(res, 201, { orderId: id, orderToken, status: "pending", amount: body.amount, currency: "INR", upiUri, upiId: config.upiId, beneficiary: config.beneficiary, expiresAt, verification: "manual", qrMode: config.qrMode, qrUrl: config.qrUrl });
   } catch (error) {
     return fail(res, 503, error.message || "Could not create a direct UPI order.");
   }
