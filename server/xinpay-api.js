@@ -138,7 +138,7 @@ export async function rateLimit(_req, db, scope, limit = 30) {
 export async function publicConfig() {
   const db = newClient();
   const { data, error } = await db.from("payment_config")
-    .select("receiving_upi_id,beneficiary_display_name,instructions,enabled,version,updated_at")
+    .select("receiving_upi_id,beneficiary_display_name,instructions,enabled,qr_asset_key,qr_mode,version,updated_at")
     .eq("id", "primary").maybeSingle();
   if (error) throw error;
   return {
@@ -146,6 +146,11 @@ export async function publicConfig() {
     beneficiary: data?.beneficiary_display_name || "",
     instructions: data?.instructions || DEFAULT_INSTRUCTIONS,
     enabled: !!data?.enabled,
+    qrMode: data?.qr_mode || "generated",
+    qrAssetKey: data?.qr_asset_key || "",
+    qrAssetUrl: data?.qr_mode === "uploaded" && data?.qr_asset_key
+      ? db.storage.from("xinpay-payment-qr").getPublicUrl(data.qr_asset_key).data.publicUrl + "?v=" + Number(data?.version || 0)
+      : "",
     version: Number(data?.version || 0),
     updatedAt: data?.updated_at || "",
   };
