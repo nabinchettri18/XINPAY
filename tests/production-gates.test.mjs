@@ -169,3 +169,10 @@ test("Admin can change the receiving UPI ID and QR image without redeploying", (
   assert.ok(customerApp.includes('directOrder?.upiId'));
 });
 
+
+
+const vercelRouting=JSON.parse(await readFile(new URL("../vercel.json",import.meta.url),"utf8"));
+test("Vercel rewrites Vite SPA deep links to index.html",()=>{
+  assert.ok(vercelRouting.rewrites.some(rule=>rule.source==="/(.*)" && rule.destination==="/index.html"));
+  assert.ok(adminSession.includes("context(req, { admin: true })"));
+});
