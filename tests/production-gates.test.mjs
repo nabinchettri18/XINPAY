@@ -131,17 +131,15 @@ test("Customer dashboard contains no invented balance, merchant transactions, du
 });
 
 
-const qrConfigApi=await read("api/payment-config.js");
-const paymentServer=await read("server/xinpay-api.js");
 test("Admin can upload a QR image and update the UPI destination through the dashboard",()=>{
   assert.ok(paymentSettings.includes('storage.from(BUCKET).upload'));
   assert.ok(paymentSettings.includes('crypto.randomUUID()'));
   assert.ok(paymentSettings.includes('accept="image/png,image/jpeg,image/webp"') || paymentSettings.includes('accept="image/png,image/jpeg,image/webp"'));
-  assert.ok(qrConfigApi.includes('context(req, { admin: true })'));
-  assert.ok(qrConfigApi.includes('admin_update_payment_config_with_qr'));
-  assert.ok(qrConfigApi.includes("QR_KEY_PATTERN"));
-  assert.ok(paymentServer.includes("qr_asset_key,qr_mode"));
-  assert.ok(paymentServer.includes("storagePublicUrl("));
+  assert.ok(paymentConfig.includes('context(req, { admin: true })'));
+  assert.ok(paymentConfig.includes('admin_update_payment_config_with_qr'));
+  assert.ok(paymentConfig.includes("QR_KEY_PATTERN"));
+  assert.ok(server.includes("qr_asset_key,qr_mode"));
+  assert.ok(server.includes("storagePublicUrl("));
   assert.ok(paymentConfigClient.includes("qrAssetUrl"));
 });
 test("Customer payment screen refreshes saved QR settings and displays the uploaded image",()=>{
