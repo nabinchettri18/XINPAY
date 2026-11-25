@@ -49,9 +49,9 @@ export default function CustomerAuth({onAuthenticated}:Props) {
         if(d.code==="EMAIL_NOT_VERIFIED"){setVerificationEmail(email.trim());setError(d.error||"Verify your email before signing in.");}
         else throw new Error(d.error||"Something went wrong. Please try again.");
       }else if(mode==="login"){onAuthenticated(d.user);window.history.replaceState({},"","/customer");}
-      else if(mode==="register"){setVerificationEmail(email.trim());setMessage(d.message||"Check your inbox for a verification link.");}
+      else if(mode==="register"){setVerificationEmail(email.trim());setMessage(d.message||"Check your inbox for a verification link.");setMode("login");setPassword("");setConfirmPassword("");}
       else if(mode==="forgot"){setMessage(d.message||"If an account exists for that email, a password reset link will be sent.");}
-      else {setMessage("Your password has been updated. Sign in with your new password.");switchMode("login");}
+      else {setMessage("Your password has been updated. Sign in with your new password.");setMode("login");setPassword("");setConfirmPassword("");setResetToken("");}
     }catch(err){setError(err instanceof Error?err.message:"Something went wrong. Please try again.");}
     finally{setBusy(false);}
   }
@@ -76,7 +76,7 @@ export default function CustomerAuth({onAuthenticated}:Props) {
         {error&&<div className="xa-alert xa-error" role="alert">{error}</div>}
         {message&&<div className="xa-alert xa-success" role="status"><CheckCircle2 size={17}/><span>{message}</span></div>}
         {verified&&<div className="xa-alert xa-success"><CheckCircle2 size={17}/>Email verified successfully.</div>}
-        {verificationEmail&&error.toLowerCase().includes("verify")&&<button className="xa-resend" onClick={()=>void resendVerification()} disabled={busy}>Resend verification email</button>}
+        {verificationEmail&&(error.toLowerCase().includes("verify")||!!message)&&<button className="xa-resend" onClick={()=>void resendVerification()} disabled={busy}>Resend verification email</button>}
         <form className="xa-form" onSubmit={submit}>
           {mode==="register"&&<label>Full name<div className="xa-input-wrap"><UserRound size={17}/><input autoComplete="name" value={name} onChange={e=>setName(e.target.value)} placeholder="Your full name" required minLength={2} maxLength={100}/></div></label>}
           {mode!=="reset"&&<label>Email address<div className="xa-input-wrap"><Mail size={17}/><input type="email" autoComplete="email" value={email} onChange={e=>setEmail(e.target.value)} placeholder="you@example.com" required maxLength={254}/></div></label>}
