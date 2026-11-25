@@ -1,8 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import {
-  Activity, ArrowDownLeft, ArrowRight, ArrowUpRight, CheckCircle2,
-  ChevronRight, Clock3, Copy, CreditCard, Home, LogOut, Menu, Plus,
-  Search, Settings, ShieldCheck, Wallet, X
+  Activity, ArrowRight, CheckCircle2, ChevronRight, Clock3, Copy,
+  Home, LogOut, Menu, Plus, Search, Settings, ShieldCheck, X
 } from "lucide-react";
 import { QRCodeSVG } from "qrcode.react";
 import CustomerAuth from "./CustomerAuth";
