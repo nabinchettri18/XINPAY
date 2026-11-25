@@ -64,7 +64,7 @@ export default function LandingPage() {
         <h1>Payments made <em>clear.</em></h1>
         <p className="xlp-hero-copy">Sign in to your account and keep your payment activity in view.</p>
         <div className="xlp-hero-actions">
-          <button className="xlp-primary-cta" type="button" onClick={()=>openAuth("login")}>Get started with XinPay <ArrowRight size={18}/></button>
+          <button className="xlp-primary-cta" type="button" onClick={()=>openAuth("login")}>Get started with XINPAY <ArrowRight size={18}/></button>
           <button className="xlp-secondary-cta" type="button" onClick={()=>openAuth("register")}>Create an account</button>
         </div>
       </div>
