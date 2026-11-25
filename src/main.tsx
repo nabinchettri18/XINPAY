@@ -12,6 +12,7 @@ import "./customer-account-setup.css";
 import "./customer-auth.css";
 import "./brand-palette.css";
 import "./customer-refinement.css";
+import "./subscription-workspace.css";
 
 const path = window.location.pathname;
 const isCustomer = path.startsWith("/customer");
