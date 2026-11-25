@@ -43,6 +43,21 @@ const imageTypes = ["image/png", "image/jpeg", "image/webp"];
 const proofBucket = "xinpay-subscription-proofs";
 const bankQrBucket = "xinpay-customer-bank-qr";
 
+function customerError(value: unknown): string {
+  const message = value instanceof Error ? value.message : String(value || "");
+  const normalized = message.toLowerCase().replaceAll("_", ".");
+  if (normalized.includes("subscription.collection.unavailable")) {
+    return "Plan payments are not available yet. XinPay admin needs to add the receiving UPI ID and beneficiary, then enable payment collection.";
+  }
+  if (normalized.includes("subscription.qr.unavailable")) {
+    return "The receiving QR code is not ready yet. Please try again later.";
+  }
+  if (message.toLowerCase().includes("rate limit service is unavailable")) {
+    return "Your account service is temporarily unavailable. Please refresh and try again.";
+  }
+  return message || "Something went wrong. Please try again.";
+}
+
 export default function SubscriptionWorkspace({ authUser, onSignOut }: { authUser: AuthUser; onSignOut: () => void }) {
   const [section, setSection] = useState<Section>("Account Setup");
   const [membership, setMembership] = useState<Membership | null>(null);
@@ -66,17 +81,24 @@ export default function SubscriptionWorkspace({ authUser, onSignOut }: { authUse
   const [savingBank, setSavingBank] = useState(false);
   const [bankMessage, setBankMessage] = useState("");
   const [mobileNav, setMobileNav] = useState(false);
+  const [collectionAvailable, setCollectionAvailable] = useState<boolean | null>(null);
 
   async function refresh(showLoading = false) {
     if (showLoading) setLoading(true);
     setError("");
     try {
-      const [subResponse, bankResponse] = await Promise.all([
+      const [subResponse, bankResponse, configResponse] = await Promise.all([
         apiFetch("/api/customer/subscription", { cache: "no-store" }),
         apiFetch("/api/customer/bank-profile", { cache: "no-store" }),
+        apiFetch("/api/payment-config", { cache: "no-store" }).catch(() => null),
       ]);
       const subData = await subResponse.json().catch(() => ({}));
       const bankData = await bankResponse.json().catch(() => ({}));
+      const configData = configResponse ? await configResponse.json().catch(() => ({})) : {};
+      const validReceivingUpi = /^[A-Za-z0-9._-]{2,256}@[A-Za-z]{2,64}$/.test(String(configData.upiId || "").trim());
+      const validBeneficiary = String(configData.beneficiary || "").trim().length > 0;
+      const uploadedQrReady = configData.qrMode !== "uploaded" || Boolean(configData.qrAssetUrl);
+      setCollectionAvailable(Boolean(configResponse?.ok && configData.enabled === true && validReceivingUpi && validBeneficiary && uploadedQrReady));
       if (!subResponse.ok) throw new Error(subData.error || "Unable to load your subscription.");
       if (!bankResponse.ok) throw new Error(bankData.error || "Unable to load your bank profile.");
       setMembership(subData.membership || null);
@@ -97,7 +119,8 @@ export default function SubscriptionWorkspace({ authUser, onSignOut }: { authUse
         }
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Unable to load your account.");
+      setError(customerError(err));
+      setCollectionAvailable(false);
     } finally {
       setLoading(false);
     }
@@ -130,6 +153,10 @@ export default function SubscriptionWorkspace({ authUser, onSignOut }: { authUse
   }
 
   async function choosePlan(plan: Plan) {
+    if (collectionAvailable !== true) {
+      setError("Plan payments are not available yet. XinPay admin needs to configure the receiving UPI details.");
+      return;
+    }
     setBusyPlan(plan.key);
     setError("");
     try {
@@ -148,7 +175,7 @@ export default function SubscriptionWorkspace({ authUser, onSignOut }: { authUse
       await refresh();
       setSection("Pay");
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Could not start this plan payment.");
+      setError(customerError(err));
     } finally {
       setBusyPlan("");
     }
@@ -308,6 +335,9 @@ export default function SubscriptionWorkspace({ authUser, onSignOut }: { authUse
             <h1>Choose your XinPay plan.</h1>
             <p>Select one plan to continue. The fee is paid once for account activation.</p>
           </div>
+          {collectionAvailable === false && <div className="xp-sub-alert" role="status">
+            Plan payments are temporarily unavailable. The XinPay admin must add a valid receiving UPI ID and beneficiary, then enable collection in Payment Settings.
+          </div>}
           <div className="xp-plan-grid">
             {plans.map(plan=><article key={plan.key} className={"xp-plan-card "+plan.accent}>
               {plan.key==="starter"&&<span className="xp-plan-tag">START HERE</span>}
@@ -320,8 +350,8 @@ export default function SubscriptionWorkspace({ authUser, onSignOut }: { authUse
               <div className="xp-plan-divider"/>
               <div className="xp-plan-detail"><CheckCircle2 size={16}/> One-time subscription fee</div>
               <div className="xp-plan-detail"><ShieldCheck size={16}/> Manual payment review</div>
-              <button className="xp-plan-button" disabled={busyPlan!==""} onClick={()=>void choosePlan(plan)}>
-                {busyPlan===plan.key?"Preparing…":"Pay now"} <ArrowRight size={17}/>
+              <button className="xp-plan-button" disabled={busyPlan!=="" || collectionAvailable !== true} onClick={()=>void choosePlan(plan)}>
+                {busyPlan===plan.key?"Preparing…":collectionAvailable === true?"Pay now":"Payments unavailable"} {collectionAvailable === true && <ArrowRight size={17}/>}
               </button>
             </article>)}
           </div>
