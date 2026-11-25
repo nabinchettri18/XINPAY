@@ -4,7 +4,9 @@ import { supabase } from "./lib/supabase";
 import PaymentSettings from "./PaymentSettings";
 import AdminTransactions from "./AdminTransactions";
 import AdminSubscriptionRequests from "./AdminSubscriptionRequests";
-import AdminBankAccounts from "./AdminBankAccounts";\nimport AdminCustomers from "./AdminCustomers";\nimport AdminSettlements from "./AdminSettlements";
+import AdminBankAccounts from "./AdminBankAccounts";
+import AdminCustomers from "./AdminCustomers";
+import AdminSettlements from "./AdminSettlements";
 import {
   Activity, AlertCircle, ArrowLeftRight, Bell, Building2, CheckCircle2,
   ChevronDown, ChevronRight, CircleHelp, CreditCard, LayoutDashboard,
