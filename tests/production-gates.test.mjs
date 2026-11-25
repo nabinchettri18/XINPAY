@@ -69,6 +69,6 @@ test("Worker does not implement a second customer password/session store",()=>{
 
 const adminApp=await readFile(new URL("../src/App.tsx",import.meta.url),"utf8");
 test("admin workspace exposes a direct customer sign-in entry point",()=>{
- assert.match(adminApp,/href="\\/customer"/);
+ assert.ok(adminApp.includes('href="/customer"'));
  assert.match(adminApp,/Customer sign in/);
 });
