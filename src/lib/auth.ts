@@ -9,7 +9,7 @@ export type AuthUser = {
 };
 
 export function toAuthUser(user: User | null): AuthUser | null {
-  if (!user) return null;
+  if (!user || !(user.email_confirmed_at || user.confirmed_at)) return null;
   const fullName = user.user_metadata?.full_name;
   return {
     id: user.id,
