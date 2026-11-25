@@ -8,7 +8,7 @@ import {
   ToggleLeft, ToggleRight, UploadCloud
 } from "lucide-react";
 
-const BUCKET = "xinpay-payment-assets";
+const BUCKET = "xinpay-payment-qr";
 const MAX_QR_BYTES = 1024 * 1024;
 const ACCEPTED_QR_TYPES = ["image/png", "image/jpeg", "image/webp"] as const;
 
@@ -99,7 +99,7 @@ export default function PaymentSettings() {
       let nextKey=qrMode==="uploaded"?qrAssetKey:"";
       if(qrMode==="uploaded"&&qrFile){
         const extension=qrFile.type==="image/png"?"png":qrFile.type==="image/webp"?"webp":"jpg";
-        const objectKey="payment-qr/"+crypto.randomUUID()+"."+extension;
+        const objectKey="payment-qr/qr-"+crypto.randomUUID()+"."+extension;
         const {data,error}=await supabase!.storage.from(BUCKET).upload(objectKey,qrFile,{
           cacheControl:"60",
           contentType:qrFile.type,
