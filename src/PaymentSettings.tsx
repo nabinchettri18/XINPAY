@@ -120,7 +120,6 @@ export default function PaymentSettings() {
         qrAssetUrl,
       };
       const result=await savePaymentConfig(next);
-      const previousKey=qrAssetKey;
       setUpiId(result.upiId);
       setBeneficiary(result.beneficiary);
       setInstructions(result.instructions);
@@ -132,10 +131,6 @@ export default function PaymentSettings() {
       setUpdatedAt(result.updatedAt || "");
       setSaved(true);
       setMessage("Saved. Customer checkout now uses the updated payment details.");
-      if(previousKey&&previousKey!==result.qrAssetKey&&supabase){
-        const {error:removeError}=await supabase.storage.from(BUCKET).remove([previousKey]);
-        if(removeError)console.warn("Old payment QR cleanup failed:",removeError.message);
-      }
     }catch(error){
       if(uploadedKey&&supabase){
         const {error:cleanupError}=await supabase.storage.from(BUCKET).remove([uploadedKey]);
@@ -183,7 +178,7 @@ export default function PaymentSettings() {
           <label className="upload-qr-button"><UploadCloud size={16}/>{qrFile?"Replace selected image":"Choose QR image"}
             <input type="file" accept="image/png,image/jpeg,image/webp" onChange={e=>selectQrFile(e.target.files?.[0])}/>
           </label>
-          <p>PNG, JPG or WebP · Maximum 1 MB. Make sure the QR belongs to the same UPI ID and beneficiary above.</p>
+          <p>PNG, JPG or WebP · Maximum 1 MB. Make sure the QR belongs to the same UPI ID and beneficiary above. Older QR files are retained for pending requests.</p>
           {(qrFile||qrAssetKey)&&<div className="qr-file-row"><span>{qrFile?.name || "Saved QR image"}</span><span>{qrFile?"Ready to upload":"Current image"}</span></div>}
         </div>}
 
