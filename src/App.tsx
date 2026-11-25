@@ -1,13 +1,12 @@
 import { supabase } from "./lib/supabase";
-import { useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import PaymentSettings from "./PaymentSettings";
 import AdminTransactions from "./AdminTransactions";
 import AdminSubscriptionRequests from "./AdminSubscriptionRequests";
 import {
-  Activity, AlertCircle, ArrowDownLeft, ArrowLeftRight, ArrowUpRight, Bell,
-  Building2, CheckCircle2, ChevronDown, ChevronRight, CircleHelp,
-  CreditCard, LayoutDashboard, LockKeyhole, Menu, RefreshCw, ReceiptText,
-  Search, Settings, ShieldCheck, Wallet, X, LogOut
+  Activity, AlertCircle, Bell, Building2, CheckCircle2, ChevronDown, ChevronRight,
+  CircleHelp, CreditCard, LayoutDashboard, Menu, RefreshCw, ReceiptText,
+  Settings, ShieldCheck, Wallet, LogOut
 } from "lucide-react";
 
 type NavKey = "Overview" | "Transactions" | "Subscription Requests" | "Settlements" | "Accounts" | "Customers" | "Support" | "Payment Settings" | "Settings";
