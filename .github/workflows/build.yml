@@ -4,6 +4,8 @@ on:
     branches: [main, production-readiness-phase-2-6, direct-upi-manual-reconciliation]
   pull_request:
     branches: [main, production-readiness-phase-2-6]
+permissions:
+  contents: write
 concurrency:
   group: xinpay-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
@@ -16,11 +18,16 @@ jobs:
         with:
           node-version: 24
       - run: npm install
-      - uses: actions/upload-artifact@v4
-        with:
-          name: generated-supabase-lock
-          path: package-lock.json
-          if-no-files-found: error
+      - name: Commit generated lockfile on the feature branch
+        if: github.ref == 'refs/heads/direct-upi-manual-reconciliation'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add package-lock.json
+          if ! git diff --cached --quiet; then
+            git commit -m "chore: lock frontend dependencies"
+            git push
+          fi
       - run: npm run build
       - run: node --test tests/*.test.mjs
       - run: npx wrangler deploy --dry-run --outdir=worker-build
