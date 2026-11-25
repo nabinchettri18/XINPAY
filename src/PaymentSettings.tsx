@@ -183,7 +183,7 @@ export default function PaymentSettings() {
           <label className="upload-qr-button"><UploadCloud size={16}/>{qrFile?"Replace selected image":"Choose QR image"}
             <input type="file" accept="image/png,image/jpeg,image/webp" onChange={e=>selectQrFile(e.target.files?.[0])}/>
           </label>
-          <p>PNG, JPG or WebP · Maximum 1 MB. The uploaded image is shown in customer checkout.</p>
+          <p>PNG, JPG or WebP · Maximum 1 MB. Make sure the QR belongs to the same UPI ID and beneficiary above.</p>
           {(qrFile||qrAssetKey)&&<div className="qr-file-row"><span>{qrFile?.name || "Saved QR image"}</span><span>{qrFile?"Ready to upload":"Current image"}</span></div>}
         </div>}
 
