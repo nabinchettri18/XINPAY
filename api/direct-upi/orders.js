@@ -25,11 +25,17 @@ export default async function handler(req, res) {
       amount_minor: minor(body.amount), currency: "INR", status: "pending",
       customer_access_hash: await sha256(orderToken),
       destination_config_version: config.version,
-      destination_snapshot: { upiId: config.upiId, beneficiary: config.beneficiary },
+      destination_snapshot: {
+        upiId: config.upiId,
+        beneficiary: config.beneficiary,
+        qrMode: config.qrMode,
+        qrAssetKey: config.qrAssetKey,
+        qrAssetUrl: config.qrAssetUrl,
+      },
       expires_at: expiresAt,
     });
     if (error) throw error;
-    return json(res, 201, { orderId: id, orderToken, status: "pending", amount: body.amount, currency: "INR", upiUri, upiId: config.upiId, beneficiary: config.beneficiary, expiresAt, verification: "manual", qrMode: config.qrMode, qrUrl: config.qrUrl });
+    return json(res, 201, { orderId: id, orderToken, status: "pending", amount: body.amount, currency: "INR", upiUri, upiId: config.upiId, beneficiary: config.beneficiary, expiresAt, verification: "manual", qrMode: config.qrMode, qrAssetUrl: config.qrAssetUrl });
   } catch (error) {
     return fail(res, 503, error.message || "Could not create a direct UPI order.");
   }
