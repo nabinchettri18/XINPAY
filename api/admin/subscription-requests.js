@@ -1,4 +1,4 @@
-import { context, fail, json, method, rateLimit } from "../server/xinpay-api.js";
+import { context, fail, json, method, rateLimit } from "../../server/xinpay-api.js";
 
 const PROOF_BUCKET = "xinpay-subscription-proofs";
 
