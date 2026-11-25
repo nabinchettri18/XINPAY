@@ -1,29 +1,7 @@
-# XinPay foundation architecture
+# XinPay architecture
 
-## Initial frontend
+- Frontend and deployment: Vercel (Vite/React).
+- Backend and database: the existing Supabase project (Postgres, Auth, Storage, RPC, and RLS).
+- Repository and CI: GitHub Actions.
 
-The frontend is a Vite-built React application deployed to Cloudflare Pages. It is intentionally static at this stage and displays demo-only data.
-
-## Planned API
-
-A separately deployed Cloudflare Worker provides the UPI configuration API. The current prototype supports public reads and admin-token-protected writes to D1. API secrets must live in Worker secrets, never in the browser. Full user authentication and role-based access are still planned.
-
-## Planned D1 data domains
-
-- users, roles, and sessions
-- transaction records and provider references
-- settlement batches and status history
-- verified settlement accounts and account-change requests
-- support tickets
-- audit events
-
-## Payment lifecycle (planned)
-
-1. Server creates a payment intent/order with a configured provider.
-2. Client receives only the provider-approved checkout details.
-3. Provider sends a signed webhook.
-4. Worker verifies signature, validates event, and handles idempotency.
-5. Database records the authoritative state.
-6. Reconciliation jobs compare internal records with provider reports.
-
-UPI display configuration API is implemented in prototype code; actual payment and settlement functionality remains inactive.
+Do not introduce Cloudflare Workers or D1. Customer payment proof uses Supabase Auth, the private `xinpay-subscription-proofs` Storage bucket, and the existing subscription-payment RPCs. Manual review is required; proof submissions never directly credit wallet balances.
