@@ -10,9 +10,10 @@ XinPay is being developed as a secure payment-operations dashboard foundation.
 
 - React + TypeScript
 - Vite
-- Cloudflare Pages for the static frontend
-- Cloudflare Workers for the UPI configuration API (prototype implementation added)
-- Cloudflare D1 for UPI configuration and audit records (migration added; deployment required)
+- Vercel for the React + Vite customer/admin frontend
+- Supabase Auth for customer registration, email verification, sessions and password reset
+- Supabase PostgreSQL for future customer/profile data with RLS
+- Existing Cloudflare Worker + D1 remain the experimental payment/configuration API during the Vercel migration; customer authentication does not use Worker/D1
 
 ## Local development
 
@@ -28,6 +29,23 @@ npm run build
 npm run preview
 ```
 
+## Vercel frontend build settings
+
+For the Vercel project connected to this repository:
+
+- Framework preset: **Vite**
+- Build command: **npm run build**
+- Output directory: **dist**
+- Root directory: **/**
+- Add `VITE_SUPABASE_URL` and `VITE_SUPABASE_PUBLISHABLE_KEY` to the Vercel environment variables for Preview and Production.
+
+See [Vercel + Supabase Auth configuration](docs/cloudflare-deployment.md#customer-sign-in-and-account-creation-vercel--supabase-auth) for email confirmation, redirect URLs, and SMTP setup.
+
+## Legacy Cloudflare Worker API deployment
+
+The payment/configuration Worker is still a separate experimental API and has not yet been migrated to Vercel. Its deployment instructions are in [docs/cloudflare-deployment.md](docs/cloudflare-deployment.md).
+
+<!-- Legacy Cloudflare Pages build settings retained for historical setup reference -->
 ## Cloudflare Pages build settings
 
 For a Pages project connected to this repository:
@@ -55,6 +73,10 @@ For a Pages project connected to this repository:
 - Admin operations require authentication, authorization, re-authentication for sensitive actions, and audit logging.
 - This UI is not a substitute for provider, legal, compliance, or security review.
 
+
+## Customer authentication
+
+Customer registration, email confirmation, login and password recovery are handled by Supabase Auth from the Vercel-hosted frontend. The customer portal no longer uses a custom Worker/D1 password or session store. Keep the Supabase publishable key in Vercel environment variables only; never expose secret/service-role keys. See the Vercel + Supabase Auth setup above.
 
 ## Admin-controlled UPI settings
 
