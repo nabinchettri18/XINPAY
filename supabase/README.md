@@ -2,7 +2,7 @@
 
 The application API is implemented as Vercel Functions under `api/`. Shared server-only helpers live in `server/xinpay-api.js`. The frontend calls same-origin `/api/*` routes; there is no Cloudflare Worker or D1 runtime in the active deployment.
 
-The XinPay Supabase project contains the PostgreSQL tables, RLS policies and RPC functions used by the Vercel Functions. Admin authorization is checked with a Supabase Auth session and the private admin allowlist. Customer accounts do not become administrators through signup.
+The XinPay Supabase project contains the PostgreSQL tables, RLS policies, per-user database rate limits and RPC functions used by the Vercel Functions. Admin authorization is checked with a Supabase Auth session and the private admin allowlist. Customer accounts do not become administrators through signup.
 
 ## Preview environment
 
