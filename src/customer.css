@@ -72,3 +72,15 @@
 .xp-auth-card .xp-primary{width:100%;justify-content:center}
 .xp-auth-loading{min-height:100vh;display:grid;place-items:center;color:#65758a;background:#f5f7fa;font-size:14px}
 .xp-auth-card .xp-secondary{justify-content:center}
+
+/* Telegram phone verification */
+.xp-telegram-verification{margin:22px 0;padding:20px;border:1px solid var(--xp-border,#e6e9ef);border-radius:16px;background:var(--xp-surface,#fff)}
+.xp-telegram-verification h3{margin:0 0 8px;font-size:16px}
+.xp-telegram-verification p{margin:0 0 16px;color:var(--xp-muted,#64748b);font-size:13px;line-height:1.55}
+.xp-telegram-verification label{display:grid;gap:7px;margin:12px 0;font-size:13px;font-weight:600}
+.xp-telegram-verification input{width:100%;min-height:42px;padding:10px 12px;border:1px solid #d9dee7;border-radius:10px;font:inherit}
+.xp-telegram-status{margin:12px 0;padding:12px;border-radius:12px;background:#f2f6fb;color:#334155;font-size:13px;line-height:1.5}
+.xp-telegram-status.success{background:#eaf8f0;color:#167447}
+.xp-telegram-status.error{background:#fff1f1;color:#b42318}
+.xp-telegram-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.xp-telegram-verification .xp-secondary{display:inline-flex;align-items:center;justify-content:center;text-decoration:none;min-height:38px;padding:8px 12px;border:1px solid #d7dde7;border-radius:9px;background:white;color:inherit;font-size:13px}
