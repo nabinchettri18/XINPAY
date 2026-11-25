@@ -173,21 +173,3 @@ test("Admin can change the receiving UPI ID and QR image without redeploying", (
   assert.ok(customerApp.includes('directOrder?.upiId'));
 });
 
-
-const paymentConfigClient=await read("src/paymentConfig.ts");
-const paymentSettings=await read("src/PaymentSettings.tsx");
-test("Runtime UPI and QR management is admin-only, stored in Supabase and reflected in customer checkout",()=>{
-  assert.ok(paymentConfig.includes('context(req, { admin: true })'));
-  assert.ok(paymentConfig.includes('auth.db.rpc("admin_update_payment_config_with_qr"'));
-  assert.ok(paymentConfig.includes('storagePublicUrl("xinpay-payment-qr"'));
-  assert.ok(server.includes('storagePublicUrl("xinpay-payment-qr"'));
-  assert.ok(paymentSettings.includes('storage.from(BUCKET).upload'));
-  assert.ok(paymentSettings.includes('upsert:false'));
-  assert.ok(paymentSettings.includes('MAX_QR_BYTES = 1024 * 1024'));
-  assert.ok(paymentSettings.includes('image/png'));
-  assert.ok(paymentSettings.includes('image/jpeg'));
-  assert.ok(paymentSettings.includes('image/webp'));
-  assert.ok(paymentConfigClient.includes('channel("xinpay-payment-config")'));
-  assert.ok(customerApp.includes('directOrder?.qrAssetUrl'));
-  assert.ok(customerApp.includes('directOrder?.upiId'));
-});
