@@ -16,6 +16,11 @@ jobs:
         with:
           node-version: 24
       - run: npm install
+      - uses: actions/upload-artifact@v4
+        with:
+          name: generated-supabase-lock
+          path: package-lock.json
+          if-no-files-found: error
       - run: npm run build
       - run: node --test tests/*.test.mjs
       - run: npx wrangler deploy --dry-run --outdir=worker-build
