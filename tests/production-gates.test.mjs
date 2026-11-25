@@ -176,3 +176,13 @@ test("Vercel rewrites Vite SPA deep links to index.html",()=>{
   assert.ok(vercelRouting.rewrites.some(rule=>rule.source==="/(.*)" && rule.destination==="/index.html"));
   assert.ok(adminSession.includes("context(req, { admin: true })"));
 });
+
+
+const customerRateLimitMigration=await read("supabase/migrations/20261125110859_allow_customer_orders_rate_limit_scope.sql");
+test("Customer order history is an allowed, user-scoped rate-limit scope",()=>{
+  assert.ok(customerOrders.includes('rateLimit(req, auth.db, "customer-orders", 60)'));
+  assert.ok(customerRateLimitMigration.includes("'customer-orders'"));
+  assert.ok(customerRateLimitMigration.includes("auth.uid()"));
+  assert.ok(customerRateLimitMigration.includes("v_user_id::text || ':' || p_scope"));
+  assert.ok(customerRateLimitMigration.includes("return v_hits <= p_limit"));
+});
