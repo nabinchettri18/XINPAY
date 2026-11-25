@@ -38,7 +38,7 @@ export default function AdminGate({ children }: Props) {
       return true;
     } catch {
       setPhase("denied");
-      setError("Could not reach the secure XinPay API. Check the Worker deployment and allowed website origins.");
+      setError("Could not reach the secure XinPay API. Check the Vercel API deployment.");
       return false;
     }
   }
@@ -78,7 +78,7 @@ export default function AdminGate({ children }: Props) {
         }
       } catch {
         if (active && current === checkId) {
-          setError("Could not reach the secure XinPay API. Check the Worker deployment and allowed website origins.");
+          setError("Could not reach the secure XinPay API. Check the Vercel API deployment.");
           setPhase("denied");
         }
       }
