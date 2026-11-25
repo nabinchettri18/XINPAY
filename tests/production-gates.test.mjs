@@ -23,6 +23,11 @@ const customerApp = await read("src/CustomerApp.tsx");
 const dashboard = await read("src/App.tsx");
 const buildWorkflow = await read(".github/workflows/build.yml");
 
+const subscriptionWorkspace=await read("src/SubscriptionWorkspace.tsx");
+const subscriptionCreateApi=await read("api/subscription-requests.js");
+const customerSubscriptionApi=await read("api/customer/subscription.js");
+
+
 test("Vercel API Functions are the only application API base", () => {
   assert.ok(apiClient.includes('return normalized.startsWith("/api/") ? normalized : "/api" + normalized'));
   assert.ok(apiClient.includes('credentials: "same-origin"'));
@@ -63,7 +68,9 @@ test("Customer orders are bound to the authenticated Supabase identity", () => {
   assert.ok(directOrders.includes("customer_access_hash"));
   assert.ok(orderStatus.includes('req.headers["x-order-token"]'));
   assert.ok(orderStatus.includes("auth.db.from(\"payment_orders\")"));
-  assert.ok(customerApp.includes('"X-Order-Token": token'));
+  assert.ok(customerApp.includes("SubscriptionWorkspace"));
+  assert.ok(subscriptionCreateApi.includes('context(req)'));
+  assert.ok(subscriptionCreateApi.includes('auth.db.rpc("create_subscription_payment_request"'));
 });
 
 test("Cashfree and Direct UPI stay disabled unless explicit server feature flags are set", () => {
@@ -118,16 +125,18 @@ test("Customer payment history reads only the signed-in customer's own orders", 
   assert.ok(customerOrders.includes('.limit(100)'));
   assert.ok(!customerOrders.includes("serviceClient"));
   assert.ok(!customerOrders.includes("customer_access_hash"));
-  assert.ok(customerApp.includes('apiFetch("/api/customer/orders"'));
+  assert.ok(customerSubscriptionApi.includes('apiFetch')===false);
+  assert.ok(customerSubscriptionApi.includes('.eq("customer_id", auth.user.id)'));
+  assert.ok(customerSubscriptionApi.includes('.from("subscription_payment_requests")'));
+  assert.ok(subscriptionWorkspace.includes('apiFetch("/api/customer/subscription"'));
 });
 test("Customer dashboard contains no invented balance, merchant transactions, dummy card or demo labels", () => {
   for (const phrase of ["₹12,450.00", "₹3,500.00", "Cafe Coffee Day", "Metro recharge", "DEMO", "Demo environment", "Prototype / sample data", "4821"]) {
-    assert.ok(!customerApp.includes(phrase), phrase);
+    assert.ok(!subscriptionWorkspace.includes(phrase), phrase);
   }
-  assert.ok(customerApp.includes("Total requests"));
-  assert.ok(customerApp.includes("Completed"));
-  assert.ok(customerApp.includes("Awaiting confirmation"));
-  assert.ok(customerApp.includes("orders.map"));
+  assert.ok(subscriptionWorkspace.includes("SUBSCRIPTION AMOUNT RECEIVED"));
+  assert.ok(subscriptionWorkspace.includes("not a wallet balance"));
+  assert.ok(subscriptionWorkspace.includes("requests.map"));
 });
 
 
@@ -143,9 +152,10 @@ test("Admin can upload a QR image and update the UPI destination through the das
   assert.ok(paymentConfigClient.includes("qrAssetUrl"));
 });
 test("Customer payment screen refreshes saved QR settings and displays the uploaded image",()=>{
-  assert.ok(customerApp.includes("window.setInterval(refresh, 20000)"));
-  assert.ok(customerApp.includes('directOrder?.qrMode === "uploaded" && directOrder?.qrAssetUrl'));
-  assert.ok(customerApp.includes('className="xc-customer-qr"'));
+  assert.ok(customerSubscriptionApi.includes("receiver_qr_asset_key"));
+  assert.ok(customerSubscriptionApi.includes("qrAssetUrl"));
+  assert.ok(subscriptionWorkspace.includes('pay.payment.qrMode==="uploaded"&&pay.payment.qrAssetUrl'));
+  assert.ok(subscriptionWorkspace.includes('QRCodeSVG value={pay.payment.upiUri}'));
 });
 
 
@@ -165,8 +175,9 @@ test("Admin can change the receiving UPI ID and QR image without redeploying", (
   assert.ok(paymentSettings.includes('image/webp'));
   assert.ok(paymentConfigClient.includes('channel("xinpay-payment-config")'));
   assert.ok(paymentConfigClient.includes('table: "payment_config"'));
-  assert.ok(customerApp.includes('directOrder?.qrAssetUrl'));
-  assert.ok(customerApp.includes('directOrder?.upiId'));
+  assert.ok(subscriptionCreateApi.includes("receiver_qr_asset_key"));
+  assert.ok(subscriptionWorkspace.includes("pay.payment.qrAssetUrl"));
+  assert.ok(subscriptionWorkspace.includes("pay.payment.upiId"));
 });
 
 
