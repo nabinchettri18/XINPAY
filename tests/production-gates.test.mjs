@@ -12,9 +12,6 @@ const adminSession = await read("api/admin/session.js");
 const adminOrders = await read("api/admin/orders.js");
 const verifyUpi = await read("api/admin/orders/[id]/verify-direct-upi.js");
 const paymentConfig = await read("api/payment-config.js");
-const directOrders = await read("api/direct-upi/orders.js");
-const cashfreeOrders = await read("api/orders.js");
-const orderStatus = await read("api/orders/[id].js");
 const customerOrders = await read("api/customer/orders.js");
 const paymentConfigClient = await read("src/paymentConfig.ts");
 const paymentSettings = await read("src/PaymentSettings.tsx");
@@ -64,21 +61,18 @@ test("Payment settings require admin authorization for writes and keep public re
 });
 
 test("Customer orders are bound to the authenticated Supabase identity", () => {
-  assert.ok(directOrders.includes("auth.user.id"));
-  assert.ok(directOrders.includes("customer_access_hash"));
-  assert.ok(orderStatus.includes('req.headers["x-order-token"]'));
-  assert.ok(orderStatus.includes("auth.db.from(\"payment_orders\")"));
   assert.ok(customerApp.includes("SubscriptionWorkspace"));
   assert.ok(subscriptionCreateApi.includes('context(req)'));
   assert.ok(subscriptionCreateApi.includes('auth.db.rpc("create_subscription_payment_request"'));
 });
 
-test("Cashfree and Direct UPI stay disabled unless explicit server feature flags are set", () => {
-  assert.ok(cashfreeOrders.includes("paymentsEnabled()"));
-  assert.ok(cashfreeOrders.includes('environment("CASHFREE_ENV") === "production"'));
-  assert.ok(directOrders.includes("directUpiEnabled()"));
-  assert.ok(server.includes('env("PAYMENTS_ENABLED") === "true"'));
-  assert.ok(server.includes('env("DIRECT_UPI_ENABLED") === "true"'));
+test("Legacy Cashfree/direct-UPI order routes are removed; subscription payments are used", async () => {
+  assert.ok(customerApp.includes("SubscriptionWorkspace"));
+  assert.ok(subscriptionCreateApi.includes('context(req)'));
+  assert.ok(subscriptionCreateApi.includes('auth.db.rpc("create_subscription_payment_request"'));
+  await assert.rejects(access(new URL("../api/orders.js", import.meta.url)));
+  await assert.rejects(access(new URL("../api/orders/[id].js", import.meta.url)));
+  await assert.rejects(access(new URL("../api/direct-upi/orders.js", import.meta.url)));
 });
 
 test("Cashfree webhook is signature-verified and requires server-side storage credentials", () => {
