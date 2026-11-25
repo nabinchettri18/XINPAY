@@ -20,7 +20,6 @@ create index if not exists telegram_phone_verifications_status_expiry
 create index if not exists telegram_phone_verifications_user_chat
   on public.telegram_phone_verifications(telegram_user_id, telegram_chat_id, created_at desc);
 alter table public.telegram_phone_verifications enable row level security;
--- No anon/authenticated policies. The Vercel API uses the server-only Supabase key.
 
 create table if not exists public.telegram_rate_limits (
   bucket_key text primary key,
@@ -32,26 +31,33 @@ alter table public.telegram_rate_limits enable row level security;
 create or replace function public.consume_telegram_rate_limit(
   p_bucket text, p_max_hits integer, p_window_seconds integer
 ) returns boolean
-language plpgsql
-security definer
-set search_path = public, pg_catalog
+language plpgsql security definer set search_path = public, pg_catalog
 as $$
 declare current_hits integer;
 begin
   insert into public.telegram_rate_limits(bucket_key,hits,window_started)
   values(p_bucket,1,now())
   on conflict(bucket_key) do update
-    set hits = case
-      when telegram_rate_limits.window_started <= now() - make_interval(secs => p_window_seconds) then 1
-      else telegram_rate_limits.hits + 1
-    end,
-    window_started = case
-      when telegram_rate_limits.window_started <= now() - make_interval(secs => p_window_seconds) then now()
-      else telegram_rate_limits.window_started
-    end
+    set hits = case when telegram_rate_limits.window_started <= now() - make_interval(secs => p_window_seconds) then 1 else telegram_rate_limits.hits + 1 end,
+    window_started = case when telegram_rate_limits.window_started <= now() - make_interval(secs => p_window_seconds) then now() else telegram_rate_limits.window_started end
   returning hits into current_hits;
   return current_hits <= p_max_hits;
 end;
 $$;
 revoke all on function public.consume_telegram_rate_limit(text,integer,integer) from public, anon, authenticated;
 grant execute on function public.consume_telegram_rate_limit(text,integer,integer) to service_role;
+
+create or replace function public.consume_telegram_otp_attempt(p_id uuid)
+returns integer language plpgsql security definer set search_path = public, pg_catalog
+as $$
+declare current_attempts integer;
+begin
+  update public.telegram_phone_verifications
+    set otp_attempts=otp_attempts+1, updated_at=now()
+    where id=p_id and status='otp_sent' and otp_expires_at>now() and otp_attempts<5
+    returning otp_attempts into current_attempts;
+  return coalesce(current_attempts,-1);
+end;
+$$;
+revoke all on function public.consume_telegram_otp_attempt(uuid) from public, anon, authenticated;
+grant execute on function public.consume_telegram_otp_attempt(uuid) to service_role;
