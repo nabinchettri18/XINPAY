@@ -1,6 +1,6 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
-import { supabaseAdmin } from "../_lib/supabase";
-import { json, hash, secureEqual, normalizePhone, phoneDigits, telegram, serviceSecret, tokenHex } from "../_lib/telegram";
+import { supabaseAdmin } from "../_lib/supabase.js";
+import { json, hash, secureEqual, normalizePhone, phoneDigits, telegram, serviceSecret, tokenHex } from "../_lib/telegram.js";
 
 export default async function handler(req:VercelRequest,res:VercelResponse){
   if(req.method!=="POST"){res.setHeader("Allow","POST");return json(res,405,{error:"Method not allowed"});}
