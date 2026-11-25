@@ -2,7 +2,9 @@ import { useEffect, useMemo, useState } from "react";
 import { loadPaymentConfig, subscribePaymentConfig } from "./paymentConfig";
 import { Activity, ArrowDownLeft, ArrowUpRight, Bell, ChevronRight, CircleHelp, CreditCard, Eye, EyeOff, Home, LogOut, Plus, Search, Settings, ShieldCheck, Wallet, X, Menu, ReceiptText, Clock3 } from "lucide-react";
 import { QRCodeSVG } from "qrcode.react";
-import CustomerAuth, { type AuthUser } from "./CustomerAuth";
+import CustomerAuth from "./CustomerAuth";
+import { supabase } from "./lib/supabase";
+import { toAuthUser, type AuthUser } from "./lib/auth";
 
 type Section = "Overview" | "Transactions" | "Payments" | "Payment methods" | "Account setup" | "Profile" | "Help";
 type Tx = { id: string; name: string; detail: string; date: string; amount: number; status: "Completed" | "Pending" | "Failed"; kind: "Credit" | "Debit"; icon: string };
@@ -21,12 +23,15 @@ export default function CustomerApp() {
   const [authUser,setAuthUser] = useState<AuthUser|null>(null);
   const [authLoading,setAuthLoading] = useState(true);
   useEffect(()=>{
-    let cancelled=false;
-    fetch("/api/auth/me",{credentials:"include",cache:"no-store"})
-      .then(async r=>{const d=await r.json().catch(()=>({}));if(!r.ok)throw new Error("Session check failed");if(!cancelled)setAuthUser(d.user||null);})
-      .catch(()=>{if(!cancelled)setAuthUser(null);})
-      .finally(()=>{if(!cancelled)setAuthLoading(false);});
-    return ()=>{cancelled=true;};
+    if(!supabase){setAuthLoading(false);return;}
+    let active=true;
+    const {data:{subscription}}=supabase.auth.onAuthStateChange((_event,session)=>{
+      if(active)setAuthUser(toAuthUser(session?.user||null));
+    });
+    void supabase.auth.getSession().then(({data,error})=>{
+      if(active){setAuthUser(error?null:toAuthUser(data.session?.user||null));setAuthLoading(false);}
+    }).catch(()=>{if(active){setAuthUser(null);setAuthLoading(false);}});
+    return ()=>{active=false;subscription.unsubscribe();};
   },[]);
   const [section,setSection] = useState<Section>("Overview");
   const [balanceVisible,setBalanceVisible] = useState(true);
@@ -86,7 +91,7 @@ async function startDirectUpi(){
   const go=(s:Section)=>{setSection(s);setMobileNav(false);setSearch("");};
   const filtered=useMemo(()=>transactions.filter(t=>(filter==="All"||t.kind===filter)&&((t.name+" "+t.detail+" "+t.id).toLowerCase().includes(search.toLowerCase()))),[filter,search]);
   const customerInitials=(authUser?.name||"Customer").split(/\s+/).slice(0,2).map(part=>part[0]?.toUpperCase()||"").join("");
-  async function signOut(){try{await fetch("/api/auth/logout",{method:"POST",credentials:"include",headers:{"Accept":"application/json"}});}finally{setAuthUser(null);}}
+  async function signOut(){if(!supabase)return;const {error}=await supabase.auth.signOut();if(error){showToast(error.message);return;}setAuthUser(null);}
   if(authLoading)return <div className="xa-loading">Loading your secure XinPay account…</div>;
   if(!authUser)return <CustomerAuth onAuthenticated={setAuthUser}/>;
   return <div className="xp-shell">
