@@ -1,4 +1,5 @@
 import { apiFetch } from "./lib/api";
+import { supabase } from "./lib/supabase";
 
 export type PaymentConfig = {
   upiId: string;
