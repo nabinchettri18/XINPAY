@@ -48,24 +48,21 @@ test("manual reconciliation is Access protected, amount/reference/time bound and
  assert.match(worker,/verification_state='verified'/);
 });
 
-const authMigration=await readFile(new URL("../database/migrations/0007_customer_auth.sql",import.meta.url),"utf8");
+
 const customerAuth=await readFile(new URL("../src/CustomerAuth.tsx",import.meta.url),"utf8");
-test("customer auth schema stores password hashes and expiring one-time tokens",()=>{
- for(const term of ["auth_users","password_hash TEXT NOT NULL","email_verified_at","auth_sessions","token_hash TEXT NOT NULL UNIQUE","auth_email_tokens","used_at TEXT","expires_at TEXT"])assert.ok(authMigration.includes(term),term);
+const supabaseClient=await readFile(new URL("../src/lib/supabase.ts",import.meta.url),"utf8");
+const customerApp=await readFile(new URL("../src/CustomerApp.tsx",import.meta.url),"utf8");
+const packageJson=JSON.parse(await readFile(new URL("../package.json",import.meta.url),"utf8"));
+test("customer authentication uses a pinned Supabase client and public publishable configuration",()=>{
+ assert.equal(packageJson.dependencies["@supabase/supabase-js"],"2.119.1");
+ for(const term of ["VITE_SUPABASE_URL","VITE_SUPABASE_PUBLISHABLE_KEY","persistSession: true","autoRefreshToken: true","detectSessionInUrl: true","flowType: \"pkce\""])assert.ok(supabaseClient.includes(term),term);
 });
-test("customer auth uses PBKDF2 and secure HttpOnly session cookies",()=>{
- assert.match(worker,/PBKDF2/);
- assert.match(worker,/AUTH_PASSWORD_ITERATIONS=310000/);
- assert.match(worker,/HttpOnly; Secure; SameSite=Lax/);
- assert.match(worker,/AUTH_SESSION_SECONDS=60\*60\*24\*7/);
+test("customer auth uses Supabase sign up, sign in, verification resend and password recovery",()=>{
+ for(const term of ["supabase.auth.signUp","supabase.auth.signInWithPassword","supabase.auth.resend","supabase.auth.resetPasswordForEmail","supabase.auth.updateUser","emailRedirectTo","PASSWORD_RECOVERY"])assert.ok(customerAuth.includes(term),term);
 });
-test("customer auth mutations are origin checked, rate limited and email verified",()=>{
- for(const term of ["authMutationAllowed","auth-register","auth-login","auth-verify","auth-forgot","auth-reset","email_verified_at","RESEND_API_KEY","AUTH_EMAIL_FROM"])assert.ok(worker.includes(term),term);
+test("customer dashboard derives the signed-in identity from Supabase session and signs out",()=>{
+ for(const term of ["supabase.auth.getSession","supabase.auth.onAuthStateChange","supabase.auth.signOut","toAuthUser"])assert.ok(customerApp.includes(term),term);
 });
-test("customer auth supports register, login, session, verification, logout and password reset routes",()=>{
- for(const route of ["/api/auth/register","/api/auth/login","/api/auth/me","/api/auth/logout","/api/auth/verify-email","/api/auth/resend-verification","/api/auth/forgot-password","/api/auth/reset-password"])assert.ok(worker.includes(route),route);
-});
-test("customer portal renders auth before dashboard and submits real account requests",()=>{
- for(const term of ["Create account","Sign in","/api/auth/login","/api/auth/register","/api/auth/forgot-password","/api/auth/verify-email","credentials:\"include\"","type=\"email\"","minLength={12}"])assert.ok(customerAuth.includes(term),term);
- assert.match(customerAuth,/onAuthenticated\(d\.user\)/);
+test("Worker does not implement a second customer password/session store",()=>{
+ for(const term of ["auth_users","auth_sessions","auth_email_tokens","/api/auth/register","AUTH_SESSION_SECONDS","RESEND_API_KEY"])assert.ok(!worker.includes(term),term);
 });
