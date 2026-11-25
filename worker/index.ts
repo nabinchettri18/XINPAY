@@ -34,7 +34,31 @@ export default { async fetch(req:Request,env:Env){
  const url=new URL(req.url), origin=req.headers.get("Origin")||"", allowed=env.ALLOWED_ORIGIN||"", isApi=url.pathname.startsWith("/api/");
  if(isApi&&origin&&origin!==allowed)return json({error:"Origin not allowed"},403,origin,env);
  if(req.method==="OPTIONS"&&isApi){if(origin&&origin!==allowed)return new Response(null,{status:403,headers:SECURITY_HEADERS});return new Response(null,{status:204,headers:corsHeaders(origin,env)});}
- if(isApi&&url.pathname!=="/api/payment-config")return json({error:"Not found"},404,origin,env);
+ if(isApi&&url.pathname!=="/api/payment-config"&&url.pathname!=="/api/payment-proofs")return json({error:"Not found"},404,origin,env);
+ if(url.pathname==="/api/payment-proofs"){
+  if(req.method==="POST"){
+   let allowedRate:boolean;try{allowedRate=await rateLimitAdminWrite(req,env)}catch{return json({error:"Submission security service unavailable. Please retry."},503,origin,env)}
+   if(!allowedRate)return json({error:"Too many submissions. Please wait and try again."},429,origin,env);
+   let raw:string;try{raw=await req.text()}catch{return json({error:"Could not read submission. Please retry."},400,origin,env)}
+   if(new TextEncoder().encode(raw).length>1600000)return json({error:"Proof file is too large. Maximum upload size is 1 MB."},413,origin,env);
+   let body:any;try{body=JSON.parse(raw)}catch{return json({error:"Invalid submission data."},400,origin,env)}
+   const amount=Number(body?.amount), utr=String(body?.utr||"").trim().toUpperCase(), payerName=String(body?.payerName||"").trim().slice(0,120), payerEmail=String(body?.payerEmail||"").trim().slice(0,200), note=String(body?.note||"").trim().slice(0,300), mime=String(body?.proofMime||""), proof=String(body?.proofBase64||"");
+   if(!Number.isFinite(amount)||amount<=0||amount>99999999)return json({error:"Enter a valid payment amount."},400,origin,env);
+   if(!/^[A-Z0-9]{8,30}$/.test(utr))return json({error:"Enter a valid UTR or transaction reference (8–30 letters/numbers)."},400,origin,env);
+   if(!payerName)return json({error:"Enter the name used for the payment."},400,origin,env);
+   if(payerEmail&&!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(payerEmail))return json({error:"Enter a valid email address."},400,origin,env);
+   if(!["image/jpeg","image/png","application/pdf"].includes(mime))return json({error:"Proof must be JPG, PNG, or PDF."},400,origin,env);
+   if(!proof||proof.length>1400000||!/^[A-Za-z0-9+/]+={0,2}$/.test(proof))return json({error:"Choose a valid proof file under 1 MB."},400,origin,env);
+   const id=crypto.randomUUID();
+   try{await env.DB.prepare("INSERT INTO payment_proof_submissions(id,amount_minor,utr,payer_name,payer_email,note,proof_mime,proof_base64) VALUES(?,?,?,?,?,?,?,?)").bind(id,Math.round(amount*100),utr,payerName,payerEmail,note,mime,proof).run();return json({success:true,id,status:"pending",message:"Proof submitted for review. Your balance will not change until payment is verified."},201,origin,env)}catch(e:any){if(String(e?.message||"").includes("UNIQUE"))return json({error:"This UTR has already been submitted."},409,origin,env);return json({error:"Submission could not be saved. Please try again."},500,origin,env)}
+  }
+  if(req.method==="GET"){
+   const auth=req.headers.get("Authorization")||"";
+   if(!env.ADMIN_TOKEN||!auth.startsWith("Bearer ")||!constantTimeEqual(auth.slice(7),env.ADMIN_TOKEN))return json({error:"Unauthorized"},401,origin,env);
+   try{const rows=await env.DB.prepare("SELECT id,amount_minor,utr,payer_name,payer_email,note,proof_mime,status,submitted_at FROM payment_proof_submissions ORDER BY submitted_at DESC LIMIT 100").all();return json({submissions:rows.results||[]},200,origin,env)}catch{return json({error:"Could not load submissions"},500,origin,env)}
+  }
+  return json({error:"Method not allowed"},405,origin,env);
+ }
  if(url.pathname==="/api/payment-config"){
   if(req.method==="GET"){try{return json(publicConfig(await readConfig(env)),200,origin,env)}catch{return json({error:"Configuration unavailable"},500,origin,env)}}
   if(req.method!=="PUT")return json({error:"Method not allowed"},405,origin,env);
