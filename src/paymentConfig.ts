@@ -50,5 +50,16 @@ export async function savePaymentConfig(config: PaymentConfig): Promise<PaymentC
 
 export function subscribePaymentConfig(callback: () => void) {
   window.addEventListener("xinpay-payment-config-updated", callback);
-  return () => window.removeEventListener("xinpay-payment-config-updated", callback);
+  const channel = supabase?.channel("xinpay-payment-config")
+    .on("postgres_changes", {
+      event: "UPDATE",
+      schema: "public",
+      table: "payment_config",
+      filter: "id=eq.primary",
+    }, callback)
+    .subscribe();
+  return () => {
+    window.removeEventListener("xinpay-payment-config-updated", callback);
+    if (channel && supabase) void supabase.removeChannel(channel);
+  };
 }
