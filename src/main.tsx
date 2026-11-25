@@ -13,6 +13,7 @@ import "./customer-auth.css";
 import "./brand-palette.css";
 import "./customer-refinement.css";
 import "./subscription-workspace.css";
+import "./admin-subscription-requests.css";
 
 const path = window.location.pathname;
 const isCustomer = path.startsWith("/customer");
