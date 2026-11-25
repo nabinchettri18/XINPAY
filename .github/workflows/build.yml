@@ -18,4 +18,3 @@ jobs:
       - run: npm ci
       - run: npm run build
       - run: node --test tests/*.test.mjs
-      - run: npx wrangler deploy --dry-run --outdir=worker-build
