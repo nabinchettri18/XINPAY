@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { loadPaymentConfig, subscribePaymentConfig } from "./paymentConfig";
-import { Activity, ArrowDownLeft, ArrowUpRight, Bell, ChevronRight, CircleHelp, CreditCard, Eye, EyeOff, Home, LogOut, Plus, Search, Settings, ShieldCheck, Wallet, X, Menu, ReceiptText, Clock3 } from "lucide-react";
+import { Activity, ArrowDownLeft, ArrowUpRight, ArrowRight, Bell, ChevronRight, CircleHelp, CreditCard, Eye, EyeOff, Home, LogOut, Plus, Search, Settings, ShieldCheck, Wallet, X, Menu, ReceiptText, Clock3, Check, LockKeyhole } from "lucide-react";
 import { QRCodeSVG } from "qrcode.react";
 import { supabase } from "./paymentConfig";
 
