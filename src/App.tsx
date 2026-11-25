@@ -1,3 +1,4 @@
+import { supabase } from "./lib/supabase";
 import { useMemo, useState } from "react";
 import PaymentSettings from "./PaymentSettings";
 import AdminTransactions from "./AdminTransactions";
@@ -5,7 +6,7 @@ import {
   Activity, AlertCircle, ArrowDownLeft, ArrowLeftRight, ArrowUpRight, Bell,
   Building2, CheckCircle2, ChevronDown, ChevronRight, CircleHelp,
   CreditCard, LayoutDashboard, LockKeyhole, Menu, RefreshCw, ReceiptText,
-  Search, Settings, ShieldCheck, Wallet, X
+  Search, Settings, ShieldCheck, Wallet, X, LogOut
 } from "lucide-react";
 
 type NavKey = "Overview" | "Transactions" | "Settlements" | "Accounts" | "Customers" | "Support" | "Payment Settings" | "Settings";
@@ -93,6 +94,7 @@ export default function App() {
           <div className="top-actions">
             <button className="icon-btn" aria-label="Refresh demo view" title="Refresh view" onClick={()=>setQuery("")}><RefreshCw size={17}/></button>
             <button className="icon-btn notification" aria-label="Notifications not connected" title="Notifications are not connected" disabled><Bell size={18}/><i/></button>
+            <button className="admin-signout" onClick={()=>void supabase?.auth.signOut()} title="Sign out" aria-label="Sign out"><LogOut size={16}/><span>Sign out</span></button>
             <div className="avatar small">DA</div>
           </div>
         </header>
