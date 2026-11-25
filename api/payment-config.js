@@ -69,7 +69,7 @@ export default async function handler(req, res) {
     };
     if (result.qrMode === "uploaded" && result.qrAssetKey) {
       result.qrAssetUrl = auth.db.storage.from("xinpay-payment-qr")
-        .getPublicUrl(result.qrAssetKey).data.publicUrl;
+        .getPublicUrl(result.qrAssetKey).data.publicUrl + "?v=" + result.version;
     }
     return json(res, 200, result);
   }
