@@ -49,7 +49,10 @@ async function verifyTelegramOtp(req:Request,env:Env,origin:string){await ensure
  const url=new URL(req.url), origin=req.headers.get("Origin")||"", allowed=env.ALLOWED_ORIGIN||"", isApi=url.pathname.startsWith("/api/");
  if(isApi&&origin&&origin!==allowed)return json({error:"Origin not allowed"},403,origin,env);
  if(req.method==="OPTIONS"&&isApi){if(origin&&origin!==allowed)return new Response(null,{status:403,headers:SECURITY_HEADERS});return new Response(null,{status:204,headers:corsHeaders(origin,env)});}
- if(url.pathname==="/api/telegram/webhook"&&req.method==="POST")return telegramWebhook(req,env);\n if(url.pathname==="/api/telegram/verification/start"&&req.method==="POST")return startTelegramVerification(req,env,origin);\n if(url.pathname==="/api/telegram/verification/status"&&req.method==="GET")return telegramStatus(url.searchParams.get("id")||"",env,origin);\n if(url.pathname==="/api/telegram/verification/verify"&&req.method==="POST")return verifyTelegramOtp(req,env,origin);\n if(isApi&&url.pathname!=="/api/payment-config")return json({error:"Not found"},404,origin,env);
+ if(url.pathname==="/api/telegram/webhook"&&req.method==="POST")return telegramWebhook(req,env);
+ if(url.pathname==="/api/telegram/verification/start"&&req.method==="POST")return startTelegramVerification(req,env,origin);
+ if(url.pathname==="/api/telegram/verification/status"&&req.method==="GET")return telegramStatus(url.searchParams.get("id")||"",env,origin);
+ if(url.pathname==="/api/telegram/verification/verify"&&req.method==="POST")return verifyTelegramOtp(req,env,origin);\n if(isApi&&url.pathname!=="/api/payment-config")return json({error:"Not found"},404,origin,env);
  if(url.pathname==="/api/payment-config"){
   if(req.method==="GET"){try{return json(publicConfig(await readConfig(env)),200,origin,env)}catch{return json({error:"Configuration unavailable"},500,origin,env)}}
   if(req.method!=="PUT")return json({error:"Method not allowed"},405,origin,env);
