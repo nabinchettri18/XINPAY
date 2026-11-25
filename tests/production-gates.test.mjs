@@ -55,7 +55,7 @@ test("Payment settings require admin authorization for writes and keep public re
   assert.ok(paymentConfig.includes('req.method === "GET"'));
   assert.ok(paymentConfig.includes('req.method === "PUT"'));
   assert.ok(paymentConfig.includes('context(req, { admin: true })'));
-  assert.ok(paymentConfig.includes('auth.db.rpc("admin_update_payment_config_v2"'));
+  assert.ok(paymentConfig.includes('auth.db.rpc("admin_update_payment_config_with_qr"'));
 });
 
 test("Customer orders are bound to the authenticated Supabase identity", () => {
@@ -143,7 +143,7 @@ test("Admin can upload a QR image and update the UPI destination through the das
   assert.ok(qrConfigApi.includes('admin_update_payment_config_with_qr'));
   assert.ok(qrConfigApi.includes("QR_KEY_PATTERN"));
   assert.ok(paymentServer.includes("qr_asset_key,qr_mode"));
-  assert.ok(paymentServer.includes("getPublicUrl(data.qr_asset_key)"));
+  assert.ok(paymentServer.includes("storagePublicUrl("));
   assert.ok(paymentConfigClient.includes("qrAssetUrl"));
 });
 test("Customer payment screen refreshes saved QR settings and displays the uploaded image",()=>{
@@ -155,10 +155,10 @@ test("Customer payment screen refreshes saved QR settings and displays the uploa
 
 test("Admin can change the receiving UPI ID and QR image without redeploying", () => {
   assert.ok(paymentConfig.includes('context(req, { admin: true })'));
-  assert.ok(paymentConfig.includes('auth.db.rpc("admin_update_payment_config_v2"'));
+  assert.ok(paymentConfig.includes('auth.db.rpc("admin_update_payment_config_with_qr"'));
   assert.ok(paymentConfig.includes("p_qr_asset_key"));
   assert.ok(paymentConfig.includes("p_qr_mode"));
-  assert.ok(server.includes('storagePublicUrl("xinpay-payment-assets"'));
+  assert.ok(server.includes('storagePublicUrl("xinpay-payment-qr"'));
   assert.ok(paymentSettings.includes('supabase!.storage.from(BUCKET).upload'));
   assert.ok(paymentSettings.includes('upsert:false'));
   assert.ok(paymentSettings.includes("MAX_QR_BYTES = 1024 * 1024"));
