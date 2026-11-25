@@ -86,7 +86,7 @@ function Overview({onNavigate}:{onNavigate:(section:NavKey)=>void}) {
   const submitted=requests.filter(r=>r.status==="submitted");
   const paidTotal=paid.reduce((sum,o)=>sum+(Number(o.amount_minor)||0),0);
   return <div className="overview-live">
-    <div className="overview-live-heading"><div><p className="eyebrow">LIVE RECORDS</p><h2>Dashboard overview</h2><p>All figures below are from the authenticated API. No demo or fabricated transactions.</p></div><button className="secondary-button" onClick={()=>void load()} disabled={loading}><RefreshCw size={15}/>{loading?"Refreshing…":"Refresh"}</button></div>
+    <div className="overview-live-heading"><div><p className="eyebrow">LIVE RECORDS</p><h2>Operational snapshot</h2><p>All figures below are from the authenticated API. No demo or fabricated transactions.</p></div><button className="secondary-button" onClick={()=>void load()} disabled={loading}><RefreshCw size={15}/>{loading?"Refreshing…":"Refresh"}</button></div>
     {error&&<div className="demo-banner"><AlertCircle size={17}/><div><strong>Dashboard data could not be loaded</strong><span>{error}</span></div><button onClick={()=>onNavigate("Transactions")}>Transactions</button></div>}
     <section className="metrics">
       <Metric title="Payment orders" value={loading?"—":String(orders.length)} detail="Orders returned by API" icon={ReceiptText}/>
