@@ -1,0 +1,25 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap');
+.xpa-screen{min-height:100vh;display:grid;place-items:center;padding:24px;background:radial-gradient(ellipse at 20% 0,#eeeaff 0,transparent 35%),#f7f7fc;color:#20203b;font-family:'DM Sans',system-ui,sans-serif}
+.xpa-card{width:min(100%,440px);padding:34px;border:1px solid #e9e7f2;border-radius:20px;background:#fff;box-shadow:0 24px 70px #2c245212}
+.xpa-brand{display:flex;align-items:center;gap:11px;color:#1d1d38;font:800 20px Manrope;letter-spacing:-.6px}
+.xpa-brand small{display:block;margin-top:3px;color:#9998af;font:700 8px 'DM Sans';letter-spacing:1.5px}
+.xpa-logo{width:38px;height:38px;display:grid;place-items:center;border-radius:12px;background:linear-gradient(135deg,#7d64ff,#59a4ff);color:#fff;font:800 22px Manrope;box-shadow:0 8px 18px #7963f533}
+.xpa-heading-icon{width:44px;height:44px;display:grid;place-items:center;margin:38px 0 18px;border-radius:13px;background:#f0edff;color:#7459ec}
+.xpa-eyebrow{margin:0 0 8px;color:#9b98b2;font-size:9px;font-weight:800;letter-spacing:1.7px}
+.xpa-card h1{margin:0;color:#20203c;font:800 26px Manrope;letter-spacing:-.8px}
+.xpa-intro,.xpa-loading p{margin:9px 0 23px;color:#82829a;font-size:12px;line-height:1.7}
+.xpa-form{display:grid;gap:15px}
+.xpa-form label{display:grid;gap:7px;color:#5d5d79;font-size:10px;font-weight:700}
+.xpa-input{height:44px;display:flex;align-items:center;gap:10px;padding:0 12px;border:1px solid #e7e6f1;border-radius:10px;background:#fbfaff;color:#9997b1}
+.xpa-input:focus-within{border-color:#9a88f2;box-shadow:0 0 0 3px #8065f618}
+.xpa-input input{width:100%;min-width:0;border:0;outline:0;background:transparent;color:#30304e;font:12px 'DM Sans'}
+.xpa-form button,.xpa-secondary{height:45px;display:flex;align-items:center;justify-content:center;gap:9px;margin-top:5px;border:0;border-radius:10px;background:linear-gradient(105deg,#755bf2,#9272f6);color:#fff;font-size:11px;font-weight:800;cursor:pointer;box-shadow:0 8px 18px #8064ee25}
+.xpa-form button:disabled{opacity:.6;cursor:wait}
+.xpa-secondary{width:100%;border:1px solid #e9e7f2;background:#fff;color:#656580;box-shadow:none}
+.xpa-error{margin:12px 0;padding:11px 12px;border:1px solid #f0d5d7;border-radius:9px;background:#fff5f5;color:#ac4f59;font-size:10px;line-height:1.6}
+.xpa-account-label{color:#72718c;font-size:10px}
+.xpa-help{color:#997b3a;font-size:11px;line-height:1.6}
+.xpa-foot{display:flex;align-items:flex-start;gap:8px;margin-top:22px;padding-top:17px;border-top:1px solid #f0eff6;color:#9998af;font-size:9px;line-height:1.6}
+.xpa-foot svg{flex:0 0 auto;color:#8065f6}
+.xpa-loading{display:grid;justify-items:center;text-align:center}.xpa-loading .xpa-logo{margin-bottom:20px}.xpa-loading h1{font-size:22px}
+@media(max-width:480px){.xpa-screen{padding:14px}.xpa-card{padding:25px 21px;border-radius:16px}}
