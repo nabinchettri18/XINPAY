@@ -75,6 +75,38 @@ Open **Admin → Payment Settings**, enter the Worker admin token in the Admin A
 
 Customer portal requests the public configuration from the API and builds the UPI QR / intent from it. The same config is shared across users and devices.
 
+
+## Customer sign-in and account creation
+
+Customer authentication uses the Worker and D1 database. It is separate from the admin Cloudflare Access identity gate.
+
+Apply all D1 migrations, including `0007_customer_auth.sql`, before using authentication:
+
+```bash
+npx wrangler d1 migrations apply xinpay --remote
+```
+
+Configure a verified sender domain in Resend, then add these Worker secrets:
+
+```bash
+npx wrangler secret put RESEND_API_KEY
+npx wrangler secret put AUTH_EMAIL_FROM
+```
+
+Set `PUBLIC_BASE_URL` to the public customer-facing XinPay origin (for example, the HTTPS URL that serves the customer portal). The email verification and password-reset links are generated from this origin.
+
+Customer auth endpoints:
+- `POST /api/auth/register`: create an unverified customer and email a verification link.
+- `POST /api/auth/verify-email`: consume the single-use verification token and create a session.
+- `POST /api/auth/login` and `POST /api/auth/logout`: issue and revoke customer sessions.
+- `GET /api/auth/me`: return the current verified customer identity.
+- `POST /api/auth/forgot-password` and `POST /api/auth/reset-password`: issue and consume single-use reset links.
+- `POST /api/auth/resend-verification`: resend a verification email without disclosing whether an address is registered.
+
+Passwords are stored as PBKDF2 hashes, never as plain text. Session tokens are random, stored only as hashes in D1, and delivered in Secure, HttpOnly, SameSite=Lax cookies. Verification and reset tokens expire after 30 minutes and are single-use. Auth mutation routes enforce an Origin check and use the existing IP-hash rate limiter.
+
+The login flow is not enabled until the D1 migration and Resend sender configuration are complete. Do not put the Resend key in a frontend `VITE_*` variable. This customer session layer does not authenticate the admin dashboard; keep the admin hostname/API behind Cloudflare Access as described below.
+
 ## Admin access protection (required before production)
 
 The admin dashboard itself is a static frontend and is not authenticated by the Worker. The token protects only configuration writes. Before production, protect the admin surface with Cloudflare Access (prefer a separate admin hostname) and allow only named administrators. Do not expose an admin dashboard on the same public host without an identity gate. This setup must be completed in the Cloudflare dashboard; it is not configured by repository code.
