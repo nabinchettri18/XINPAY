@@ -28,7 +28,10 @@ test("Vercel API Functions are the only application API base", () => {
   assert.ok(!server.includes("CF_ACCESS"));
 });
 
-test("Admin route is gated by Supabase Auth and a server-side allowlist check", () => {
+test("Only the separate admin path opens the protected admin console", () => {
+  assert.ok(main.includes('path === "/admin24776543"'));
+  assert.ok(!main.includes('path === "/admin"'));
+  assert.ok(!main.includes('path.startsWith("/admin/")'));
   assert.ok(main.includes("<AdminGate><App /></AdminGate>"));
   assert.ok(adminGate.includes("supabase.auth.signInWithPassword"));
   assert.ok(adminGate.includes("/api/admin/session"));
