@@ -4,7 +4,7 @@ import { supabase } from "./lib/supabase";
 import PaymentSettings from "./PaymentSettings";
 import AdminTransactions from "./AdminTransactions";
 import AdminSubscriptionRequests from "./AdminSubscriptionRequests";
-import AdminBankAccounts from "./AdminBankAccounts";
+import AdminBankAccounts from "./AdminBankAccounts";\nimport AdminCustomers from "./AdminCustomers";\nimport AdminSettlements from "./AdminSettlements";
 import {
   Activity, AlertCircle, ArrowLeftRight, Bell, Building2, CheckCircle2,
   ChevronDown, ChevronRight, CircleHelp, CreditCard, LayoutDashboard,
@@ -48,7 +48,7 @@ export default function App() {
       <header className="topbar"><button className="icon-btn mobile-menu" onClick={()=>setMobileOpen(true)} aria-label="Open navigation"><Menu/></button><div className="breadcrumbs">Workspace <span>/</span> <strong>{active}</strong></div><div className="top-actions"><button className="icon-btn notification" aria-label="Notifications not connected" title="Notifications are not connected" disabled><Bell size={18}/></button><button className="admin-signout" onClick={()=>void supabase?.auth.signOut()} title="Sign out"><LogOut size={16}/><span>Sign out</span></button><div className="avatar small">AD</div></div></header>
       <div className="page-content">
         <div className="overview-welcome"><div><p className="eyebrow">PAYMENT OPERATIONS · WORKSPACE</p><h1>{active==="Overview"?"XinPay operations":active}</h1><p className="subheading">{active==="Overview"?"Monitor subscription payments, manual reviews, and payment configuration.":"Manage customer plan payments and payment operations."}</p></div>{active==="Overview"&&<div className="welcome-actions"><button className="welcome-secondary" onClick={()=>go("Subscription Requests")}><ShieldCheck size={15}/> Review requests</button><button className="welcome-primary" onClick={()=>go("Payment Settings")}><Settings size={15}/> Payment settings</button></div>}</div>
-        {active==="Overview"?<Overview onNavigate={go}/>:active==="Payment Settings"?<PaymentSettings/>:active==="Transactions"?<AdminTransactions/>:active==="Subscription Requests"?<AdminSubscriptionRequests/>:active==="Accounts"?<AdminBankAccounts/>:<section className="panel section-panel"><div className="empty-icon">{(()=>{const I=navItems.find(n=>n.label===active)?.icon||LayoutDashboard;return <I size={24}/>})()}</div><h2>{active}</h2><p>This module is not connected to live records yet.</p><div className="module-list"><span>✓ Workspace navigation</span><span>○ Backend integration pending</span><span>○ Audit and permissions pending</span></div></section>}
+        {active==="Overview"?<Overview onNavigate={go}/>:active==="Payment Settings"?<PaymentSettings/>:active==="Transactions"?<AdminTransactions/>:active==="Subscription Requests"?<AdminSubscriptionRequests/>:active==="Accounts"?<AdminBankAccounts/>:active==="Customers"?<AdminCustomers/>:active==="Settlements"?<AdminSettlements/>:<section className="panel section-panel"><div className="empty-icon">{(()=>{const I=navItems.find(n=>n.label===active)?.icon||LayoutDashboard;return <I size={24}/>})()}</div><h2>{active}</h2><p>This module is not connected to live records yet.</p><div className="module-list"><span>✓ Workspace navigation</span><span>○ Backend integration pending</span><span>○ Audit and permissions pending</span></div></section>}
         <footer>XinPay Admin <span>•</span> Payment operations workspace</footer>
       </div>
     </main>
