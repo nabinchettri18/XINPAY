@@ -1,6 +1,6 @@
 import { createHash, randomBytes, timingSafeEqual } from "node:crypto";
 import type { VercelRequest, VercelResponse } from "@vercel/node";
-import { supabaseAdmin } from "./supabase";
+import { supabaseAdmin } from "./supabase.js";
 
 export function json(res:VercelResponse,status:number,data:unknown){res.status(status).setHeader("Cache-Control","no-store").json(data);}
 export function method(req:VercelRequest,res:VercelResponse,allowed:string){if(req.method!==allowed){res.setHeader("Allow",allowed);json(res,405,{error:"Method not allowed"});return false;}return true;}
