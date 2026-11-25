@@ -16,6 +16,8 @@ const directOrders = await read("api/direct-upi/orders.js");
 const cashfreeOrders = await read("api/orders.js");
 const orderStatus = await read("api/orders/[id].js");
 const customerOrders = await read("api/customer/orders.js");
+const paymentConfigClient = await read("src/paymentConfig.ts");
+const paymentSettings = await read("src/PaymentSettings.tsx");
 const cashfreeWebhook = await read("api/webhooks/cashfree.js");
 const customerApp = await read("src/CustomerApp.tsx");
 const dashboard = await read("src/App.tsx");
@@ -53,7 +55,7 @@ test("Payment settings require admin authorization for writes and keep public re
   assert.ok(paymentConfig.includes('req.method === "GET"'));
   assert.ok(paymentConfig.includes('req.method === "PUT"'));
   assert.ok(paymentConfig.includes('context(req, { admin: true })'));
-  assert.ok(paymentConfig.includes('auth.db.rpc("admin_update_payment_config"'));
+  assert.ok(paymentConfig.includes('auth.db.rpc("admin_update_payment_config_v2"'));
 });
 
 test("Customer orders are bound to the authenticated Supabase identity", () => {
@@ -148,4 +150,23 @@ test("Customer payment screen refreshes saved QR settings and displays the uploa
   assert.ok(customerApp.includes("window.setInterval(refresh, 20000)"));
   assert.ok(customerApp.includes('paymentConfig.qrMode === "uploaded" && paymentConfig.qrAssetUrl'));
   assert.ok(customerApp.includes('className="xc-customer-qr"'));
+});
+
+
+test("Admin can change the receiving UPI ID and QR image without redeploying", () => {
+  assert.ok(paymentConfig.includes('context(req, { admin: true })'));
+  assert.ok(paymentConfig.includes('auth.db.rpc("admin_update_payment_config_v2"'));
+  assert.ok(paymentConfig.includes("p_qr_asset_key"));
+  assert.ok(paymentConfig.includes("p_qr_mode"));
+  assert.ok(server.includes('storagePublicUrl("xinpay-payment-assets"'));
+  assert.ok(paymentSettings.includes('supabase!.storage.from(BUCKET).upload'));
+  assert.ok(paymentSettings.includes('upsert:false'));
+  assert.ok(paymentSettings.includes("MAX_QR_BYTES = 1024 * 1024"));
+  assert.ok(paymentSettings.includes('image/png'));
+  assert.ok(paymentSettings.includes('image/jpeg'));
+  assert.ok(paymentSettings.includes('image/webp'));
+  assert.ok(paymentConfigClient.includes('channel("xinpay-payment-config")'));
+  assert.ok(paymentConfigClient.includes('table: "payment_config"'));
+  assert.ok(customerApp.includes('directOrder?.qrAssetUrl'));
+  assert.ok(customerApp.includes('directOrder?.upiId'));
 });
