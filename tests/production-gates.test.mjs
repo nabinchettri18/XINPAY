@@ -287,3 +287,15 @@ test("Customer plan-payment RPC errors are translated into clear setup guidance"
   assert.ok(subscriptionWorkspace.includes('normalized.includes("subscription.collection.unavailable")'));
   assert.ok(subscriptionWorkspace.includes("XinPay admin needs to add the receiving UPI ID and beneficiary"));
 });
+
+
+const upiRegexFixMigration=await read("supabase/migrations/20261125121839_fix_postgres_upi_regex_repetition_bound.sql");
+const customerBankProfileApi=await read("api/customer/bank-profile.js");
+test("UPI validation uses PostgreSQL-compatible repetition bounds in every live path",()=>{
+  for(const source of [paymentSettings,paymentConfig,subscriptionWorkspace,customerBankProfileApi]){
+    assert.ok(source.includes("{2,255}"));
+    assert.ok(!source.includes("{2,256}"));
+  }
+  assert.ok(upiRegexFixMigration.includes("replace(pg_get_functiondef(fn.oid), '{2,256}', '{2,255}')"));
+  assert.ok(upiRegexFixMigration.includes("pg_get_functiondef(p.oid) LIKE '%{2,256}%'"));
+});
