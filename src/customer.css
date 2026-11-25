@@ -27,3 +27,23 @@
 .xp-qr-demo svg{display:block;background:#fff;padding:5px;border-radius:5px}.xp-upi-link{text-decoration:none;justify-content:center;margin-top:2px}.xp-collect-method{gap:10px}.xp-collect-method .xp-secondary{width:100%;justify-content:center}.xp-payment-form label input::placeholder{color:#aab4bf}
 
 .xp-configured-upi{border:1px solid #e8edf2;background:#f9fbfd;border-radius:9px;padding:12px;display:grid;gap:5px;margin:12px 0}.xp-configured-upi>span{font-size:9px;font-weight:750;letter-spacing:1px;color:#98a3b1}.xp-configured-upi>strong{font-size:12px;color:#34465b}.xp-configured-upi>small{font-size:11px;color:#59718b}.xp-configured-upi>p{font-size:10px;line-height:1.5;color:#8b97a5;margin:3px 0 0}
+
+/* Customer account balance and withdrawal UI */
+.xp-balance-panel{position:relative;overflow:hidden}
+.xp-balance-panel h2{font-size:clamp(27px,3vw,36px);letter-spacing:-1px}
+.xp-balance-actions{flex-wrap:wrap}
+.xp-balance-actions .xp-withdraw-action{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.22);color:#fff}
+.xp-withdraw-action:hover{background:rgba(255,255,255,.22)}
+.xp-withdraw-card{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:20px 22px;background:#fff;border:1px solid #e7edf1;border-radius:16px;box-shadow:0 4px 18px #17233806}
+.xp-withdraw-card-copy h3{margin:5px 0 6px;color:#172338;font-size:16px}
+.xp-withdraw-card-copy p{margin:0;color:#7c8997;font-size:12px;line-height:1.5}
+.xp-withdraw-card>button{display:inline-flex;align-items:center;gap:8px;border:0;border-radius:10px;background:#172b46;color:#fff;padding:12px 15px;font-size:12px;font-weight:700;white-space:nowrap}
+.xp-withdraw-modal{width:min(460px,calc(100vw - 28px));max-height:90vh;overflow:auto;background:#fff;border:1px solid #e8edf2;border-radius:18px;padding:20px;box-shadow:0 20px 70px #101c2b30}
+.xp-withdraw-balance{display:grid;gap:5px;padding:14px 15px;background:#f5f7fa;border-radius:12px;margin:14px 0}
+.xp-withdraw-balance span,.xp-withdraw-balance small{font-size:11px;color:#7b8795}
+.xp-withdraw-balance strong{font-size:22px;color:#172b46}
+.xp-withdraw-modal>label{display:grid;gap:7px;margin:13px 0;font-size:11px;font-weight:700;color:#526176}
+.xp-withdraw-modal input,.xp-withdraw-modal select{width:100%;padding:11px 12px;border:1px solid #e0e6ec;border-radius:9px;background:#fff;color:#18283d;font:inherit;font-size:13px;outline:none}
+.xp-withdraw-modal input:focus,.xp-withdraw-modal select:focus{border-color:#8bb8ad;box-shadow:0 0 0 3px #1f9d8312}
+.xp-withdraw-modal .xp-primary:disabled{opacity:.55;cursor:not-allowed}
+@media(max-width:600px){.xp-withdraw-card{align-items:flex-start;flex-direction:column}.xp-withdraw-card>button{width:100%;justify-content:center}.xp-balance-actions button{flex:1;justify-content:center}}
