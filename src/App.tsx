@@ -15,7 +15,8 @@ const navItems: { label: NavKey; icon: typeof LayoutDashboard }[] = [
   { label: "Customers", icon: CreditCard },
   { label: "Support", icon: CircleHelp },
   { label: "Payment Settings", icon: Wallet },
-  { label: "Payment Proof Review", icon: FileCheck },\n  { label: "Withdrawal Requests", icon: Wallet },
+  { label: "Payment Proof Review", icon: FileCheck },
+  { label: "Withdrawal Requests", icon: Wallet },
   { label: "Settings", icon: Settings }
 ];
 const transactions = [
