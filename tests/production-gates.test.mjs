@@ -81,3 +81,36 @@ test("public XinPay landing Get Started opens Supabase customer sign-in and regi
  assert.ok(authComponent.includes("initialMode?:\"login\"|\"register\""));
  assert.ok(authComponent.includes("embedded?"));
 });
+
+
+const adminGate=await readFile(new URL("../src/AdminGate.tsx",import.meta.url),"utf8");
+
+const wranglerConfig=await readFile(new URL("../wrangler.toml",import.meta.url),"utf8");
+const apiClient=await readFile(new URL("../src/lib/api.ts",import.meta.url),"utf8");
+const adminApp=await readFile(new URL("../src/App.tsx",import.meta.url),"utf8");
+const adminTransactions=await readFile(new URL("../src/AdminTransactions.tsx",import.meta.url),"utf8");
+const paymentConfig=await readFile(new URL("../src/paymentConfig.ts",import.meta.url),"utf8");
+test("admin route requires Supabase sign-in and server-confirmed admin authorization",()=>{
+ assert.ok(mainEntry.includes("<AdminGate><App /></AdminGate>"));
+ for(const term of ["supabase.auth.signInWithPassword","/api/admin/session","Authorization: \"Bearer \" + token","Customer access does not grant admin permissions"])assert.ok(adminGate.includes(term),term);
+ assert.ok(adminGate.includes("phase === \"authorized\""));
+});
+test("Worker verifies Supabase JWT signature and enforces issuer, role, expiry and admin allowlist",()=>{
+ for(const term of ["SUPABASE_URL","/auth/v1/.well-known/jwks.json","claims.iss!==issuer","claims.role!==\"authenticated\"","claims.is_anonymous===true","claims.exp<=now","ADMIN_EMAILS","crypto.subtle.verify"])assert.ok(worker.includes(term),term);
+ assert.ok(worker.includes('path==="/api/admin/session"'));
+ assert.ok(!worker.includes("user_metadata"));
+});
+test("admin API calls carry the active Supabase bearer token to the Worker API",()=>{
+ assert.ok(apiClient.includes("VITE_API_BASE_URL"));
+ assert.ok(apiClient.includes("https://xinpay.nabinchettri0007.workers.dev"));
+ assert.ok(apiClient.includes("Authorization",));
+ assert.ok(adminTransactions.includes('apiFetch("/api/admin/orders"'));
+ assert.ok(adminTransactions.includes('apiFetch("/api/admin/orders/"+'));
+ assert.ok(paymentConfig.includes("apiFetch(endpoint"));
+ assert.ok(adminApp.includes("supabase?.auth.signOut"));
+});
+test("Worker allows only the Vercel app and preview branch origins for browser API calls",()=>{
+ assert.ok(worker.includes("ALLOWED_ORIGINS"));
+ assert.ok(worker.includes("allowedOrigin(origin,env)"));
+ assert.ok(!wranglerConfig.includes("https://*.vercel.app"));
+});
