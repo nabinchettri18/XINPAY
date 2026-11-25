@@ -95,7 +95,7 @@ export default function SubscriptionWorkspace({ authUser, onSignOut }: { authUse
       const subData = await subResponse.json().catch(() => ({}));
       const bankData = await bankResponse.json().catch(() => ({}));
       const configData = configResponse ? await configResponse.json().catch(() => ({})) : {};
-      const validReceivingUpi = /^[A-Za-z0-9._-]{2,256}@[A-Za-z]{2,64}$/.test(String(configData.upiId || "").trim());
+      const validReceivingUpi = /^[A-Za-z0-9._-]{2,255}@[A-Za-z]{2,64}$/.test(String(configData.upiId || "").trim());
       const validBeneficiary = String(configData.beneficiary || "").trim().length > 0;
       const uploadedQrReady = configData.qrMode !== "uploaded" || Boolean(configData.qrAssetUrl);
       setCollectionAvailable(Boolean(configResponse?.ok && configData.enabled === true && validReceivingUpi && validBeneficiary && uploadedQrReady));
@@ -246,7 +246,7 @@ export default function SubscriptionWorkspace({ authUser, onSignOut }: { authUse
       return;
     }
     if (!bankHolder.trim() || !bankName.trim() || !/^[A-Z]{4}0[A-Z0-9]{6}$/.test(ifsc.trim().toUpperCase()) ||
-        !/^\d{4}$/.test(last4.trim()) || !/^[A-Za-z0-9._-]{2,256}@[A-Za-z]{2,64}$/.test(upiId.trim())) {
+        !/^\d{4}$/.test(last4.trim()) || !/^[A-Za-z0-9._-]{2,255}@[A-Za-z]{2,64}$/.test(upiId.trim())) {
       setBankMessage("Check the account holder, bank, IFSC, last four digits and UPI ID.");
       return;
     }
