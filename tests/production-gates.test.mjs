@@ -290,7 +290,6 @@ test("Customer plan-payment RPC errors are translated into clear setup guidance"
 
 
 const upiRegexFixMigration=await read("supabase/migrations/20261125121839_fix_postgres_upi_regex_repetition_bound.sql");
-const customerBankProfileApi=await read("api/customer/bank-profile.js");
 test("UPI validation uses PostgreSQL-compatible repetition bounds in every live path",()=>{
   for(const source of [paymentSettings,paymentConfig,subscriptionWorkspace,customerBankProfileApi]){
     assert.ok(source.includes("{2,255}"));
