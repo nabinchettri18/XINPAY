@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import {
-  Activity, ArrowRight, CheckCircle2, ChevronRight, Clock3, Copy,
+  Activity, ArrowRight, ArrowUpRight, CheckCircle2, ChevronRight, Clock3, Copy,
   Home, LogOut, Menu, Plus, Search, Settings, ShieldCheck, X
 } from "lucide-react";
 import { QRCodeSVG } from "qrcode.react";
