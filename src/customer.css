@@ -27,3 +27,60 @@
 .xp-qr-demo svg{display:block;background:#fff;padding:5px;border-radius:5px}.xp-upi-link{text-decoration:none;justify-content:center;margin-top:2px}.xp-collect-method{gap:10px}.xp-collect-method .xp-secondary{width:100%;justify-content:center}.xp-payment-form label input::placeholder{color:#aab4bf}
 
 .xp-configured-upi{border:1px solid #e8edf2;background:#f9fbfd;border-radius:9px;padding:12px;display:grid;gap:5px;margin:12px 0}.xp-configured-upi>span{font-size:9px;font-weight:750;letter-spacing:1px;color:#98a3b1}.xp-configured-upi>strong{font-size:12px;color:#34465b}.xp-configured-upi>small{font-size:11px;color:#59718b}.xp-configured-upi>p{font-size:10px;line-height:1.5;color:#8b97a5;margin:3px 0 0}
+
+/* Customer account balance and withdrawal UI */
+.xp-balance-panel{position:relative;overflow:hidden}
+.xp-balance-panel h2{font-size:clamp(27px,3vw,36px);letter-spacing:-1px}
+.xp-balance-actions{flex-wrap:wrap}
+.xp-balance-actions .xp-withdraw-action{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.22);color:#fff}
+.xp-withdraw-action:hover{background:rgba(255,255,255,.22)}
+.xp-withdraw-card{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:20px 22px;background:#fff;border:1px solid #e7edf1;border-radius:16px;box-shadow:0 4px 18px #17233806}
+.xp-withdraw-card-copy h3{margin:5px 0 6px;color:#172338;font-size:16px}
+.xp-withdraw-card-copy p{margin:0;color:#7c8997;font-size:12px;line-height:1.5}
+.xp-withdraw-card>button{display:inline-flex;align-items:center;gap:8px;border:0;border-radius:10px;background:#172b46;color:#fff;padding:12px 15px;font-size:12px;font-weight:700;white-space:nowrap}
+.xp-withdraw-modal{width:min(460px,calc(100vw - 28px));max-height:90vh;overflow:auto;background:#fff;border:1px solid #e8edf2;border-radius:18px;padding:20px;box-shadow:0 20px 70px #101c2b30}
+.xp-withdraw-balance{display:grid;gap:5px;padding:14px 15px;background:#f5f7fa;border-radius:12px;margin:14px 0}
+.xp-withdraw-balance span,.xp-withdraw-balance small{font-size:11px;color:#7b8795}
+.xp-withdraw-balance strong{font-size:22px;color:#172b46}
+.xp-withdraw-modal>label{display:grid;gap:7px;margin:13px 0;font-size:11px;font-weight:700;color:#526176}
+.xp-withdraw-modal input,.xp-withdraw-modal select{width:100%;padding:11px 12px;border:1px solid #e0e6ec;border-radius:9px;background:#fff;color:#18283d;font:inherit;font-size:13px;outline:none}
+.xp-withdraw-modal input:focus,.xp-withdraw-modal select:focus{border-color:#8bb8ad;box-shadow:0 0 0 3px #1f9d8312}
+.xp-withdraw-modal .xp-primary:disabled{opacity:.55;cursor:not-allowed}
+@media(max-width:600px){.xp-withdraw-card{align-items:flex-start;flex-direction:column}.xp-withdraw-card>button{width:100%;justify-content:center}.xp-balance-actions button{flex:1;justify-content:center}}
+
+/* Account balance card hierarchy */
+.xp-balance-panel .xp-balance-head>span{font-size:12px;font-weight:750;letter-spacing:.08em;text-transform:uppercase;opacity:.9}
+.xp-balance-panel>h2{margin:15px 0 5px;font-size:clamp(30px,3.4vw,40px);font-weight:800;letter-spacing:-1.3px}
+.xp-balance-panel>p{margin:0 0 14px;font-size:12px;opacity:.78}
+.xp-balance-breakdown{display:flex;gap:0;margin:15px 0 18px;padding:12px 0;border-top:1px solid #ffffff25;border-bottom:1px solid #ffffff25}
+.xp-balance-breakdown>div{display:grid;gap:5px;flex:1;padding:0 12px;border-right:1px solid #ffffff20}
+.xp-balance-breakdown>div:first-child{padding-left:0}
+.xp-balance-breakdown>div:last-child{border-right:0;padding-right:0}
+.xp-balance-breakdown span{font-size:10px;opacity:.72}
+.xp-balance-breakdown strong{font-size:13px;font-weight:750}
+@media(max-width:500px){.xp-balance-breakdown{gap:6px}.xp-balance-breakdown>div{padding:0 7px}.xp-balance-breakdown strong{font-size:11px}}
+
+.xp-proof-submit{margin-top:26px;padding-top:22px;border-top:1px solid var(--xp-border,#e5eaf0);display:grid;gap:14px}.xp-proof-submit h3{margin:0;font-size:18px}.xp-proof-submit p{margin:-7px 0 2px;color:var(--xp-muted,#687789);font-size:13px;line-height:1.55}.xp-proof-submit label{display:grid;gap:7px;font-size:13px;font-weight:600}.xp-proof-submit input{width:100%;box-sizing:border-box;padding:11px 12px;border:1px solid #dbe2ea;border-radius:9px;background:#fff;color:#172a40;font:inherit}.xp-proof-submit input[type=file]{font-weight:400;font-size:12px}.xp-proof-submit small{font-size:12px;color:#6b7788;font-weight:400}.xp-proof-error{padding:11px 13px;border-radius:9px;background:#fff1f1;color:#a82b2b;font-size:13px;border:1px solid #ffd6d6}.xp-proof-submit .xp-primary{width:100%;justify-content:center}
+
+/* Supabase-authenticated portals */
+.xp-auth-wrap{min-height:100vh;display:grid;place-items:center;background:#f5f7fa;padding:20px;box-sizing:border-box}
+.xp-auth-card{width:min(430px,100%);background:#fff;border:1px solid #e4eaf0;border-radius:18px;padding:28px;box-shadow:0 18px 50px #13233a0c;display:grid;gap:15px}
+.xp-auth-card h1{margin:5px 0 0;font-size:24px;color:#172b46}
+.xp-auth-card>p{margin:0;color:#718094;font-size:13px;line-height:1.5}
+.xp-auth-card label{display:grid;gap:7px;color:#526176;font-size:12px;font-weight:700}
+.xp-auth-card input{width:100%;box-sizing:border-box;padding:12px;border:1px solid #dbe2ea;border-radius:9px;font:inherit;color:#172b46}
+.xp-auth-card .xp-primary{width:100%;justify-content:center}
+.xp-auth-loading{min-height:100vh;display:grid;place-items:center;color:#65758a;background:#f5f7fa;font-size:14px}
+.xp-auth-card .xp-secondary{justify-content:center}
+
+/* Telegram phone verification */
+.xp-telegram-verification{margin:22px 0;padding:20px;border:1px solid var(--xp-border,#e6e9ef);border-radius:16px;background:var(--xp-surface,#fff)}
+.xp-telegram-verification h3{margin:0 0 8px;font-size:16px}
+.xp-telegram-verification p{margin:0 0 16px;color:var(--xp-muted,#64748b);font-size:13px;line-height:1.55}
+.xp-telegram-verification label{display:grid;gap:7px;margin:12px 0;font-size:13px;font-weight:600}
+.xp-telegram-verification input{width:100%;min-height:42px;padding:10px 12px;border:1px solid #d9dee7;border-radius:10px;font:inherit}
+.xp-telegram-status{margin:12px 0;padding:12px;border-radius:12px;background:#f2f6fb;color:#334155;font-size:13px;line-height:1.5}
+.xp-telegram-status.success{background:#eaf8f0;color:#167447}
+.xp-telegram-status.error{background:#fff1f1;color:#b42318}
+.xp-telegram-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.xp-telegram-verification .xp-secondary{display:inline-flex;align-items:center;justify-content:center;text-decoration:none;min-height:38px;padding:8px 12px;border:1px solid #d7dde7;border-radius:9px;background:white;color:inherit;font-size:13px}

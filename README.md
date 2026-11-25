@@ -1,70 +1,63 @@
 # XinPay
 
-XinPay is being developed as a secure payment-operations dashboard foundation.
+XinPay is a payment-operations application foundation.
 
-## Current status
+## Architecture
 
-**Prototype only — not production payment software.** The interface contains sample data and a limited UPI display-configuration API. It does not process or verify payments, maintain a real wallet/ledger, initiate settlements, or change bank/payment destinations. Do not use it to collect or represent real money as paid.
+- **Frontend and deployment:** Vercel (React + TypeScript + Vite)
+- **Serverless APIs:** Vercel Functions under `api/`
+- **Database, auth, storage, RPC and RLS:** Existing Supabase project
+- **Source and CI:** GitHub
+- **Phone verification:** Telegram Bot API webhook handled by Vercel
 
-## Stack
+Cloudflare Workers and D1 are not part of the target architecture.
 
-- React + TypeScript
-- Vite
-- Cloudflare Pages for the static frontend
-- Cloudflare Workers for the UPI configuration API (prototype implementation added)
-- Cloudflare D1 for UPI configuration and audit records (migration added; deployment required)
+## Existing data
+
+The Supabase project already contains payment configuration, subscription payment requests, customer wallet and withdrawal records, bank-account profiles, payment events, ledger tables, audit logs, and security RPCs. Migration work is additive and must not replace or reset this database.
+
+## Current status and safety
+
+XinPay is not a licensed payment processor. QR display and uploaded payment proof do not independently verify a payment. Wallet credits, subscriptions, and payouts must only be applied after trusted verification and authorized review. Phone verification does not establish financial identity or authorize withdrawals.
 
 ## Local development
 
 ```bash
 npm install
+cp .env.example .env.local
 npm run dev
 ```
 
-Build:
+Vite environment variables:
+- `VITE_SUPABASE_URL`
+- `VITE_SUPABASE_PUBLISHABLE_KEY`
 
-```bash
-npm run build
-npm run preview
-```
+Server-only Vercel environment variables:
+- `SUPABASE_URL`
+- `SUPABASE_SERVICE_ROLE_KEY` (or Supabase secret key)
+- `TELEGRAM_BOT_TOKEN`
+- `TELEGRAM_BOT_USERNAME`
+- `TELEGRAM_WEBHOOK_SECRET`
+- `OTP_HASH_SECRET`
+- `APP_ORIGIN` (optional; supports comma-separated origins)
 
-## Cloudflare Pages build settings
+Never put service keys, bot tokens, webhook secrets, or OTP hash secrets in frontend `VITE_*` variables or commit them.
 
-For a Pages project connected to this repository:
+## Telegram phone verification
 
-- Framework preset: **Vite**
-- Build command: **npm run build**
-- Build output directory: **dist**
-- Root directory: **/**
+1. Customer signs in and starts verification in Profile.
+2. XinPay creates a short-lived link token and the customer opens the bot.
+3. The customer presses Start and shares their own Telegram contact.
+4. Backend matches the shared phone number, sends a 6-digit OTP, and verifies it.
+5. Link token expires in 10 minutes; OTP expires in 5 minutes; verification allows at most 5 attempts.
 
-## Planned modules
+Webhook endpoint:
+`https://<production-domain>/api/telegram/webhook`
 
-- Dashboard overview
-- Transactions and reconciliation
-- Settlement batches and approved settlement-account workflows
-- Customer records
-- Support queue
-- Settings and role-based access
-- Immutable audit trail
+Configure Telegram's webhook using the bot token and the same `TELEGRAM_WEBHOOK_SECRET` stored in Vercel. Do not paste the bot token into chat.
 
-## Security principles
+## Deployment
 
-- No secrets in frontend code or `VITE_*` variables.
-- Payment status must be confirmed server-side using provider-verified webhooks and reconciliation.
-- Settlement destinations must be provider-approved and independently verified.
-- Admin operations require authentication, authorization, re-authentication for sensitive actions, and audit logging.
-- This UI is not a substitute for provider, legal, compliance, or security review.
+Vercel project: `xinpay`, root directory `/`, build command `npm run build`, output directory `dist`. GitHub auto-deployment requires a Vercel GitHub Login Connection for the repository. If that connection is not yet authorized, connect it in Vercel and then enable production deploys from `main`.
 
-
-## Admin-controlled UPI settings
-
-The Payment Settings admin module now uses the Cloudflare Worker API and D1 (once deployed) rather than browser localStorage:
-- Edit receiving UPI ID, beneficiary name, and instructions.
-- Enable/disable the customer-facing UPI collection display.
-- Generate QR preview dynamically.
-- Admin API writes require a Worker secret token.
-- Customer portal fetches the same public config across devices.
-
-**Still prototype-only:** payment receipt verification, ledger, and payment provider integration are not connected. A QR scan or screenshot is not proof of receipt.
-
-Deployment instructions: [docs/cloudflare-deployment.md](docs/cloudflare-deployment.md). See also [docs/payment-system.md](docs/payment-system.md), [database/schema.sql](database/schema.sql), and [database/migrations/0001_payment_config.sql](database/migrations/0001_payment_config.sql).
+The migration branch is intentionally not production-deployed until the build, API configuration, and required server secrets are validated.

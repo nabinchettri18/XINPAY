@@ -1,16 +1,10 @@
-export type PaymentConfig = { upiId:string; beneficiary:string; instructions:string; enabled:boolean; version?:number; updatedAt?:string };
-const DEFAULTS: PaymentConfig = { upiId:"", beneficiary:"", instructions:"Use the payment details shown here and keep your transaction reference for your records.", enabled:false };
-const API_BASE = (import.meta.env.VITE_API_BASE_URL || "").replace(/\/$/,"");
-const endpoint = API_BASE + "/api/payment-config";
-
-export async function loadPaymentConfig():Promise<PaymentConfig>{
- try{const res=await fetch(endpoint,{headers:{Accept:"application/json"},cache:"no-store"});if(!res.ok)throw new Error("API unavailable");const data=await res.json();return {...DEFAULTS,...data}}catch{return DEFAULTS}
-}
-export async function savePaymentConfig(config:PaymentConfig,token:string):Promise<PaymentConfig>{
- const res=await fetch(endpoint,{method:"PUT",headers:{"Content-Type":"application/json",Authorization:"Bearer "+token},body:JSON.stringify(config),cache:"no-store"});
- const data=await res.json().catch(()=>({}));
- if(!res.ok)throw new Error(data.error||"Could not save payment settings");
- window.dispatchEvent(new Event("xinpay-payment-config-updated"));
- return {...DEFAULTS,...data};
-}
+import { createClient } from "@supabase/supabase-js";
+const url=import.meta.env.VITE_SUPABASE_URL as string|undefined;
+const key=(import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY||import.meta.env.VITE_SUPABASE_ANON_KEY) as string|undefined;
+if(!url||!key)console.warn("XinPay Supabase frontend environment variables are missing.");
+export const supabase=createClient(url||"https://placeholder.supabase.co",key||"placeholder-key",{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
+export type PaymentConfig={upiId:string;beneficiary:string;instructions:string;enabled:boolean;version?:number;updatedAt?:string};
+const DEFAULTS:PaymentConfig={upiId:"",beneficiary:"",instructions:"Use the payment details shown here and keep your transaction reference for your records.",enabled:false};
+export async function loadPaymentConfig():Promise<PaymentConfig>{try{const {data,error}=await supabase.from("payment_config").select("receiving_upi_id,beneficiary_display_name,instructions,enabled,version,updated_at").eq("id","primary").single();if(error)throw error;return {upiId:data.receiving_upi_id||"",beneficiary:data.beneficiary_display_name||"",instructions:data.instructions||DEFAULTS.instructions,enabled:!!data.enabled,version:data.version,updatedAt:data.updated_at};}catch{return DEFAULTS}}
+export async function savePaymentConfig(config:PaymentConfig,_token?:string):Promise<PaymentConfig>{const {data,error}=await supabase.from("payment_config").update({receiving_upi_id:config.upiId,beneficiary_display_name:config.beneficiary,instructions:config.instructions,enabled:config.enabled}).eq("id","primary").select("receiving_upi_id,beneficiary_display_name,instructions,enabled,version,updated_at").single();if(error)throw error;window.dispatchEvent(new Event("xinpay-payment-config-updated"));return {upiId:data.receiving_upi_id||"",beneficiary:data.beneficiary_display_name||"",instructions:data.instructions||DEFAULTS.instructions,enabled:!!data.enabled,version:data.version,updatedAt:data.updated_at};}
 export function subscribePaymentConfig(callback:()=>void){window.addEventListener("xinpay-payment-config-updated",callback);return()=>window.removeEventListener("xinpay-payment-config-updated",callback);}
