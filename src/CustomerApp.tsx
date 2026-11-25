@@ -319,11 +319,11 @@ export default function CustomerApp() {
                 <p className="xc-safety-note">Never share your UPI PIN or OTP. A UPI QR scan alone does not confirm payment.</p>
               </div>
             </> : <div className="xc-qr-result">
-              <div className="xc-qr-code">{paymentConfig.qrMode === "uploaded" && paymentConfig.qrAssetUrl
-                ? <img className="xc-customer-qr" src={paymentConfig.qrAssetUrl} alt="XinPay receiving UPI QR code"/>
+              <div className="xc-qr-code">{directOrder?.qrMode === "uploaded" && directOrder?.qrAssetUrl
+                ? <img className="xc-customer-qr" src={directOrder.qrAssetUrl} alt="XinPay receiving UPI QR code"/>
                 : <QRCodeSVG value={directOrder?.upiUri || ""} size={176} level="M" includeMargin bgColor="#ffffff" fgColor="#173B35"/>}</div>
               <div><h2>{money(Number(paymentAmount))}</h2><p>{paymentPurpose || "Payment request"}</p><p className="xc-order-beneficiary">{directOrder?.beneficiary || paymentConfig.beneficiary} · {directOrder?.upiId || paymentConfig.upiId}</p><strong className="xc-order-pending"><Clock3 size={15}/> Awaiting confirmation</strong><div className="xc-upi-line"><span>{directOrder?.upiId}</span><button onClick={() => { void navigator.clipboard?.writeText(directOrder?.upiId || ""); showToast("UPI ID copied"); }}><Copy size={15}/> Copy</button></div><a className="xc-secondary xc-upi-open" href={directOrder?.upiUri || upiUri}>Open UPI app</a><button className="xc-text-button" onClick={() => { setDirectOrder(null); setPaymentStep(0); }}>Create another request</button></div>
-              <p className="xc-safety-note">{paymentConfig.qrMode === "uploaded" && paymentConfig.qrAssetUrl
+              <p className="xc-safety-note">{directOrder?.qrMode === "uploaded" && directOrder?.qrAssetUrl
                 ? "Scan the saved QR, check the payee and enter the amount shown above if it is not prefilled. Payment is complete only after bank reconciliation."
                 : "The payment is marked complete only after the receiving bank credit is reconciled."}</p>
             </div>}
