@@ -18,6 +18,7 @@ const orderStatus = await read("api/orders/[id].js");
 const cashfreeWebhook = await read("api/webhooks/cashfree.js");
 const customerApp = await read("src/CustomerApp.tsx");
 const dashboard = await read("src/App.tsx");
+const buildWorkflow = await read(".github/workflows/build.yml");
 
 test("Vercel API Functions are the only application API base", () => {
   assert.ok(apiClient.includes('return normalized.startsWith("/api/") ? normalized : "/api" + normalized'));
@@ -79,11 +80,10 @@ test("Admin sign-out is available in the dashboard", () => {
   assert.ok(dashboard.includes("supabase?.auth.signOut()"));
 });
 
-test("Cloudflare Worker deployment is removed from the active release workflow", async () => {
-  assert.rejects(access(new URL("../.github/workflows/deploy.yml", import.meta.url)));
-  assert.rejects(access(new URL("../wrangler.toml", import.meta.url)));
-  assert.rejects(access(new URL("../worker/index.ts", import.meta.url)));
-  assert.ok(!wfPlaceholder());
+test("Cloudflare deployment and D1 worker runtime are removed from the active project", async () => {
+  await assert.rejects(access(new URL("../.github/workflows/deploy.yml", import.meta.url)));
+  await assert.rejects(access(new URL("../wrangler.toml", import.meta.url)));
+  await assert.rejects(access(new URL("../worker/index.ts", import.meta.url)));
+  assert.ok(!buildWorkflow.includes("wrangler"));
+  assert.ok(!buildWorkflow.toLowerCase().includes("cloudflare"));
 });
-
-function wfPlaceholder() { return !server.includes("cloudflare"); }
