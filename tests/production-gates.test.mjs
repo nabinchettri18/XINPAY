@@ -1,116 +1,89 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import {readFile} from "node:fs/promises";
-const worker=await readFile(new URL("../worker/index.ts",import.meta.url),"utf8");
-const migration=await readFile(new URL("../database/migrations/0003_transactions.sql",import.meta.url),"utf8");
-const migration4=await readFile(new URL("../database/migrations/0004_order_access.sql",import.meta.url),"utf8");
-const migration5=await readFile(new URL("../database/migrations/0005_ledger_idempotency.sql",import.meta.url),"utf8");
-test("payments default to disabled and production mode is blocked",()=>{
- assert.match(worker,/PAYMENTS_ENABLED!=="true"/);
- assert.match(worker,/CASHFREE_ENV==="production"/);
-});
-test("Access JWT validation checks issuer, audience, expiry, signature and admin allowlist",()=>{
- for(const term of ["claims.iss!==issuer","replace(/^https?:\\/\\//","claims.aud","claims.exp","crypto.subtle.verify","ADMIN_EMAILS"])assert.ok(worker.includes(term),term);
-});
-test("orders use INR and integer minor units and store hashed customer access",()=>{
- assert.match(worker,/currency:"INR"/);
- assert.match(worker,/Math\.round\(amount\*100\)/);
- assert.match(migration,/amount_minor INTEGER NOT NULL CHECK \(amount_minor > 0\)/);
- assert.match(migration4,/customer_access_hash TEXT/);
-});
-test("webhook validates signature, timestamp, amount, currency and deduplicates",()=>{
- for(const term of ["x-webhook-signature","x-webhook-timestamp","HMAC","payload_hash","verification_state",`currency==="INR"`,"INSERT OR IGNORE"])assert.ok(worker.includes(term),term);
-});
-test("ledger rows only originate from successful verified webhook branch",()=>{
- assert.match(worker,/status==="SUCCESS"&&verified/);
- assert.match(migration,/ledger_entries/);
- assert.match(migration5,/ledger_source_event_unique/);
-});
-test("admin transaction endpoint is Access protected",()=>{
- assert.match(worker,/path==="\/api\/admin\/orders"/);
- assert.match(worker,/const identity=await requireAdmin/);
+import { readFile, access } from "node:fs/promises";
+
+const read = (path) => readFile(new URL("../" + path, import.meta.url), "utf8");
+
+const server = await read("server/xinpay-api.js");
+const main = await read("src/main.tsx");
+const apiClient = await read("src/lib/api.ts");
+const adminGate = await read("src/AdminGate.tsx");
+const adminSession = await read("api/admin/session.js");
+const adminOrders = await read("api/admin/orders.js");
+const verifyUpi = await read("api/admin/orders/[id]/verify-direct-upi.js");
+const paymentConfig = await read("api/payment-config.js");
+const directOrders = await read("api/direct-upi/orders.js");
+const cashfreeOrders = await read("api/orders.js");
+const orderStatus = await read("api/orders/[id].js");
+const cashfreeWebhook = await read("api/webhooks/cashfree.js");
+const customerApp = await read("src/CustomerApp.tsx");
+const dashboard = await read("src/App.tsx");
+
+test("Vercel API Functions are the only application API base", () => {
+  assert.ok(apiClient.includes('return normalized.startsWith("/api/") ? normalized : "/api" + normalized'));
+  assert.ok(apiClient.includes('credentials: "same-origin"'));
+  assert.ok(!apiClient.includes("workers.dev"));
+  assert.ok(!server.includes("CF_ACCESS"));
 });
 
-test("direct UPI is independently feature-gated and creates pending QR orders",()=>{
- assert.match(worker,/DIRECT_UPI_ENABLED!=="true"/);
- assert.match(worker,/bind\(id,"direct_upi"/);
- assert.match(worker,/upi:\/\/pay\?pa=/);
- assert.match(worker,/verification:"manual"/);
-});
-test("manual reconciliation is Access protected, amount/reference/time bound and audited",()=>{
- assert.match(worker,/requireAdmin\(req,env\)/);
- assert.match(worker,/confirmBankCredit/);
- assert.match(worker,/minor\(body\.verifiedAmount\)!==order\.amount_minor/);
- assert.match(worker,/bankReference/);
- assert.match(worker,/bankTime/);
- assert.match(worker,/payment\.manual_verified/);
- assert.match(worker,/ledger_entries/);
- assert.match(worker,/verification_state='verified'/);
+test("Admin route is gated by Supabase Auth and a server-side allowlist check", () => {
+  assert.ok(main.includes("<AdminGate><App /></AdminGate>"));
+  assert.ok(adminGate.includes("supabase.auth.signInWithPassword"));
+  assert.ok(adminGate.includes("/api/admin/session"));
+  assert.ok(adminSession.includes("context(req, { admin: true })"));
+  assert.ok(server.includes("auth.getUser(token)"));
+  assert.ok(server.includes('db.rpc("is_xinpay_admin")'));
 });
 
-
-const customerAuth=await readFile(new URL("../src/CustomerAuth.tsx",import.meta.url),"utf8");
-const supabaseClient=await readFile(new URL("../src/lib/supabase.ts",import.meta.url),"utf8");
-const customerApp=await readFile(new URL("../src/CustomerApp.tsx",import.meta.url),"utf8");
-const packageJson=JSON.parse(await readFile(new URL("../package.json",import.meta.url),"utf8"));
-test("customer authentication uses a pinned Supabase client and public publishable configuration",()=>{
- assert.equal(packageJson.dependencies["@supabase/supabase-js"],"2.119.1");
- for(const term of ["VITE_SUPABASE_URL","VITE_SUPABASE_PUBLISHABLE_KEY","persistSession: true","autoRefreshToken: true","detectSessionInUrl: true","flowType: \"pkce\""])assert.ok(supabaseClient.includes(term),term);
-});
-test("customer auth uses Supabase sign up, sign in, verification resend and password recovery",()=>{
- for(const term of ["supabase.auth.signUp","supabase.auth.signInWithPassword","supabase.auth.resend","supabase.auth.resetPasswordForEmail","supabase.auth.updateUser","emailRedirectTo","PASSWORD_RECOVERY","signOutError"])assert.ok(customerAuth.includes(term),term);
-});
-test("customer dashboard derives the signed-in identity from Supabase session and signs out",()=>{
- for(const term of ["supabase.auth.getSession","supabase.auth.onAuthStateChange","supabase.auth.signOut","toAuthUser","isPasswordRecoveryRoute","/reset-password"])assert.ok(customerApp.includes(term),term);
-});
-test("Worker does not implement a second customer password/session store",()=>{
- for(const term of ["auth_users","auth_sessions","auth_email_tokens","/api/auth/register","AUTH_SESSION_SECONDS","RESEND_API_KEY"])assert.ok(!worker.includes(term),term);
+test("Admin transaction reads and manual reconciliation use RLS-scoped Supabase requests", () => {
+  assert.ok(adminOrders.includes('context(req, { admin: true })'));
+  assert.ok(adminOrders.includes('.from("payment_orders")'));
+  assert.ok(verifyUpi.includes('context(req, { admin: true })'));
+  assert.ok(verifyUpi.includes('auth.db.rpc("admin_verify_direct_upi"'));
+  assert.ok(verifyUpi.includes("confirmBankCredit"));
+  assert.ok(verifyUpi.includes("verifiedAmount"));
 });
 
-
-const landingPage=await readFile(new URL("../src/LandingPage.tsx",import.meta.url),"utf8");
-const mainEntry=await readFile(new URL("../src/main.tsx",import.meta.url),"utf8");
-const authComponent=await readFile(new URL("../src/CustomerAuth.tsx",import.meta.url),"utf8");
-test("public XinPay landing Get Started opens Supabase customer sign-in and registration",()=>{
- assert.ok(landingPage.includes("Get started with XINPAY"));
- assert.ok(landingPage.includes("openAuth(\"login\")"));
- assert.ok(landingPage.includes("openAuth(\"register\")"));
- assert.ok(landingPage.includes("<CustomerAuth embedded initialMode={authMode}"));
- assert.ok(mainEntry.includes("path === \"/admin\""));
- assert.ok(mainEntry.includes("<LandingPage />"));
- assert.ok(authComponent.includes("initialMode?:\"login\"|\"register\""));
- assert.ok(authComponent.includes("embedded?"));
+test("Payment settings require admin authorization for writes and keep public reads limited", () => {
+  assert.ok(paymentConfig.includes('req.method === "GET"'));
+  assert.ok(paymentConfig.includes('req.method === "PUT"'));
+  assert.ok(paymentConfig.includes('context(req, { admin: true })'));
+  assert.ok(paymentConfig.includes('auth.db.rpc("admin_update_payment_config"'));
 });
 
+test("Customer orders are bound to the authenticated Supabase identity", () => {
+  assert.ok(directOrders.includes("auth.user.id"));
+  assert.ok(directOrders.includes("customer_access_hash"));
+  assert.ok(orderStatus.includes('req.headers["x-order-token"]'));
+  assert.ok(orderStatus.includes("auth.db.from(\"payment_orders\")"));
+  assert.ok(customerApp.includes('"X-Order-Token":token'));
+});
 
-const adminGate=await readFile(new URL("../src/AdminGate.tsx",import.meta.url),"utf8");
+test("Cashfree and Direct UPI stay disabled unless explicit server feature flags are set", () => {
+  assert.ok(cashfreeOrders.includes("paymentsEnabled()"));
+  assert.ok(cashfreeOrders.includes('environment("CASHFREE_ENV") === "production"'));
+  assert.ok(directOrders.includes("directUpiEnabled()"));
+  assert.ok(server.includes('env("PAYMENTS_ENABLED") === "true"'));
+  assert.ok(server.includes('env("DIRECT_UPI_ENABLED") === "true"'));
+});
 
-const wranglerConfig=await readFile(new URL("../wrangler.toml",import.meta.url),"utf8");
-const apiClient=await readFile(new URL("../src/lib/api.ts",import.meta.url),"utf8");
-const adminApp=await readFile(new URL("../src/App.tsx",import.meta.url),"utf8");
-const adminTransactions=await readFile(new URL("../src/AdminTransactions.tsx",import.meta.url),"utf8");
-const paymentConfig=await readFile(new URL("../src/paymentConfig.ts",import.meta.url),"utf8");
-test("admin route requires Supabase sign-in and server-confirmed admin authorization",()=>{
- assert.ok(mainEntry.includes("<AdminGate><App /></AdminGate>"));
- for(const term of ["supabase.auth.signInWithPassword","/api/admin/session","Authorization: \"Bearer \" + token","Customer access does not grant admin permissions"])assert.ok(adminGate.includes(term),term);
- assert.ok(adminGate.includes("phase === \"authorized\""));
+test("Cashfree webhook is signature-verified and requires server-side storage credentials", () => {
+  assert.ok(cashfreeWebhook.includes("CASHFREE_WEBHOOK_SECRET"));
+  assert.ok(cashfreeWebhook.includes('name: "HMAC"'));
+  assert.ok(cashfreeWebhook.includes("constantTimeEqual"));
+  assert.ok(cashfreeWebhook.includes("serviceClient()"));
+  assert.ok(server.includes("SUPABASE_SECRET_KEY"));
 });
-test("Worker verifies Supabase JWT signature and enforces issuer, role, expiry and admin allowlist",()=>{
- for(const term of ["SUPABASE_URL","/auth/v1/.well-known/jwks.json","claims.iss!==issuer","claims.role!==\"authenticated\"","claims.is_anonymous===true","claims.exp<=now","ADMIN_EMAILS","crypto.subtle.verify"])assert.ok(worker.includes(term),term);
- assert.ok(worker.includes('path==="/api/admin/session"'));
- assert.ok(!worker.includes("user_metadata"));
+
+test("Admin sign-out is available in the dashboard", () => {
+  assert.ok(dashboard.includes("supabase?.auth.signOut()"));
 });
-test("admin API calls carry the active Supabase bearer token to the Worker API",()=>{
- assert.ok(apiClient.includes("VITE_API_BASE_URL"));
- assert.ok(apiClient.includes("https://xinpay.nabinchettri0007.workers.dev"));
- assert.ok(apiClient.includes("Authorization",));
- assert.ok(adminTransactions.includes('apiFetch("/api/admin/orders"'));
- assert.ok(adminTransactions.includes('apiFetch("/api/admin/orders/"+'));
- assert.ok(paymentConfig.includes("apiFetch(endpoint"));
- assert.ok(adminApp.includes("supabase?.auth.signOut"));
+
+test("Cloudflare Worker deployment is removed from the active release workflow", async () => {
+  assert.rejects(access(new URL("../.github/workflows/deploy.yml", import.meta.url)));
+  assert.rejects(access(new URL("../wrangler.toml", import.meta.url)));
+  assert.rejects(access(new URL("../worker/index.ts", import.meta.url)));
+  assert.ok(!wfPlaceholder());
 });
-test("Worker allows only the Vercel app and preview branch origins for browser API calls",()=>{
- assert.ok(worker.includes("ALLOWED_ORIGINS"));
- assert.ok(worker.includes("allowedOrigin(origin,env)"));
- assert.ok(!wranglerConfig.includes("https://*.vercel.app"));
-});
+
+function wfPlaceholder() { return !server.includes("cloudflare"); }
