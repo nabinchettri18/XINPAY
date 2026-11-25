@@ -92,8 +92,9 @@ async function startDirectUpi(){
   const filtered=useMemo(()=>transactions.filter(t=>(filter==="All"||t.kind===filter)&&((t.name+" "+t.detail+" "+t.id).toLowerCase().includes(search.toLowerCase()))),[filter,search]);
   const customerInitials=(authUser?.name||"Customer").split(/\s+/).slice(0,2).map(part=>part[0]?.toUpperCase()||"").join("");
   async function signOut(){if(!supabase)return;const {error}=await supabase.auth.signOut();if(error){showToast(error.message);return;}setAuthUser(null);}
+  const isPasswordRecoveryRoute=window.location.pathname.endsWith("/reset-password");
   if(authLoading)return <div className="xa-loading">Loading your secure XinPay account…</div>;
-  if(!authUser)return <CustomerAuth onAuthenticated={setAuthUser}/>;
+  if(!authUser||isPasswordRecoveryRoute)return <CustomerAuth onAuthenticated={(user)=>{setAuthUser(user);if(isPasswordRecoveryRoute)window.history.replaceState({},"","/customer");}}/>;
   return <div className="xp-shell">
     <aside className="xp-sidebar">
       <div className="xp-brand"><span className="xp-brand-mark">x</span><span className="xp-brand-word">xinpay<small>PAYMENTS MADE CLEAR</small></span></div>
