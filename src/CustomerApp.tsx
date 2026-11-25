@@ -324,7 +324,7 @@ export default function CustomerApp() {
                 : <QRCodeSVG value={directOrder?.upiUri || ""} size={176} level="M" includeMargin bgColor="#ffffff" fgColor="#173B35"/>}</div>
               <div><h2>{money(Number(paymentAmount))}</h2><p>{paymentPurpose || "Payment request"}</p><p className="xc-order-beneficiary">{directOrder?.beneficiary || paymentConfig.beneficiary} · {directOrder?.upiId || paymentConfig.upiId}</p><strong className="xc-order-pending"><Clock3 size={15}/> Awaiting confirmation</strong><div className="xc-upi-line"><span>{directOrder?.upiId}</span><button onClick={() => { void navigator.clipboard?.writeText(directOrder?.upiId || ""); showToast("UPI ID copied"); }}><Copy size={15}/> Copy</button></div><a className="xc-secondary xc-upi-open" href={directOrder?.upiUri || upiUri}>Open UPI app</a><button className="xc-text-button" onClick={() => { setDirectOrder(null); setPaymentStep(0); }}>Create another request</button></div>
               <p className="xc-safety-note">{paymentConfig.qrMode === "uploaded" && paymentConfig.qrAssetUrl
-                ? "Scan the saved QR and verify the payee and amount in your UPI app. Payment is marked complete only after the receiving bank credit is reconciled."
+                ? "Scan the saved QR, check the payee and enter the amount shown above if it is not prefilled. Payment is complete only after bank reconciliation."
                 : "The payment is marked complete only after the receiving bank credit is reconciled."}</p>
             </div>}
           </section>
