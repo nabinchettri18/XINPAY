@@ -3,6 +3,7 @@ import ReactDOM from "react-dom/client";
 import App from "./App";
 import CustomerApp from "./CustomerApp";
 import LandingPage from "./LandingPage";
+import AdminGate from "./AdminGate";
 import "./styles.css";
 import "./customer.css";
 import "./dashboard-theme.css";
@@ -15,6 +16,6 @@ const isCustomer = path.startsWith("/customer");
 const isAdmin = path === "/admin" || path.startsWith("/admin/");
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    {isCustomer ? <CustomerApp /> : isAdmin ? <App /> : <LandingPage />}
+    {isCustomer ? <CustomerApp /> : isAdmin ? <AdminGate><App /></AdminGate> : <LandingPage />}
   </React.StrictMode>
 );
