@@ -4,10 +4,10 @@ import { supabase, isSupabaseConfigured } from "./lib/supabase";
 import { toAuthUser, type AuthUser } from "./lib/auth";
 
 type Mode = "login" | "register" | "forgot" | "reset";
-type Props = { onAuthenticated:(user:AuthUser)=>void };
+type Props = { onAuthenticated:(user:AuthUser)=>void; initialMode?:"login"|"register"; embedded?:boolean };
 
-export default function CustomerAuth({onAuthenticated}:Props) {
-  const [mode,setMode] = useState<Mode>(() => window.location.pathname.endsWith("/reset-password") ? "reset" : "login");
+export default function CustomerAuth({onAuthenticated,initialMode="login",embedded=false}:Props) {
+  const [mode,setMode] = useState<Mode>(() => window.location.pathname.endsWith("/reset-password") ? "reset" : initialMode);
   const [name,setName] = useState("");
   const [email,setEmail] = useState("");
   const [password,setPassword] = useState("");
@@ -107,9 +107,9 @@ export default function CustomerAuth({onAuthenticated}:Props) {
   const title=mode==="login"?"Welcome back":mode==="register"?"Create your account":mode==="forgot"?"Reset your password":"Choose a new password";
   const subtitle=mode==="login"?"Sign in to continue to your XinPay account.":mode==="register"?"A few details to get your account started.":mode==="forgot"?"We'll email you a secure password reset link.":"Choose a strong password you have not used before.";
 
-  if(!isSupabaseConfigured)return <div className="xa-verifying"><div className="xa-mark">x</div><h2>XinPay authentication is not configured</h2><p>Add VITE_SUPABASE_URL and VITE_SUPABASE_PUBLISHABLE_KEY to this Vercel project.</p></div>;
+  if(!isSupabaseConfigured)return <div className={embedded?"xa-verifying xa-verifying-embedded":"xa-verifying"}><div className="xa-mark">x</div><h2>XinPay authentication is not configured</h2><p>Add VITE_SUPABASE_URL and VITE_SUPABASE_PUBLISHABLE_KEY to this Vercel project.</p></div>;
 
-  return <div className="xa-auth">
+  return <div className={embedded?"xa-auth xa-auth-embedded":"xa-auth"}>
     <section className="xa-story">
       <div className="xa-story-brand"><span className="xa-mark">x</span><span>xinpay<small>PAYMENTS MADE CLEAR</small></span></div>
       <div className="xa-story-copy"><span className="xa-eyebrow">YOUR MONEY. MORE CLARITY.</span><h1>A clearer way to stay on top of your payments.</h1><p>One place to review activity, manage payment details and keep your account organised.</p>
