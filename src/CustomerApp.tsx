@@ -1,11 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
 import { loadPaymentConfig, subscribePaymentConfig } from "./paymentConfig";
 import { Activity, ArrowDownLeft, ArrowUpRight, Bell, ChevronRight, CircleHelp, CreditCard, Eye, EyeOff, Home, LogOut, Plus, Search, Settings, ShieldCheck, Wallet, X, Menu, ReceiptText, Clock3 } from "lucide-react";
-import { QRCodeSVG } from "qrcode.react";\nimport { startTelegramVerification, getTelegramVerificationStatus, verifyTelegramOtp } from "./telegramVerification";
+import { QRCodeSVG } from "qrcode.react";
 
 type TgStart={verificationId:string;telegramUrl:string;expiresInSeconds:number};
 type TgStatus={status:"pending_link"|"linked"|"otp_sent"|"verified"|"expired"|"failed";phone?:string};
-const TG_API=(import.meta.env.VITE_API_BASE_URL||"").replace(/\\/$/,"");
+const TG_API=(import.meta.env.VITE_API_BASE_URL||"").replace(/\/$/,"");
 async function startTelegramVerification(phone:string):Promise<TgStart>{const r=await fetch(TG_API+"/api/telegram/verification/start",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({phone}),cache:"no-store"});const d=await r.json().catch(()=>({}));if(!r.ok)throw new Error(d.error||"Could not start verification");return d;}
 async function getTelegramVerificationStatus(id:string):Promise<TgStatus>{const r=await fetch(TG_API+"/api/telegram/verification/status?id="+encodeURIComponent(id),{cache:"no-store"});const d=await r.json().catch(()=>({}));if(!r.ok)throw new Error(d.error||"Status check failed");return d;}
 async function verifyTelegramOtp(verificationId:string,otp:string):Promise<{verified:boolean;phone:string}>{const r=await fetch(TG_API+"/api/telegram/verification/verify",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({verificationId,otp}),cache:"no-store"});const d=await r.json().catch(()=>({}));if(!r.ok)throw new Error(d.error||"OTP verification failed");return d;}
