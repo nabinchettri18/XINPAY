@@ -45,7 +45,7 @@ const bankQrBucket = "xinpay-customer-bank-qr";
 
 function customerError(value: unknown): string {
   const message = value instanceof Error ? value.message : String(value || "");
-  const normalized = message.toLowerCase().replaceAll("_", ".");
+  const normalized = message.toLowerCase().replace(/_/g, ".");
   if (normalized.includes("subscription.collection.unavailable")) {
     return "Plan payments are not available yet. XinPay admin needs to add the receiving UPI ID and beneficiary, then enable payment collection.";
   }
