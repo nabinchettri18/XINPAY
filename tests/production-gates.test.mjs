@@ -251,9 +251,11 @@ test("Customer dashboard starts at account setup until subscription approval, th
   assert.ok(subscriptionWorkspace.includes("SUBSCRIPTION AMOUNT RECEIVED"));
   assert.ok(subscriptionWorkspace.includes("not a wallet balance"));
 });
-test("Admin dashboard opens to the live subscription review queue",()=>{
-  assert.ok(dashboard.includes('useState<NavKey>("Subscription Requests")'));
-  assert.ok(dashboard.includes('<AdminSubscriptionRequests/>'));
+test("Admin dashboard opens to Overview and displays authenticated live operational data",()=>{
+  assert.ok(dashboard.includes('useState<NavKey>("Overview")'));
+  assert.ok(dashboard.includes('<Overview onNavigate={go}/>'));
+  assert.ok(dashboard.includes('apiFetch("/api/admin/orders"'));
+  assert.ok(dashboard.includes('apiFetch("/api/admin/subscription-requests"'));
   assert.ok(dashboard.includes('{ label: "Subscription Requests", icon: ShieldCheck }'));
 });
 test("Rejected subscription requests retain payment proof and UTR for audit",()=>{
