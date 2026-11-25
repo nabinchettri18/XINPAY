@@ -31,7 +31,7 @@ const transactions = [
 const quickActions: { label: string; description: string; icon: typeof Activity; target: NavKey }[] = [
   { label: "Transactions", description: "Review payment activity", icon: ReceiptText, target: "Transactions" },
   { label: "Reconciliation", description: "Match pending UPI credits", icon: RefreshCw, target: "Transactions" },
-  { label: "Payment settings", description: "Manage receiving details", icon: SlidersHorizontalIcon, target: "Payment Settings" },
+  { label: "Payment settings", description: "Manage receiving details", icon: Settings, target: "Payment Settings" },
   { label: "Settlements", description: "View settlement workspace", icon: ArrowLeftRight, target: "Settlements" }
 ];
 function SlidersHorizontalIcon(props: React.ComponentProps<typeof Activity>) {
