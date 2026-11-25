@@ -2,7 +2,7 @@ import { useState } from "react";
 import PaymentSettings from "./PaymentSettings";
 import {
   Activity, ArrowDownLeft, ArrowUpRight, Bell, Building2, ChevronDown,
-  CircleHelp, CreditCard, LayoutDashboard, LockKeyhole, Menu, Search,
+  CircleHelp, CreditCard, FileCheck, LayoutDashboard, LockKeyhole, Menu, Search,
   Settings, ShieldCheck, Wallet, X
 } from "lucide-react";
 
