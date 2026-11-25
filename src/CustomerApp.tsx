@@ -24,7 +24,14 @@ export default function CustomerApp() {
   const [mobileNav,setMobileNav] = useState(false);
   const [wallet,setWallet]=useState<any>({available_minor:0,pending_minor:0,transactions:[],withdrawals:[]});
   const [walletLoading,setWalletLoading]=useState(true);
-  const [withdrawBusy,setWithdrawBusy]=useState(false);\n  const [topupOpen,setTopupOpen]=useState(false);\n  const [topupAmount,setTopupAmount]=useState("500");\n  const [topupRequest,setTopupRequest]=useState<any>(null);\n  const [topupProof,setTopupProof]=useState<File|null>(null);\n  const [topupUtr,setTopupUtr]=useState("");\n  const [topupBusy,setTopupBusy]=useState(false);\n  const [topupError,setTopupError]=useState("");
+  const [withdrawBusy,setWithdrawBusy]=useState(false);
+  const [topupOpen,setTopupOpen]=useState(false);
+  const [topupAmount,setTopupAmount]=useState("500");
+  const [topupRequest,setTopupRequest]=useState<any>(null);
+  const [topupProof,setTopupProof]=useState<File|null>(null);
+  const [topupUtr,setTopupUtr]=useState("");
+  const [topupBusy,setTopupBusy]=useState(false);
+  const [topupError,setTopupError]=useState("");
   const [withdrawError,setWithdrawError]=useState("");
   const [withdrawOpen,setWithdrawOpen] = useState(false);
   const [withdrawAmount,setWithdrawAmount] = useState("");
