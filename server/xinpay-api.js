@@ -158,7 +158,7 @@ export async function publicConfig() {
     qrMode: data?.qr_mode === "uploaded" ? "uploaded" : "generated",
     qrAssetKey,
     qrAssetUrl: qrAssetKey
-      ? storagePublicUrl("xinpay-payment-assets", qrAssetKey) + "?v=" + Number(data?.version || 0)
+      ? storagePublicUrl("xinpay-payment-qr", qrAssetKey) + "?v=" + Number(data?.version || 0)
       : "",
     version: Number(data?.version || 0),
     updatedAt: data?.updated_at || "",
