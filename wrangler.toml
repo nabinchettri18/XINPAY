@@ -15,4 +15,6 @@ database_id = "01a0150b-0688-42f7-89b7-8e305ae5f48c"
 migrations_dir = "database/migrations"
 
 [vars]
-ALLOWED_ORIGIN = "https://xinpay.nabinchettri0007.workers.dev"
+ALLOWED_ORIGIN = "https://xinpay65.vercel.app"
+ALLOWED_ORIGINS = "https://xinpay65.vercel.app,https://xinpay65-git-direct-upi-manual-reconciliation-xinpay.vercel.app,http://localhost:5173"
+SUPABASE_URL = "https://tybmrgfcyjjuxlnsuqdo.supabase.co"
