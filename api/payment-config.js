@@ -62,7 +62,7 @@ export default async function handler(req, res) {
       qrMode: data?.qr_mode === "uploaded" ? "uploaded" : "generated",
       qrAssetKey: savedKey,
       qrAssetUrl: savedKey
-        ? storagePublicUrl("xinpay-payment-assets", savedKey) + "?v=" + Number(data?.version || 0)
+        ? storagePublicUrl("xinpay-payment-qr", savedKey) + "?v=" + Number(data?.version || 0)
         : "",
       version: Number(data?.version || 0),
       updatedAt: data?.updated_at || "",
