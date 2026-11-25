@@ -199,13 +199,10 @@ test("Customer order history is an allowed, user-scoped rate-limit scope",()=>{
 });
 
 
-const subscriptionCreateApi=await read("api/subscription-requests.js");
-const customerSubscriptionApi=await read("api/customer/subscription.js");
 const proofSubmitApi=await read("api/subscription-requests/[id]/submit.js");
 const adminSubscriptionApi=await read("api/admin/subscription-requests.js");
 const adminSubscriptionReview=await read("api/admin/subscription-requests/[id]/review.js");
 const customerBankProfileApi=await read("api/customer/bank-profile.js");
-const subscriptionWorkspace=await read("src/SubscriptionWorkspace.tsx");
 const adminSubscriptionWorkspace=await read("src/AdminSubscriptionRequests.tsx");
 const subscriptionMigration=await read("supabase/migrations/20261125113030_subscription_activation_manual_upi_workflow.sql");
 const subscriptionConstraintFix=await read("supabase/migrations/20261125113041_retain_proof_fields_for_rejected_subscriptions.sql");
