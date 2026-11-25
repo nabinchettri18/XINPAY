@@ -1,6 +1,6 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
-import { supabaseAdmin } from "../../_lib/supabase";
-import { json, method, originAllowed, authenticate } from "../../_lib/telegram";
+import { supabaseAdmin } from "../../_lib/supabase.js";
+import { json, method, originAllowed, authenticate } from "../../_lib/telegram.js";
 
 export default async function handler(req:VercelRequest,res:VercelResponse){
   if(!method(req,res,"GET"))return;
