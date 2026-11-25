@@ -34,6 +34,7 @@ export default async function handler(req, res) {
           accountLast4: data.account_last4,
           ifscCode: data.ifsc_code,
           upiId: data.upi_id,
+          qrAssetKey: data.qr_asset_key,
           qrUrl,
           updatedAt: data.updated_at,
         } : null,
