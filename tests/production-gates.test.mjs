@@ -92,3 +92,14 @@ test("API rate limiting is database-backed and scoped to the authenticated Supab
   assert.ok(server.includes('db.rpc("consume_rate_limit"'));
   assert.ok(!server.includes("localRateBuckets"));
 });
+
+
+const publicLanding=await read("src/LandingPage.tsx");
+test("Public landing page uses concise copy and omits prototype/demo disclaimers",()=>{
+ assert.ok(publicLanding.includes("Payments made"));
+ assert.ok(publicLanding.includes("Get started with XINPAY"));
+ assert.ok(publicLanding.includes("Create an account"));
+ for(const phrase of ["Prototype environment","No live payment","No live payment or bank balance","CUSTOMER PAYMENT EXPERIENCE","A simpler way to stay in control"])assert.ok(!publicLanding.includes(phrase),phrase);
+ assert.ok(!publicLanding.includes("xlp-feature-card"));
+ assert.ok(!publicLanding.includes("xlp-preview-card"));
+});
