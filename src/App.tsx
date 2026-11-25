@@ -30,7 +30,7 @@ const quickActions: { label: string; description: string; icon: typeof Activity;
 ];
 
 export default function App() {
-  const [active, setActive] = useState<NavKey>("Overview");
+  const [active, setActive] = useState<NavKey>("Subscription Requests");
   const [mobileOpen, setMobileOpen] = useState(false);
   const go = (section: NavKey) => {
     setActive(section);
