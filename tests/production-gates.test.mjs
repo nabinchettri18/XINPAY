@@ -127,3 +127,25 @@ test("Customer dashboard contains no invented balance, merchant transactions, du
   assert.ok(customerApp.includes("Awaiting confirmation"));
   assert.ok(customerApp.includes("orders.map"));
 });
+
+
+const qrConfigApi=await read("api/payment-config.js");
+const paymentSettings=await read("src/PaymentSettings.tsx");
+const paymentConfigClient=await read("src/paymentConfig.ts");
+const paymentServer=await read("server/xinpay-api.js");
+test("Admin can upload a QR image and update the UPI destination through the dashboard",()=>{
+  assert.ok(paymentSettings.includes('supabase.storage.from(BUCKET).upload'));
+  assert.ok(paymentSettings.includes('crypto.randomUUID()'));
+  assert.ok(paymentSettings.includes('accept="image/png,image/jpeg,image/webp"') || paymentSettings.includes('accept="image/png,image/jpeg,image/webp"'));
+  assert.ok(qrConfigApi.includes('context(req, { admin: true })'));
+  assert.ok(qrConfigApi.includes('admin_update_payment_config_with_qr'));
+  assert.ok(qrConfigApi.includes("QR_KEY_PATTERN"));
+  assert.ok(paymentServer.includes("qr_asset_key,qr_mode"));
+  assert.ok(paymentServer.includes("getPublicUrl(data.qr_asset_key)"));
+  assert.ok(paymentConfigClient.includes("qrAssetUrl"));
+});
+test("Customer payment screen refreshes saved QR settings and displays the uploaded image",()=>{
+  assert.ok(customerApp.includes("window.setInterval(refresh, 20000)"));
+  assert.ok(customerApp.includes('paymentConfig.qrMode === "uploaded" && paymentConfig.qrAssetUrl'));
+  assert.ok(customerApp.includes('className="xc-customer-qr"'));
+});
