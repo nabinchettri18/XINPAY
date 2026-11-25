@@ -29,7 +29,7 @@ export default function PaymentSettings() {
     <div className="payment-settings-grid">
       <div className="payment-settings-card">
         <div className="settings-card-title"><div><h3>Receiving details</h3><p>Configure the destination shown to customers.</p></div></div>
-        <div className="payment-warning"><ShieldCheck size={16}/><div><strong>Admin identity protected</strong><span>Saving requires an authenticated Cloudflare Access administrator session.</span></div></div>
+        <div className="payment-warning"><ShieldCheck size={16}/><div><strong>Admin identity protected</strong><span>Saving requires a Supabase session that the payment API verifies against its admin allowlist.</span></div></div>
         <label className="settings-label">UPI ID<input value={upiId} onChange={e=>{setUpiId(e.target.value);setSaved(false)}} placeholder="name@bank" autoComplete="off"/></label>
         <label className="settings-label">Beneficiary / display name<input value={beneficiary} onChange={e=>{setBeneficiary(e.target.value);setSaved(false)}} placeholder="Account holder or business name"/></label>
         <label className="settings-label">Customer instructions<textarea rows={4} value={instructions} onChange={e=>{setInstructions(e.target.value);setSaved(false)}}/></label>
