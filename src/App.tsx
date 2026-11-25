@@ -3,7 +3,8 @@ import { apiFetch } from "./lib/api";
 import { supabase } from "./lib/supabase";
 import PaymentSettings from "./PaymentSettings";
 import AdminTransactions from "./AdminTransactions";
-import AdminSubscriptionRequests from "./AdminSubscriptionRequests";\nimport AdminBankAccounts from "./AdminBankAccounts";
+import AdminSubscriptionRequests from "./AdminSubscriptionRequests";
+import AdminBankAccounts from "./AdminBankAccounts";
 import {
   Activity, AlertCircle, ArrowLeftRight, Bell, Building2, CheckCircle2,
   ChevronDown, ChevronRight, CircleHelp, CreditCard, LayoutDashboard,
