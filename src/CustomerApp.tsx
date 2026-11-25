@@ -71,7 +71,7 @@ export default function CustomerApp() {
   const [selected, setSelected] = useState<CustomerOrder | null>(null);
   const [mobileNav, setMobileNav] = useState(false);
   const [toast, setToast] = useState("");
-  const [paymentConfig, setPaymentConfig] = useState({ upiId: "", beneficiary: "", instructions: "", enabled: false });
+  const [paymentConfig, setPaymentConfig] = useState({ upiId: "", beneficiary: "", instructions: "", enabled: false, qrMode: "generated" as "generated" | "uploaded", qrAssetKey: "", qrAssetUrl: "" });
   const [paymentAmount, setPaymentAmount] = useState("");
   const [paymentPurpose, setPaymentPurpose] = useState("");
   const [paymentStep, setPaymentStep] = useState(0);
@@ -117,9 +117,20 @@ export default function CustomerApp() {
   }, [authUser?.id]);
 
   useEffect(() => {
-    const refresh = () => loadPaymentConfig().then(setPaymentConfig).catch(() => undefined);
-    void refresh();
-    return subscribePaymentConfig(refresh);
+    let active = true;
+    const refresh = () => {
+      void loadPaymentConfig().then((config) => {
+        if (active) setPaymentConfig(config);
+      }).catch(() => undefined);
+    };
+    refresh();
+    const interval = window.setInterval(refresh, 20000);
+    const unsubscribe = subscribePaymentConfig(refresh);
+    return () => {
+      active = false;
+      window.clearInterval(interval);
+      unsubscribe();
+    };
   }, []);
 
   useEffect(() => {
@@ -308,9 +319,13 @@ export default function CustomerApp() {
                 <p className="xc-safety-note">Never share your UPI PIN or OTP. A UPI QR scan alone does not confirm payment.</p>
               </div>
             </> : <div className="xc-qr-result">
-              <div className="xc-qr-code"><QRCodeSVG value={directOrder?.upiUri || ""} size={176} level="M" includeMargin bgColor="#ffffff" fgColor="#173B35"/></div>
-              <div><h2>{money(Number(paymentAmount))}</h2><p>{paymentPurpose || "Payment request"}</p><strong className="xc-order-pending"><Clock3 size={15}/> Awaiting confirmation</strong><div className="xc-upi-line"><span>{directOrder?.upiId}</span><button onClick={() => { void navigator.clipboard?.writeText(directOrder?.upiId || ""); showToast("UPI ID copied"); }}><Copy size={15}/> Copy</button></div><a className="xc-secondary xc-upi-open" href={directOrder?.upiUri || upiUri}>Open UPI app</a><button className="xc-text-button" onClick={() => { setDirectOrder(null); setPaymentStep(0); }}>Create another request</button></div>
-              <p className="xc-safety-note">The payment is marked complete only after the receiving bank credit is reconciled.</p>
+              <div className="xc-qr-code">{paymentConfig.qrMode === "uploaded" && paymentConfig.qrAssetUrl
+                ? <img className="xc-customer-qr" src={paymentConfig.qrAssetUrl} alt="XinPay receiving UPI QR code"/>
+                : <QRCodeSVG value={directOrder?.upiUri || ""} size={176} level="M" includeMargin bgColor="#ffffff" fgColor="#173B35"/>}</div>
+              <div><h2>{money(Number(paymentAmount))}</h2><p>{paymentPurpose || "Payment request"}</p><p className="xc-order-beneficiary">{directOrder?.beneficiary || paymentConfig.beneficiary} · {directOrder?.upiId || paymentConfig.upiId}</p><strong className="xc-order-pending"><Clock3 size={15}/> Awaiting confirmation</strong><div className="xc-upi-line"><span>{directOrder?.upiId}</span><button onClick={() => { void navigator.clipboard?.writeText(directOrder?.upiId || ""); showToast("UPI ID copied"); }}><Copy size={15}/> Copy</button></div><a className="xc-secondary xc-upi-open" href={directOrder?.upiUri || upiUri}>Open UPI app</a><button className="xc-text-button" onClick={() => { setDirectOrder(null); setPaymentStep(0); }}>Create another request</button></div>
+              <p className="xc-safety-note">{paymentConfig.qrMode === "uploaded" && paymentConfig.qrAssetUrl
+                ? "Scan the saved QR and verify the payee and amount in your UPI app. Payment is marked complete only after the receiving bank credit is reconciled."
+                : "The payment is marked complete only after the receiving bank credit is reconciled."}</p>
             </div>}
           </section>
         </>}
