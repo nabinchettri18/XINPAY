@@ -3,7 +3,7 @@ import PaymentSettings from "./PaymentSettings";
 import AdminTransactions from "./AdminTransactions";
 import {
   Activity, AlertCircle, ArrowDownLeft, ArrowLeftRight, ArrowUpRight, Bell,
-  Building2, CheckCircle2, ChevronDown, ChevronRight, CircleHelp, Clock3,
+  Building2, CheckCircle2, ChevronDown, ChevronRight, CircleHelp,
   CreditCard, LayoutDashboard, LockKeyhole, Menu, RefreshCw, ReceiptText,
   Search, Settings, ShieldCheck, Wallet, X
 } from "lucide-react";
@@ -34,9 +34,6 @@ const quickActions: { label: string; description: string; icon: typeof Activity;
   { label: "Payment settings", description: "Manage receiving details", icon: Settings, target: "Payment Settings" },
   { label: "Settlements", description: "View settlement workspace", icon: ArrowLeftRight, target: "Settlements" }
 ];
-function SlidersHorizontalIcon(props: React.ComponentProps<typeof Activity>) {
-  return <Settings {...props} />;
-}
 
 export default function App() {
   const [active, setActive] = useState<NavKey>("Overview");
