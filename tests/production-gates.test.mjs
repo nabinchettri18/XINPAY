@@ -272,3 +272,18 @@ test("Customer workspace uses the light theme without changing the admin or publ
   assert.ok(!customerLightTheme.includes(".app-shell{"));
   assert.ok(main.includes('import "./customer-light-theme.css";'));
 });
+
+
+test("Customer plan payments stay disabled until the live admin receiving destination is configured",()=>{
+  assert.ok(subscriptionWorkspace.includes('apiFetch("/api/payment-config"'));
+  assert.ok(subscriptionWorkspace.includes('configData.enabled === true'));
+  assert.ok(subscriptionWorkspace.includes("validReceivingUpi"));
+  assert.ok(subscriptionWorkspace.includes("validBeneficiary"));
+  assert.ok(subscriptionWorkspace.includes("collectionAvailable !== true"));
+  assert.ok(subscriptionWorkspace.includes("Payments unavailable"));
+  assert.ok(subscriptionWorkspace.includes("Plan payments are temporarily unavailable."));
+});
+test("Customer plan-payment RPC errors are translated into clear setup guidance",()=>{
+  assert.ok(subscriptionWorkspace.includes('normalized.includes("subscription.collection.unavailable")'));
+  assert.ok(subscriptionWorkspace.includes("XinPay admin needs to add the receiving UPI ID and beneficiary"));
+});
