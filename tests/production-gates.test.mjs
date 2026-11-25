@@ -186,3 +186,75 @@ test("Customer order history is an allowed, user-scoped rate-limit scope",()=>{
   assert.ok(customerRateLimitMigration.includes("v_user_id::text || ':' || p_scope"));
   assert.ok(customerRateLimitMigration.includes("return v_hits <= p_limit"));
 });
+
+
+const subscriptionCreateApi=await read("api/subscription-requests.js");
+const customerSubscriptionApi=await read("api/customer/subscription.js");
+const proofSubmitApi=await read("api/subscription-requests/[id]/submit.js");
+const adminSubscriptionApi=await read("api/admin/subscription-requests.js");
+const adminSubscriptionReview=await read("api/admin/subscription-requests/[id]/review.js");
+const customerBankProfileApi=await read("api/customer/bank-profile.js");
+const subscriptionWorkspace=await read("src/SubscriptionWorkspace.tsx");
+const adminSubscriptionWorkspace=await read("src/AdminSubscriptionRequests.tsx");
+const subscriptionMigration=await read("supabase/migrations/20261125113030_subscription_activation_manual_upi_workflow.sql");
+const subscriptionConstraintFix=await read("supabase/migrations/20261125113041_retain_proof_fields_for_rejected_subscriptions.sql");
+
+test("Plan prices are fixed server-side and payment requests snapshot the admin receiving destination",()=>{
+  for(const amount of ["359800","535600","915800"])assert.ok(subscriptionMigration.includes(amount));
+  assert.ok(subscriptionCreateApi.includes('PLANS.has(planKey)'));
+  assert.ok(subscriptionCreateApi.includes('auth.db.rpc("create_subscription_payment_request"'));
+  assert.ok(subscriptionMigration.includes("receiver_upi_id"));
+  assert.ok(subscriptionMigration.includes("receiver_qr_asset_key"));
+  assert.ok(subscriptionMigration.includes("receiver_config_version"));
+  assert.ok(subscriptionMigration.includes("subscription_collection_unavailable"));
+  assert.ok(subscriptionWorkspace.includes("Pay now"));
+  assert.ok(subscriptionWorkspace.includes("money(plan.amount)"));
+});
+test("Customer proof submission is authenticated, user-owned, and UTR unique",()=>{
+  assert.ok(proofSubmitApi.includes('context(req)'));
+  assert.ok(proofSubmitApi.includes('auth.user.id + "/" + id + "/proof-"'));
+  assert.ok(proofSubmitApi.includes('auth.db.rpc("submit_subscription_payment_proof"'));
+  assert.ok(subscriptionMigration.includes("create unique index subscription_payment_requests_utr_unique"));
+  assert.ok(subscriptionMigration.includes("private.is_xinpay_admin()"));
+  assert.ok(subscriptionMigration.includes("subscription_proofs_customer_upload"));
+  assert.ok(subscriptionMigration.includes("subscription_proofs_customer_read"));
+  assert.ok(subscriptionMigration.includes("subscription_proofs_admin_read"));
+  assert.ok(subscriptionWorkspace.includes("Submit for verification"));
+});
+test("Admin activation requires explicit confirmation of bank credit and creates membership atomically",()=>{
+  assert.ok(adminSubscriptionApi.includes('context(req, { admin: true })'));
+  assert.ok(adminSubscriptionApi.includes("createSignedUrl"));
+  assert.ok(adminSubscriptionReview.includes('context(req, { admin: true })'));
+  assert.ok(adminSubscriptionReview.includes("confirmBankCredit"));
+  assert.ok(subscriptionMigration.includes("p_confirm_bank_credit is not true"));
+  assert.ok(subscriptionMigration.includes("insert into public.customer_memberships"));
+  assert.ok(subscriptionMigration.includes("subscription_payment.approved"));
+  assert.ok(adminSubscriptionWorkspace.includes("I verified the bank credit."));
+  assert.ok(adminSubscriptionWorkspace.includes("Confirm payment & activate"));
+});
+test("Customer bank profile is available only after activation and collects last four digits rather than a full account number",()=>{
+  assert.ok(customerBankProfileApi.includes('context(req)'));
+  assert.ok(customerBankProfileApi.includes('auth.db.rpc("save_customer_bank_profile"'));
+  assert.ok(subscriptionMigration.includes("active_subscription_required"));
+  assert.ok(subscriptionMigration.includes("account_last4 text"));
+  assert.ok(subscriptionMigration.includes("customer_bank_profiles_owner_select"));
+  assert.ok(subscriptionMigration.includes("customer_bank_qr_upload"));
+  assert.ok(subscriptionWorkspace.includes("Account number — last 4 digits only"));
+  assert.ok(subscriptionWorkspace.includes("Saving these details does not initiate payouts"));
+});
+test("Customer dashboard starts at account setup until subscription approval, then requests bank profile",()=>{
+  assert.ok(customerApp.includes("SubscriptionWorkspace"));
+  assert.ok(subscriptionWorkspace.includes('useState<Section>("Account Setup")'));
+  assert.ok(subscriptionWorkspace.includes('setSection(bankData.profile ? "Overview" : "Bank Details")'));
+  assert.ok(subscriptionWorkspace.includes("SUBSCRIPTION AMOUNT RECEIVED"));
+  assert.ok(subscriptionWorkspace.includes("not a wallet balance"));
+});
+test("Admin dashboard opens to the live subscription review queue",()=>{
+  assert.ok(dashboard.includes('useState<NavKey>("Subscription Requests")'));
+  assert.ok(dashboard.includes('<AdminSubscriptionRequests/>'));
+  assert.ok(dashboard.includes('{ label: "Subscription Requests", icon: ShieldCheck }'));
+});
+test("Rejected subscription requests retain payment proof and UTR for audit",()=>{
+  assert.ok(subscriptionConstraintFix.includes("status in ('submitted','approved','rejected')"));
+  assert.ok(subscriptionConstraintFix.includes("proof_path is not null"));
+});
