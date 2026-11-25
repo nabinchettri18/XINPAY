@@ -23,14 +23,6 @@ const navItems: { label: NavKey; icon: typeof LayoutDashboard }[] = [
   { label: "Settings", icon: Settings }
 ];
 
-const transactions = [
-  { id: "XP-10482", customer: "Aarav Sharma", date: "24 Nov, 10:42 AM", amount: "₹12,450.00", status: "Completed", type: "Payment" },
-  { id: "XP-10481", customer: "Meera Kapoor", date: "24 Nov, 10:18 AM", amount: "₹8,200.00", status: "Pending", type: "Payment" },
-  { id: "XP-10480", customer: "Rohan Mehta", date: "24 Nov, 09:56 AM", amount: "₹3,650.00", status: "Failed", type: "Refund" },
-  { id: "XP-10479", customer: "Isha Verma", date: "24 Nov, 09:31 AM", amount: "₹18,000.00", status: "Completed", type: "Payment" },
-  { id: "XP-10478", customer: "Kabir Singh", date: "24 Nov, 09:04 AM", amount: "₹5,500.00", status: "Completed", type: "Payment" }
-];
-
 const quickActions: { label: string; description: string; icon: typeof Activity; target: NavKey }[] = [
   { label: "Transactions", description: "Review payment activity", icon: ReceiptText, target: "Transactions" },
   { label: "Reconciliation", description: "Match pending UPI credits", icon: RefreshCw, target: "Transactions" },
@@ -41,15 +33,6 @@ const quickActions: { label: string; description: string; icon: typeof Activity;
 export default function App() {
   const [active, setActive] = useState<NavKey>("Overview");
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [query, setQuery] = useState("");
-  const [showNotice, setShowNotice] = useState(true);
-  const filtered = useMemo(
-    () => transactions.filter(t => (t.id + t.customer + t.status + t.type).toLowerCase().includes(query.toLowerCase())),
-    [query]
-  );
-  const completed = transactions.filter(t => t.status === "Completed").length;
-  const pending = transactions.filter(t => t.status === "Pending").length;
-  const failed = transactions.filter(t => t.status === "Failed").length;
   const go = (section: NavKey) => {
     setActive(section);
     setMobileOpen(false);
@@ -88,13 +71,8 @@ export default function App() {
         <header className="topbar">
           <button className="icon-btn mobile-menu" onClick={()=>setMobileOpen(true)} aria-label="Open navigation"><Menu/></button>
           <div className="breadcrumbs">Workspace <span>/</span> <strong>{active}</strong></div>
-          {active==="Overview"&&<label className="topbar-search">
-            <Search size={16}/>
-            <input value={query} onChange={e=>setQuery(e.target.value)} placeholder="Search transactions or IDs"/>
-            <kbd>/</kbd>
-          </label>}
           <div className="top-actions">
-            <button className="icon-btn" aria-label="Refresh demo view" title="Refresh view" onClick={()=>setQuery("")}><RefreshCw size={17}/></button>
+            
             <button className="icon-btn notification" aria-label="Notifications not connected" title="Notifications are not connected" disabled><Bell size={18}/><i/></button>
             <button className="admin-signout" onClick={()=>void supabase?.auth.signOut()} title="Sign out" aria-label="Sign out"><LogOut size={16}/><span>Sign out</span></button>
             <div className="avatar small">DA</div>
@@ -114,102 +92,8 @@ export default function App() {
             </div>}
           </div>
 
-          {showNotice&&<div className="demo-banner">
-            <LockKeyhole size={18}/>
-            <div><strong>Dashboard preview</strong><span>This dashboard is being connected to live operational records. Use the dedicated modules for verified payment and subscription data.</span></div>
-            <button onClick={()=>setShowNotice(false)} aria-label="Dismiss demo notice"><X size={17}/></button>
-          </div>}
 
-          {active==="Overview" ? <>
-            <section className="metrics">
-              <Metric title="Total processed" value="₹8,42,560" change="+12.8%" icon={Wallet} note="vs. previous period"/>
-              <Metric title="Successful payments" value="1,284" change="+8.4%" icon={CheckCircle2} note="vs. previous period"/>
-              <Metric title="Pending settlements" value="₹1,24,800" change="4 batches" icon={Building2} note="Sample queue"/>
-              <Metric title="Payment success rate" value="96.8%" change="+1.2%" icon={Activity} note="vs. previous period"/>
-            </section>
-
-            <section className="content-grid">
-              <div className="panel chart-panel">
-                <div className="panel-heading">
-                  <div><h2>Payment volume</h2><p>Illustrative activity · last 7 days</p></div>
-                  <div className="chart-legend-group"><span className="chart-legend"><i/> Successful</span><span className="chart-legend secondary"><i/> Pending</span></div>
-                </div>
-                <div className="chart">
-                  <div className="chart-grid"><span>₹2.0L</span><span>₹1.5L</span><span>₹1.0L</span><span>₹0.5L</span><span>₹0</span></div>
-                  <svg viewBox="0 0 700 230" preserveAspectRatio="none" className="chart-svg" role="img" aria-label="Illustrative payment volume line chart">
-                    <defs>
-                      <linearGradient id="area" x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stopColor="#8065f6" stopOpacity=".2"/><stop offset="100%" stopColor="#8065f6" stopOpacity="0"/></linearGradient>
-                    </defs>
-                    <path d="M0,175 C45,150 65,160 105,130 S165,148 205,100 S270,135 310,92 S370,110 415,62 S475,88 515,80 S575,40 620,54 S665,20 700,36 L700,230 L0,230 Z" fill="url(#area)"/>
-                    <path d="M0,175 C45,150 65,160 105,130 S165,148 205,100 S270,135 310,92 S370,110 415,62 S475,88 515,80 S575,40 620,54 S665,20 700,36" fill="none" stroke="#8065f6" strokeWidth="3"/>
-                    <path d="M0,198 C55,182 70,190 115,169 S180,174 220,151 S280,161 330,140 S390,151 430,126 S490,143 535,112 S590,128 630,106 S674,94 700,103" fill="none" stroke="#e2b65f" strokeWidth="2.5" strokeLinecap="round"/>
-                    <circle cx="415" cy="62" r="5" fill="#8065f6" stroke="#fff" strokeWidth="3"/>
-                  </svg>
-                  <div className="chart-labels"><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span></div>
-                </div>
-                <div className="chart-footnote"><span><i className="status-dot green"/> Successful payments trend</span><span><i className="status-dot amber"/> Pending payment trend</span></div>
-              </div>
-
-              <div className="panel quick-panel">
-                <div className="panel-heading"><div><h2>Quick actions</h2><p>Common operational tasks</p></div><span className="panel-more"><ChevronRight size={16}/></span></div>
-                <div className="quick-actions-grid">
-                  {quickActions.map(({label,description,icon:Icon,target})=>(
-                    <button className="quick-action" key={label} onClick={()=>go(target)}>
-                      <span className="quick-action-icon"><Icon size={18}/></span>
-                      <span className="quick-action-copy"><strong>{label}</strong><small>{description}</small></span>
-                      <ChevronRight className="quick-action-arrow" size={15}/>
-                    </button>
-                  ))}
-                </div>
-                <div className="quick-panel-foot"><ShieldCheck size={15}/><span>Admin actions are restricted to authenticated sessions.</span></div>
-              </div>
-            </section>
-
-            <section className="bottom-grid">
-              <div className="panel transactions-panel">
-                <div className="panel-heading transaction-heading">
-                  <div><h2>Recent transactions</h2><p>Latest sample activity</p></div>
-                  <div className="table-actions"><button className="secondary-button" onClick={()=>go("Transactions")}>View all <ChevronRight size={14}/></button></div>
-                </div>
-                <div className="table-wrap">
-                  <table><thead><tr><th>Transaction ID</th><th>Customer</th><th>Type</th><th>Date</th><th>Amount</th><th>Status</th></tr></thead>
-                    <tbody>{filtered.map(t=><tr key={t.id}>
-                      <td className="id-cell">{t.id}</td><td>{t.customer}</td>
-                      <td><span className="type-icon">{t.type==="Refund"?<ArrowUpRight size={14}/>:<ArrowDownLeft size={14}/>}</span>{t.type}</td>
-                      <td className="date-cell">{t.date}</td><td className="amount-cell">{t.amount}</td>
-                      <td><span className={"pill "+t.status.toLowerCase()}>{t.status}</span></td>
-                    </tr>)}</tbody>
-                  </table>
-                  {filtered.length===0&&<div className="no-results">No matching sample transactions. Try another search.</div>}
-                </div>
-              </div>
-
-              <div className="panel movement-panel">
-                <div className="panel-heading"><div><h2>Transaction status</h2><p>Based on 5 sample records</p></div><span className="panel-more"><Activity size={16}/></span></div>
-                <div className="status-summary"><strong>{transactions.length.toString().padStart(2,"0")}</strong><span>Sample transactions</span></div>
-                <div className="status-stack" aria-label="60 percent completed, 20 percent pending, 20 percent failed">
-                  <span className="status-stack-complete" style={{width:(completed/transactions.length*100)+"%"}}/>
-                  <span className="status-stack-pending" style={{width:(pending/transactions.length*100)+"%"}}/>
-                  <span className="status-stack-failed" style={{width:(failed/transactions.length*100)+"%"}}/>
-                </div>
-                <div className="status-breakdown">
-                  <div><span><i className="status-key complete"/>Completed</span><strong>{completed}</strong></div>
-                  <div><span><i className="status-key pending"/>Pending</span><strong>{pending}</strong></div>
-                  <div><span><i className="status-key failed"/>Failed</span><strong>{failed}</strong></div>
-                </div>
-                <div className="movement-note"><AlertCircle size={15}/><span>These counts describe the demo rows above, not live payment records.</span></div>
-              </div>
-            </section>
-          </> : active==="Payment Settings" ? <PaymentSettings/> : active==="Transactions" ? <AdminTransactions/> : active==="Subscription Requests" ? <AdminSubscriptionRequests/> :
-            <section className="panel section-panel">
-              <div className="empty-icon">{navItems.find(n=>n.label===active)?.icon && (()=>{const I=navItems.find(n=>n.label===active)!.icon;return <I size={24}/>})()}</div>
-              <h2>{active} module</h2>
-              <p>This module is scaffolded for the next development phase. No live financial actions are enabled.</p>
-              <div className="module-list"><span>✓ UI shell and navigation</span><span>○ Backend integration pending</span><span>○ Permissions and audit controls pending</span></div>
-            </section>
-          }
-
-          <footer>XinPay Admin <span>•</span> Secure operations console</footer>
+          {active==="Overview" ? <Overview onNavigate={go}/> : active==="Payment Settings" ? <PaymentSettings/> : active==="Transactions" ? <AdminTransactions/> : active==="Subscription Requests" ? <AdminSubscriptionRequests/> :\n            <section className="panel section-panel">\n              <div className="empty-icon">{navItems.find(n=>n.label===active)?.icon && (()=>{const I=navItems.find(n=>n.label===active)!.icon;return <I size={24}/>})()}</div>\n              <h2>{active} module</h2>\n              <p>This module is not connected to live records yet.</p>\n              <div className="module-list"><span>✓ UI shell and navigation</span><span>○ Backend integration pending</span><span>○ Permissions and audit controls pending</span></div>\n            </section>\n          }\n\n          <footer>XinPay Admin <span>•</span> Secure operations console</footer>
         </div>
       </main>
     </div>
@@ -223,3 +107,4 @@ function Metric({title,value,change,icon:Icon,note}:{title:string;value:string;c
     <div className="metric-bottom"><span className="metric-change">{change}</span><span>{note}</span></div>
   </div>;
 }
+\nfunction Overview({onNavigate}:{onNavigate:(section:NavKey)=>void}) {\n  type Order={id:string;provider:string;purpose:string;amount_minor:number;currency:string;status:string;created_at:string};\n  const [orders,setOrders]=useState<Order[]>([]); const [loading,setLoading]=useState(true); const [error,setError]=useState("");\n  async function load(){setLoading(true);setError("");try{const r=await fetch("/api/admin/orders",{headers:{Accept:"application/json"},cache:"no-store"});const d=await r.json().catch(()=>({}));if(!r.ok)throw new Error(d.error||"Unable to load operational data.");setOrders(Array.isArray(d.orders)?d.orders:[])}catch(e){setError(e instanceof Error?e.message:"Unable to load operational data.")}finally{setLoading(false)}}\n  useEffect(()=>{void load()},[]);\n  const money=(minor:number,currency:string)=>new Intl.NumberFormat("en-IN",{style:"currency",currency}).format(minor/100);\n  const paid=orders.filter(o=>["paid","completed","success","succeeded"].includes((o.status||"").toLowerCase()));\n  const pending=orders.filter(o=>["pending","review","awaiting_payment","submitted"].includes((o.status||"").toLowerCase()));\n  const rejected=orders.filter(o=>(o.status||"").toLowerCase()==="rejected");\n  return <div className="overview-live">\n    <div className="overview-live-heading"><div><p className="eyebrow">LIVE OPERATIONAL RECORDS</p><h2>Payment overview</h2><p>Data is loaded from XinPay's admin payment-order records. No illustrative metrics or transactions are shown.</p></div><button className="secondary-button" onClick={()=>void load()} disabled={loading}><RefreshCw size={15}/> {loading?"Loading…":"Refresh data"}</button></div>\n    {error&&<div className="demo-banner"><AlertCircle size={17}/><div><strong>Live data unavailable</strong><span>{error}</span></div><button onClick={()=>onNavigate("Transactions")}>Open transactions</button></div>}\n    <section className="metrics">\n      <Metric title="Orders loaded" value={loading?"—":String(orders.length)} change="Live records" icon={ReceiptText} note="Latest 100 orders"/>\n      <Metric title="Paid orders" value={loading?"—":String(paid.length)} change="Verified statuses" icon={CheckCircle2} note="Within loaded records"/>\n      <Metric title="Pending review" value={loading?"—":String(pending.length)} change="Requires attention" icon={Activity} note="Within loaded records"/>\n      <Metric title="Rejected orders" value={loading?"—":String(rejected.length)} change="Recorded status" icon={AlertCircle} note="Within loaded records"/>\n    </section>\n    <section className="content-grid">\n      <div className="panel transactions-panel"><div className="panel-heading"><div><h2>Recent payment orders</h2><p>Real records returned by the admin orders API</p></div><button className="secondary-button" onClick={()=>onNavigate("Transactions")}>Manage orders <ChevronRight size={14}/></button></div>\n      {loading?<div className="no-results">Loading payment records…</div>:error?<div className="no-results">Payment records could not be loaded.</div>:orders.length===0?<div className="no-results"><strong>No payment orders yet</strong><p>New customer payment orders will appear here after they are created.</p><button className="secondary-button" onClick={()=>onNavigate("Payment Settings")}>Configure payment settings</button></div>:<div className="table-wrap"><table><thead><tr><th>Order ID</th><th>Purpose</th><th>Method</th><th>Created</th><th>Amount</th><th>Status</th></tr></thead><tbody>{orders.slice(0,8).map(o=><tr key={o.id}><td className="id-cell">{o.id}</td><td>{o.purpose}</td><td>{o.provider==="direct_upi"?"Direct UPI":o.provider}</td><td>{new Date(o.created_at).toLocaleString("en-IN")}</td><td className="amount-cell">{money(o.amount_minor,o.currency)}</td><td><span className={"pill "+(o.status||"").toLowerCase()}>{o.status}</span></td></tr>)}</tbody></table></div>}</div>\n      <div className="panel quick-panel"><div className="panel-heading"><div><h2>Quick actions</h2><p>Operational tools</p></div></div><div className="quick-actions-grid">{quickActions.map(({label,description,icon:Icon,target})=><button className="quick-action" key={label} onClick={()=>onNavigate(target)}><span className="quick-action-icon"><Icon size={18}/></span><span className="quick-action-copy"><strong>{label}</strong><small>{description}</small></span><ChevronRight className="quick-action-arrow" size={15}/></button>)}</div><div className="quick-panel-foot"><ShieldCheck size={15}/><span>Admin actions require an authenticated session.</span></div></div>\n    </section>\n  </div>;\n}\n
