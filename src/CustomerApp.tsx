@@ -4,6 +4,7 @@ import { Activity, ArrowDownLeft, ArrowUpRight, Bell, ChevronRight, CircleHelp, 
 import { QRCodeSVG } from "qrcode.react";
 import CustomerAuth from "./CustomerAuth";
 import { supabase } from "./lib/supabase";
+import { apiFetch } from "./lib/api";
 import { toAuthUser, type AuthUser } from "./lib/auth";
 
 type Section = "Overview" | "Transactions" | "Payments" | "Payment methods" | "Account setup" | "Profile" | "Help";
@@ -46,7 +47,7 @@ export default function CustomerApp() {
   const [setupStep,setSetupStep] = useState(1);
   const [paymentConfig,setPaymentConfig] = useState({upiId:"",beneficiary:"",instructions:"",enabled:false});
   useEffect(()=>{const refresh=()=>loadPaymentConfig().then(setPaymentConfig);refresh();return subscribePaymentConfig(refresh)},[]);
-  useEffect(()=>{const orderId=new URLSearchParams(window.location.search).get("order_id");if(!orderId)return;const token=sessionStorage.getItem("xinpay_order_token:"+orderId);if(!token){setReturnStatus("Order created. Please wait for server-side payment verification.");return;}let cancelled=false;const check=async()=>{try{const r=await fetch("/api/orders/"+encodeURIComponent(orderId),{headers:{Authorization:"Bearer "+token},cache:"no-store"});if(!r.ok)throw new Error();const d=await r.json();if(!cancelled)setReturnStatus("Order "+orderId+" status: "+d.status.toUpperCase()+" — only verified server events can confirm payment.");}catch{if(!cancelled)setReturnStatus("We could not verify this order status. Please contact support with order ID "+orderId+".");}};void check();return()=>{cancelled=true}},[]);
+  useEffect(()=>{const orderId=new URLSearchParams(window.location.search).get("order_id");if(!orderId)return;const token=sessionStorage.getItem("xinpay_order_token:"+orderId);if(!token){setReturnStatus("Order created. Please wait for server-side payment verification.");return;}let cancelled=false;const check=async()=>{try{const r=await apiFetch("/api/orders/"+encodeURIComponent(orderId),{headers:{Authorization:"Bearer "+token},cache:"no-store"});if(!r.ok)throw new Error();const d=await r.json();if(!cancelled)setReturnStatus("Order "+orderId+" status: "+d.status.toUpperCase()+" — only verified server events can confirm payment.");}catch{if(!cancelled)setReturnStatus("We could not verify this order status. Please contact support with order ID "+orderId+".");}};void check();return()=>{cancelled=true}},[]);
   const upiId = paymentConfig.upiId;
   const upiName = paymentConfig.beneficiary;
   const validUpi = /^[a-zA-Z0-9._-]{2,256}@[a-zA-Z]{2,64}$/.test(upiId.trim());
@@ -62,7 +63,7 @@ export default function CustomerApp() {
   async function startCashfreeCheckout(){
     setCheckoutBusy(true);setCheckoutError("");
     try{
-      const response=await fetch("/api/orders",{method:"POST",headers:{"Content-Type":"application/json","Accept":"application/json"},body:JSON.stringify({amount:Number(paymentAmount),purpose:paymentPurpose||"XinPay payment"})});
+      const response=await apiFetch("/api/orders",{method:"POST",headers:{"Content-Type":"application/json","Accept":"application/json"},body:JSON.stringify({amount:Number(paymentAmount),purpose:paymentPurpose||"XinPay payment"})});
       const data=await response.json().catch(()=>({}));
       if(!response.ok)throw new Error(data.error||"Checkout is currently unavailable");
       if(data.orderId&&data.orderToken)sessionStorage.setItem("xinpay_order_token:"+data.orderId,data.orderToken);
@@ -79,7 +80,7 @@ export default function CustomerApp() {
 async function startDirectUpi(){
     setCheckoutBusy(true);setCheckoutError("");
     try{
-      const response=await fetch("/api/direct-upi/orders",{method:"POST",headers:{"Content-Type":"application/json","Accept":"application/json"},body:JSON.stringify({amount:Number(paymentAmount),purpose:paymentPurpose||"XinPay payment"})});
+      const response=await apiFetch("/api/direct-upi/orders",{method:"POST",headers:{"Content-Type":"application/json","Accept":"application/json"},body:JSON.stringify({amount:Number(paymentAmount),purpose:paymentPurpose||"XinPay payment"})});
       const data=await response.json().catch(()=>({}));
       if(!response.ok)throw new Error(data.error||"Direct UPI is unavailable");
       if(data.orderId&&data.orderToken)sessionStorage.setItem("xinpay_order_token:"+data.orderId,data.orderToken);
