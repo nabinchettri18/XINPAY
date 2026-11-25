@@ -135,6 +135,14 @@ export async function rateLimit(_req, db, scope, limit = 30) {
   return data === true;
 }
 
+
+export function storagePublicUrl(bucket, key) {
+  const base = getSupabaseUrl();
+  if (!base || !key) return "";
+  const safeKey = String(key).split("/").map(encodeURIComponent).join("/");
+  return `${base}/storage/v1/object/public/${encodeURIComponent(bucket)}/${safeKey}`;
+}
+
 export async function publicConfig() {
   const db = newClient();
   const { data, error } = await db.from("payment_config")
@@ -153,6 +161,9 @@ export async function publicConfig() {
       : "",
     version: Number(data?.version || 0),
     updatedAt: data?.updated_at || "",
+    qrMode: data?.qr_mode === "uploaded" ? "uploaded" : "generated",
+    qrAssetKey: data?.qr_asset_key || "",
+    qrUrl: data?.qr_asset_key ? storagePublicUrl("xinpay-payment-assets", data.qr_asset_key) : "",
   };
 }
 
