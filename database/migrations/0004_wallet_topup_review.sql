@@ -75,7 +75,7 @@ begin
  if p_decision='reject' and length(trim(coalesce(p_note,'')))<3 then raise exception 'rejection_reason_required' using errcode='22023'; end if;
  select * into v_row from public.customer_wallet_topup_requests where id=p_id for update;
  if not found or v_row.status<>'submitted' then raise exception 'topup_not_pending_review' using errcode='55000'; end if;
- update public.customer_wallet_topup_requests set status=p_decision||'d',admin_note=left(trim(coalesce(p_note,'')),1000),reviewed_by=auth.uid(),reviewed_at=now(),updated_at=now() where id=p_id returning * into v_row;
+ update public.customer_wallet_topup_requests set status=case when p_decision='approve' then 'approved' else 'rejected' end,admin_note=left(trim(coalesce(p_note,'')),1000),reviewed_by=auth.uid(),reviewed_at=now(),updated_at=now() where id=p_id returning * into v_row;
  if p_decision='approve' then
    insert into public.customer_wallet_accounts(customer_id) values(v_row.customer_id) on conflict(customer_id) do nothing;
    insert into public.customer_wallet_ledger(id,customer_id,entry_type,amount_minor,source_type,source_id,description)
