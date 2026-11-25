@@ -1,4 +1,4 @@
-import { context, fail, json, method, publicConfig, randomId } from "../server/xinpay-api.js";
+import { context, fail, json, method, publicConfig, randomId, storagePublicUrl } from "../server/xinpay-api.js";
 
 const QR_KEY_PATTERN = /^payment-qr\/qr-[A-Za-z0-9_-]+\.(png|jpe?g|webp)$/;
 
@@ -28,6 +28,11 @@ export default async function handler(req, res) {
     const qrMode = body.qrMode;
     const qrAssetKey = body.qrAssetKey.trim();
     const validUpi = /^[a-zA-Z0-9._-]{2,256}@[a-zA-Z]{2,64}$/.test(upiId);
+    const qrMode = body.qrMode === "uploaded" ? "uploaded" : "generated";
+    const qrAssetKey = typeof body.qrAssetKey === "string" ? body.qrAssetKey.trim() : "";
+    if (qrMode === "uploaded" && !/^payment-qr\/[a-f0-9-]{36}\.(png|jpg|jpeg|webp)$/.test(qrAssetKey)) {
+      return fail(res, 400, "Upload a valid QR image before saving.");
+    }
 
     if (body.enabled && (!validUpi || !beneficiary)) {
       return fail(res, 400, "A valid UPI ID and beneficiary are required before enabling collection.");
