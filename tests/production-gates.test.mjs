@@ -260,3 +260,15 @@ test("Rejected subscription requests retain payment proof and UTR for audit",()=
   assert.ok(subscriptionConstraintFix.includes("status in ('submitted','approved','rejected')"));
   assert.ok(subscriptionConstraintFix.includes("proof_path is not null"));
 });
+
+
+const customerLightTheme=await read("src/customer-light-theme.css");
+test("Customer workspace uses the light theme without changing the admin or public landing theme",()=>{
+  for(const selector of [".xp-sub-shell",".xp-sub-shell .xp-sidebar",".xp-sub-shell .xp-topbar",".xp-sub-shell .xp-plan-card",".xp-sub-shell .xp-sub-panel"]) {
+    assert.ok(customerLightTheme.includes(selector),selector);
+  }
+  for(const color of ["#F3F4EC","#FFFFFF","#173B35","#C6FF1A"]) assert.ok(customerLightTheme.includes(color),color);
+  assert.ok(!customerLightTheme.includes("body{"));
+  assert.ok(!customerLightTheme.includes(".app-shell{"));
+  assert.ok(main.includes('import "./customer-light-theme.css";'));
+});
