@@ -81,7 +81,7 @@ export default function PaymentSettings() {
 
   async function saveSettings(){
     const v=upiId.trim();
-    const valid=/^[a-zA-Z0-9._-]{2,256}@[a-zA-Z]{2,64}$/.test(v);
+    const valid=/^[a-zA-Z0-9._-]{2,255}@[a-zA-Z]{2,64}$/.test(v);
     if(enabled&&(!valid||!beneficiary.trim())){
       setSaved(false);setMessage("A valid UPI ID and payee name are required to enable collection.");return;
     }
