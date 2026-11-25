@@ -15,6 +15,7 @@ const paymentConfig = await read("api/payment-config.js");
 const directOrders = await read("api/direct-upi/orders.js");
 const cashfreeOrders = await read("api/orders.js");
 const orderStatus = await read("api/orders/[id].js");
+const customerOrders = await read("api/customer/orders.js");
 const cashfreeWebhook = await read("api/webhooks/cashfree.js");
 const customerApp = await read("src/CustomerApp.tsx");
 const dashboard = await read("src/App.tsx");
@@ -57,7 +58,7 @@ test("Customer orders are bound to the authenticated Supabase identity", () => {
   assert.ok(directOrders.includes("customer_access_hash"));
   assert.ok(orderStatus.includes('req.headers["x-order-token"]'));
   assert.ok(orderStatus.includes("auth.db.from(\"payment_orders\")"));
-  assert.ok(customerApp.includes('"X-Order-Token":token'));
+  assert.ok(customerApp.includes('"X-Order-Token": token'));
 });
 
 test("Cashfree and Direct UPI stay disabled unless explicit server feature flags are set", () => {
@@ -102,4 +103,24 @@ test("Public landing page uses concise copy and omits prototype/demo disclaimers
  for(const phrase of ["Prototype environment","No live payment","No live payment or bank balance","CUSTOMER PAYMENT EXPERIENCE","A simpler way to stay in control"])assert.ok(!publicLanding.includes(phrase),phrase);
  assert.ok(!publicLanding.includes("xlp-feature-card"));
  assert.ok(!publicLanding.includes("xlp-preview-card"));
+});
+
+
+test("Customer payment history reads only the signed-in customer's own orders", () => {
+  assert.ok(customerOrders.includes('context(req)'));
+  assert.ok(customerOrders.includes('.from("payment_orders")'));
+  assert.ok(customerOrders.includes('.eq("customer_id", auth.user.id)'));
+  assert.ok(customerOrders.includes('.limit(100)'));
+  assert.ok(!customerOrders.includes("serviceClient"));
+  assert.ok(!customerOrders.includes("customer_access_hash"));
+  assert.ok(customerApp.includes('apiFetch("/api/customer/orders"'));
+});
+test("Customer dashboard contains no invented balance, merchant transactions, dummy card or demo labels", () => {
+  for (const phrase of ["₹12,450.00", "₹3,500.00", "Cafe Coffee Day", "Metro recharge", "DEMO", "Demo environment", "Prototype / sample data", "4821"]) {
+    assert.ok(!customerApp.includes(phrase), phrase);
+  }
+  assert.ok(customerApp.includes("Total requests"));
+  assert.ok(customerApp.includes("Completed"));
+  assert.ok(customerApp.includes("Awaiting confirmation"));
+  assert.ok(customerApp.includes("orders.map"));
 });
