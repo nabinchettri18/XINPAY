@@ -6,7 +6,7 @@ import {
   Settings, ShieldCheck, Wallet, X
 } from "lucide-react";
 
-type NavKey = "Overview" | "Transactions" | "Settlements" | "Accounts" | "Customers" | "Support" | "Payment Settings" | "Payment Proof Review" | "Withdrawal Requests" | "Settings";
+type NavKey = "Overview" | "Transactions" | "Settlements" | "Accounts" | "Customers" | "Support" | "Payment Settings" | "Payment Proof Review" | "Withdrawal Requests" | "Wallet Top-ups" | "Settings;
 const navItems: { label: NavKey; icon: typeof LayoutDashboard }[] = [
   { label: "Overview", icon: LayoutDashboard },
   { label: "Transactions", icon: Activity },
@@ -17,6 +17,7 @@ const navItems: { label: NavKey; icon: typeof LayoutDashboard }[] = [
   { label: "Payment Settings", icon: Wallet },
   { label: "Payment Proof Review", icon: FileCheck },
   { label: "Withdrawal Requests", icon: Wallet },
+  { label: "Wallet Top-ups", icon: Wallet },
   { label: "Settings", icon: Settings }
 ];
 const transactions = [
@@ -40,7 +41,7 @@ export default function App() {
         <div className="brand"><div className="brand-mark">X</div><div><strong>xinpay</strong><small>PAYMENT OPERATIONS</small></div></div>
         <div className="workspace"><span className="workspace-icon">XP</span><div><strong>XinPay Workspace</strong><small>Demo environment</small></div><ChevronDown size={16}/></div>
         <p className="nav-label">WORKSPACE</p>
-        <nav>{navItems.map(({label,icon:Icon})=><button key={label} className={active===label?"nav-item active":"nav-item"} onClick={()=>{if(label==="Payment Proof Review"){window.location.href="/admin/proofs";return;}if(label==="Withdrawal Requests"){window.location.href="/admin/withdrawals";return;}setActive(label);setMobileOpen(false)}}><Icon size={18}/><span>{label}</span>{label==="Support"&&<span className="nav-count">2</span>}</button>)}</nav>
+        <nav>{navItems.map(({label,icon:Icon})=><button key={label} className={active===label?"nav-item active":"nav-item"} onClick={()=>{if(label==="Payment Proof Review"){window.location.href="/admin/proofs";return;}if(label==="Withdrawal Requests"){window.location.href="/admin/withdrawals";return;}if(label==="Wallet Top-ups"){window.location.href="/admin/topups";return;}setActive(label);setMobileOpen(false)}}><Icon size={18}/><span>{label}</span>{label==="Support"&&<span className="nav-count">2</span>}</button>)}</nav>
         <div className="sidebar-bottom"><div className="security-note"><ShieldCheck size={17}/><span><strong>Demo workspace</strong><small>Demo · no live money</small></span></div><div className="profile"><div className="avatar">DA</div><div><strong>Demo Admin</strong><small>Demo account</small></div><ChevronDown size={16}/></div></div>
       </aside>
       {mobileOpen && <button className="scrim" onClick={()=>setMobileOpen(false)} aria-label="Close navigation"/>}
