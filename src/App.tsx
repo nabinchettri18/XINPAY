@@ -85,11 +85,11 @@ export default function App() {
         <header className="topbar">
           <button className="icon-btn mobile-menu" onClick={()=>setMobileOpen(true)} aria-label="Open navigation"><Menu/></button>
           <div className="breadcrumbs">Workspace <span>/</span> <strong>{active}</strong></div>
-          <label className="topbar-search">
+          {active==="Overview"&&<label className="topbar-search">
             <Search size={16}/>
             <input value={query} onChange={e=>setQuery(e.target.value)} placeholder="Search transactions or IDs"/>
             <kbd>/</kbd>
-          </label>
+          </label>}
           <div className="top-actions">
             <button className="icon-btn" aria-label="Refresh demo view" title="Refresh view" onClick={()=>setQuery("")}><RefreshCw size={17}/></button>
             <button className="icon-btn notification" aria-label="Notifications not connected" title="Notifications are not connected" disabled><Bell size={18}/><i/></button>
