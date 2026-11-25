@@ -149,21 +149,19 @@ export async function publicConfig() {
     .select("receiving_upi_id,beneficiary_display_name,instructions,enabled,qr_asset_key,qr_mode,version,updated_at")
     .eq("id", "primary").maybeSingle();
   if (error) throw error;
+  const qrAssetKey = data?.qr_asset_key || "";
   return {
     upiId: data?.receiving_upi_id || "",
     beneficiary: data?.beneficiary_display_name || "",
     instructions: data?.instructions || DEFAULT_INSTRUCTIONS,
     enabled: !!data?.enabled,
-    qrMode: data?.qr_mode || "generated",
-    qrAssetKey: data?.qr_asset_key || "",
-    qrAssetUrl: data?.qr_mode === "uploaded" && data?.qr_asset_key
-      ? db.storage.from("xinpay-payment-qr").getPublicUrl(data.qr_asset_key).data.publicUrl + "?v=" + Number(data?.version || 0)
+    qrMode: data?.qr_mode === "uploaded" ? "uploaded" : "generated",
+    qrAssetKey,
+    qrAssetUrl: qrAssetKey
+      ? storagePublicUrl("xinpay-payment-assets", qrAssetKey) + "?v=" + Number(data?.version || 0)
       : "",
     version: Number(data?.version || 0),
     updatedAt: data?.updated_at || "",
-    qrMode: data?.qr_mode === "uploaded" ? "uploaded" : "generated",
-    qrAssetKey: data?.qr_asset_key || "",
-    qrUrl: data?.qr_asset_key ? storagePublicUrl("xinpay-payment-assets", data.qr_asset_key) : "",
   };
 }
 
