@@ -86,3 +86,13 @@ The admin dashboard itself is a static frontend and is not authenticated by the 
 - Restrict `ALLOWED_ORIGIN` to the frontend domain.
 - This endpoint only manages displayed UPI details. It does not confirm incoming transfers, reconcile bank statements, or mark payments as paid.
 - For real payments, integrate a regulated payment provider or a trusted bank reconciliation mechanism, verify callbacks server-side, use idempotency, and maintain an auditable ledger.
+
+## Telegram phone OTP configuration
+
+Create a bot with BotFather and configure the Worker:
+- Secret `TELEGRAM_BOT_TOKEN`: bot token
+- Secret `TELEGRAM_WEBHOOK_SECRET`: random secret of at least 32 characters
+- Secret `OTP_HASH_SECRET`: another random secret, distinct from the webhook secret
+- Variable `TELEGRAM_BOT_USERNAME`: bot username without `@`
+
+Apply migration `0003_telegram_phone_otp.sql` remotely before enabling the feature. Register webhook URL `https://xinpay.nabinchettri0007.workers.dev/api/telegram/webhook` with the secret token set to `TELEGRAM_WEBHOOK_SECRET`. The webhook validates Telegram's `X-Telegram-Bot-Api-Secret-Token` header. Customers start from Customer Portal → Profile, open the bot deep link, press Start, and share their own phone contact. XinPay checks the contact against the number they entered, then sends a six-digit OTP that expires in 5 minutes. The link expires in 10 minutes and OTP attempts are capped at five. This verifies phone ownership only; it does not establish an authenticated XinPay user session or authorize financial actions.
