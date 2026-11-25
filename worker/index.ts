@@ -3,6 +3,7 @@ export interface Env {
  ADMIN_TOKEN?: string; // legacy; disabled when Access auth is configured
 
  CF_ACCESS_TEAM_DOMAIN?: string; CF_ACCESS_AUD?: string; ADMIN_EMAILS?: string;
+ SUPABASE_URL?: string;
  CASHFREE_CLIENT_ID?: string; CASHFREE_CLIENT_SECRET?: string; CASHFREE_WEBHOOK_SECRET?: string;
  CASHFREE_ENV?: string; PAYMENTS_ENABLED?: string; DIRECT_UPI_ENABLED?: string; PUBLIC_BASE_URL?: string;
 }
@@ -10,8 +11,12 @@ type Config={upiId:string;beneficiary:string;instructions:string;enabled:boolean
 const DEFAULT:Config={upiId:"",beneficiary:"",instructions:"Use the payment details shown here and keep your transaction reference for your records.",enabled:false,version:0,updatedAt:""};
 const SECURITY_HEADERS:Record<string,string>={"Cache-Control":"no-store, max-age=0","Pragma":"no-cache","X-Content-Type-Options":"nosniff","Referrer-Policy":"no-referrer","X-Frame-Options":"DENY","Permissions-Policy":"camera=(), microphone=(), geolocation=()","Strict-Transport-Security":"max-age=31536000; includeSubDomains","Content-Security-Policy":"default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; form-action 'self'; script-src 'self' https://sdk.cashfree.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; connect-src 'self' https://sandbox.cashfree.com https://api.cashfree.com; frame-src https://payments.cashfree.com https://sandbox.cashfree.com;"};
 const enc=new TextEncoder();
-function response(data:unknown,status=200,origin="",env?:Env,extra:Record<string,string>={}){const h=new Headers({"Content-Type":"application/json; charset=utf-8",...SECURITY_HEADERS,...extra});if(env&&origin&&origin===env.ALLOWED_ORIGIN)h.set("Access-Control-Allow-Origin",origin);h.set("Vary","Origin");return new Response(JSON.stringify(data),{status,headers:h});}
-function cors(origin:string,env:Env){return {"Access-Control-Allow-Methods":"GET,POST,PUT,OPTIONS","Access-Control-Allow-Headers":"Content-Type,Authorization,CF-Access-Jwt-Assertion","Access-Control-Max-Age":"600",...(origin&&origin===env.ALLOWED_ORIGIN?{"Access-Control-Allow-Origin":origin}:{})};}
+function allowedOrigin(origin:string,env:Env){
+ const configured=(env.ALLOWED_ORIGINS||env.ALLOWED_ORIGIN||"").split(",").map(x=>x.trim()).filter(Boolean);
+ return !!origin&&configured.includes(origin);
+}
+function response(data:unknown,status=200,origin="",env?:Env,extra:Record<string,string>={}){const h=new Headers({"Content-Type":"application/json; charset=utf-8",...SECURITY_HEADERS,...extra});if(env&&allowedOrigin(origin,env))h.set("Access-Control-Allow-Origin",origin);h.set("Vary","Origin");return new Response(JSON.stringify(data),{status,headers:h});}
+function cors(origin:string,env:Env){return {"Access-Control-Allow-Methods":"GET,POST,PUT,OPTIONS","Access-Control-Allow-Headers":"Content-Type,Authorization,CF-Access-Jwt-Assertion","Access-Control-Max-Age":"600",...(allowedOrigin(origin,env)?{"Access-Control-Allow-Origin":origin}:{})};}
 function b64uDecode(s:string){const p=s.replace(/-/g,"+").replace(/_/g,"/");return Uint8Array.from(atob(p.padEnd(Math.ceil(p.length/4)*4,"=")),c=>c.charCodeAt(0));}
 function b64(bytes:ArrayBuffer){return btoa(String.fromCharCode(...new Uint8Array(bytes)));}
 async function sha256(s:string){return b64(await crypto.subtle.digest("SHA-256",enc.encode(s)));}
@@ -30,7 +35,51 @@ async function accessIdentity(req:Request,env:Env):Promise<{email:string}|null>{
   const email=String(claims.email||"").toLowerCase();const allowed=(env.ADMIN_EMAILS||"").split(",").map(x=>x.trim().toLowerCase()).filter(Boolean);if(!email||!allowed.includes(email))return null;return {email};
  }catch{return null}
 }
-async function requireAdmin(req:Request,env:Env){return await accessIdentity(req,env);}
+async function supabaseIdentity(token:string,env:Env):Promise<{email:string}|null>{
+ if(!token||!env.SUPABASE_URL||!env.ADMIN_EMAILS)return null;
+ const base=env.SUPABASE_URL.replace(/\/$/,"");
+ const parts=token.split(".");if(parts.length!==3)return null;
+ try{
+  const header=JSON.parse(new TextDecoder().decode(b64uDecode(parts[0])));
+  const claims=JSON.parse(new TextDecoder().decode(b64uDecode(parts[1])));
+  const now=Date.now()/1000,issuer=base+"/auth/v1";
+  const aud=Array.isArray(claims.aud)?claims.aud.includes("authenticated"):claims.aud==="authenticated";
+  if(claims.iss!==issuer||!aud||claims.role!=="authenticated"||claims.is_anonymous===true||
+     !claims.sub||!Number.isFinite(claims.exp)||claims.exp<=now||
+     claims.nbf!==undefined&&(!Number.isFinite(claims.nbf)||claims.nbf>now)||
+     claims.iat!==undefined&&(!Number.isFinite(claims.iat)||claims.iat>now+60))return null;
+  const email=String(claims.email||"").trim().toLowerCase();
+  const allowed=env.ADMIN_EMAILS.split(",").map(x=>x.trim().toLowerCase()).filter(Boolean);
+  if(!email||!allowed.includes(email))return null;
+  if(header.typ&&header.typ!=="JWT")return null;
+  if(header.alg!=="RS256"&&header.alg!=="ES256")return null;
+  if(typeof header.kid!=="string"||!header.kid)return null;
+  const jwksResponse=await fetch(base+"/auth/v1/.well-known/jwks.json",{headers:{Accept:"application/json"},cf:{cacheTtl:300} as any});
+  if(!jwksResponse.ok)return null;
+  const jwks=await jwksResponse.json() as {keys?:JsonWebKey[]};
+  const jwk=(jwks.keys||[]).find(k=>(k as any).kid===header.kid);
+  if(!jwk||(jwk as any).alg&&((jwk as any).alg!==header.alg)||
+     (jwk as any).use&&((jwk as any).use!=="sig")||
+     (jwk as any).key_ops&&!((jwk as any).key_ops as string[]).includes("verify"))return null;
+  let key:CryptoKey,algorithm:AlgorithmIdentifier|RsaPssParams|EcdsaParams;
+  if(header.alg==="RS256"&&(jwk as any).kty==="RSA"){
+   key=await crypto.subtle.importKey("jwk",jwk,{name:"RSASSA-PKCS1-v1_5",hash:"SHA-256"},false,["verify"]);
+   algorithm={name:"RSASSA-PKCS1-v1_5"};
+  }else if(header.alg==="ES256"&&(jwk as any).kty==="EC"&&(jwk as any).crv==="P-256"){
+   key=await crypto.subtle.importKey("jwk",jwk,{name:"ECDSA",namedCurve:"P-256"},false,["verify"]);
+   algorithm={name:"ECDSA",hash:"SHA-256"};
+  }else return null;
+  const signature=b64uDecode(parts[2]);
+  if(header.alg==="ES256"&&signature.length!==64)return null;
+  const valid=await crypto.subtle.verify(algorithm,key,signature,enc.encode(parts[0]+"."+parts[1]));
+  return valid?{email}:null;
+ }catch{return null}
+}
+async function requireAdmin(req:Request,env:Env){
+ const access=await accessIdentity(req,env);if(access)return access;
+ const bearer=req.headers.get("Authorization")?.match(/^Bearer\s+(.+)$/i)?.[1]||"";
+ return supabaseIdentity(bearer,env);
+}
 function configRow(r:any):Config{return {upiId:r?.receiving_upi_id||"",beneficiary:r?.beneficiary_display_name||"",instructions:r?.instructions||DEFAULT.instructions,enabled:!!r?.enabled,version:Number(r?.version||0),updatedAt:r?.updated_at||""};}
 async function getConfig(env:Env){const r=await env.DB.prepare("SELECT * FROM payment_config WHERE id='primary'").first<any>();return configRow(r);}
 async function rateLimit(req:Request,env:Env,scope:string,limit=30){const ip=req.headers.get("CF-Connecting-IP")||"unknown";const digest=await crypto.subtle.digest("SHA-256",enc.encode(ip));const hash=[...new Uint8Array(digest)].map(x=>x.toString(16).padStart(2,"0")).join("");const bucket=Math.floor(Date.now()/60000);const key=scope+":"+hash+":"+bucket;const r=await env.DB.prepare("INSERT INTO rate_limit_buckets(bucket_key,hits,window_started) VALUES(?,1,CURRENT_TIMESTAMP) ON CONFLICT(bucket_key) DO UPDATE SET hits=hits+1 RETURNING hits").bind(key).first<{hits:number}>();if(bucket%60===0)await env.DB.prepare("DELETE FROM rate_limit_buckets WHERE window_started < datetime('now','-24 hours')").run();return !!r&&r.hits<=limit;}
@@ -92,6 +141,11 @@ async function adminVerifyDirectUpi(req:Request,env:Env,origin:string,id:string)
  const updated=await env.DB.prepare("SELECT id,status,amount_minor,currency,provider_status,updated_at FROM payment_orders WHERE id=?").bind(id).first<any>();
  return response({success:true,order:updated,manualVerification:true,warning:"This status records an administrator's bank reconciliation; it is not an automated bank/provider confirmation."},200,origin,env);
 }
+async function adminSession(req:Request,env:Env,origin:string){
+ const identity=await requireAdmin(req,env);
+ if(!identity)return response({error:"Admin authentication required. Sign in with an authorised XinPay admin account."},401,origin,env);
+ return response({authenticated:true,email:identity.email},200,origin,env);
+}
 async function adminOrders(req:Request,env:Env,origin:string){if(!(await rateLimit(req,env,"admin",60)))return response({error:"Rate limit exceeded"},429,origin,env);const identity=await requireAdmin(req,env);if(!identity)return response({error:"Unauthorized"},401,origin,env);const rows=await env.DB.prepare("SELECT id,provider,provider_order_id,purpose,amount_minor,currency,status,provider_status,expires_at,created_at,updated_at FROM payment_orders ORDER BY created_at DESC LIMIT 100").all();return response({orders:rows.results||[],admin:identity.email},200,origin,env);}
 async function cashfreeWebhook(req:Request,env:Env){
  if(!env.CASHFREE_WEBHOOK_SECRET)return new Response("Webhook not configured",{status:503,headers:SECURITY_HEADERS});
@@ -117,7 +171,7 @@ async function adminConfig(req:Request,env:Env,origin:string){if(!(await rateLim
 
 export default {async fetch(req:Request,env:Env){
  const url=new URL(req.url),origin=req.headers.get("Origin")||"",path=url.pathname;
- if(path.startsWith("/api/")&&origin&&origin!==env.ALLOWED_ORIGIN)return response({error:"Origin not allowed"},403,origin,env);
+ if(path.startsWith("/api/")&&origin&&!allowedOrigin(origin,env))return response({error:"Origin not allowed"},403,origin,env);
  if(path.startsWith("/api/")&&req.method==="OPTIONS")return new Response(null,{status:204,headers:{...SECURITY_HEADERS,...cors(origin,env)}});
  try{
   if(path==="/api/health"&&req.method==="GET")return response({ok:true,mode:"sandbox",paymentsEnabled:env.PAYMENTS_ENABLED==="true"&&env.CASHFREE_ENV!=="production"},200,origin,env);
@@ -126,6 +180,7 @@ export default {async fetch(req:Request,env:Env){
   if(path==="/api/orders"&&req.method==="POST")return createOrder(req,env,origin);
   if(path==="/api/direct-upi/orders"&&req.method==="POST")return createDirectUpiOrder(req,env,origin);
   const match=path.match(/^\/api\/orders\/([A-Za-z0-9_-]+)$/);if(match&&req.method==="GET")return getOrder(req,env,match[1],origin);
+  if(path==="/api/admin/session"&&req.method==="GET")return adminSession(req,env,origin);
   if(path==="/api/admin/orders"&&req.method==="GET")return adminOrders(req,env,origin);
   const verifyMatch=path.match(/^\/api\/admin\/orders\/([A-Za-z0-9_-]+)\/verify-direct-upi$/);if(verifyMatch&&req.method==="POST")return adminVerifyDirectUpi(req,env,origin,verifyMatch[1]);
   if(path==="/api/webhooks/cashfree"&&req.method==="POST")return cashfreeWebhook(req,env);
