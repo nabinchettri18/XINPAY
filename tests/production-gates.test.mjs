@@ -67,3 +67,17 @@ test("Worker does not implement a second customer password/session store",()=>{
  for(const term of ["auth_users","auth_sessions","auth_email_tokens","/api/auth/register","AUTH_SESSION_SECONDS","RESEND_API_KEY"])assert.ok(!worker.includes(term),term);
 });
 
+
+const landingPage=await readFile(new URL("../src/LandingPage.tsx",import.meta.url),"utf8");
+const mainEntry=await readFile(new URL("../src/main.tsx",import.meta.url),"utf8");
+const authComponent=await readFile(new URL("../src/CustomerAuth.tsx",import.meta.url),"utf8");
+test("public XinPay landing Get Started opens Supabase customer sign-in and registration",()=>{
+ assert.ok(landingPage.includes("Get started with XINPAY"));
+ assert.ok(landingPage.includes("openAuth(\"login\")"));
+ assert.ok(landingPage.includes("openAuth(\"register\")"));
+ assert.ok(landingPage.includes("<CustomerAuth embedded initialMode={authMode}"));
+ assert.ok(mainEntry.includes("path === \"/admin\""));
+ assert.ok(mainEntry.includes("<LandingPage />"));
+ assert.ok(authComponent.includes("initialMode?:\"login\"|\"register\""));
+ assert.ok(authComponent.includes("embedded?"));
+});
