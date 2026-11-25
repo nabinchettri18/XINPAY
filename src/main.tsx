@@ -15,7 +15,7 @@ import "./customer-refinement.css";
 
 const path = window.location.pathname;
 const isCustomer = path.startsWith("/customer");
-const isAdmin = path === "/admin" || path.startsWith("/admin/");
+const isAdmin = path === "/admin24776543";
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     {isCustomer ? <CustomerApp /> : isAdmin ? <AdminGate><App /></AdminGate> : <LandingPage />}
