@@ -1,0 +1,156 @@
+/* Light customer workspace theme. Scoped to the subscription/customer portal only. */
+.xp-sub-shell{
+  min-height:100vh;
+  background:#F3F4EC;
+  color:#173B35;
+}
+.xp-sub-shell .xp-sidebar{
+  background:#FFFFFF;
+  color:#173B35;
+  border-right:1px solid #DCE1D6;
+  box-shadow:6px 0 22px rgba(23,59,53,.045);
+}
+.xp-sub-shell .xp-brand-word{color:#173B35}
+.xp-sub-shell .xp-brand-word small{color:#758378}
+.xp-sub-shell .xp-brand-mark{background:#C6FF1A;color:#0D2925;box-shadow:0 6px 16px rgba(154,203,32,.2)}
+.xp-sub-shell .xp-account{
+  background:#F1F3EA;
+  border:1px solid #DCE2D7;
+  color:#173B35;
+}
+.xp-sub-shell .xp-account strong{color:#173B35}
+.xp-sub-shell .xp-account small{color:#758378}
+.xp-sub-shell .xp-avatar{background:#173B35;color:#C6FF1A}
+.xp-sub-shell .xp-nav-label{color:#7A897D}
+.xp-sub-shell .xp-nav{color:#40584C}
+.xp-sub-shell .xp-nav:hover{background:#F1F5E7;color:#173B35}
+.xp-sub-shell .xp-nav.active{
+  background:#C6FF1A;
+  color:#0D2925;
+  box-shadow:none;
+}
+.xp-sub-shell .xp-nav.active svg{color:#0D2925}
+.xp-sub-shell .xp-signout{color:#53685A}
+.xp-sub-shell .xp-signout:hover{background:#F1F5E7;color:#173B35}
+.xp-sub-shell .xp-main{background:#F3F4EC}
+.xp-sub-shell .xp-topbar{
+  background:#FFFFFF;
+  color:#173B35;
+  border-bottom:1px solid #DCE1D6;
+  box-shadow:0 3px 12px rgba(23,59,53,.035);
+}
+.xp-sub-shell .xp-breadcrumb{color:#7B897E}
+.xp-sub-shell .xp-breadcrumb strong{color:#173B35}
+.xp-sub-shell .xp-mobile-menu{
+  background:#F4F6EF;
+  border:1px solid #DCE2D7;
+  color:#173B35;
+}
+.xp-sub-shell .xp-top-actions .xp-avatar.small{background:#173B35;color:#C6FF1A}
+.xp-sub-shell .xp-header-signout{
+  background:#FFFFFF;
+  border:1px solid #DCE2D7;
+  color:#40584C;
+}
+.xp-sub-shell .xp-header-signout:hover{background:#F1F5E7;border-color:#A9BC8C;color:#173B35}
+.xp-sub-shell .xp-content{color:#173B35}
+.xp-sub-shell .xp-sub-heading h1{
+  color:#173B35;
+  letter-spacing:-1.35px;
+}
+.xp-sub-shell .xp-sub-heading>p:not(.xp-eyebrow){color:#69796D}
+.xp-sub-shell .xp-sub-heading .xp-eyebrow{color:#54715F}
+.xp-sub-shell .xp-sub-back{color:#466052}
+.xp-sub-shell .xp-sub-back:hover{color:#173B35}
+.xp-sub-shell .xp-sub-footnote{color:#758378}
+.xp-sub-shell .xp-plan-card{
+  background:#FFFFFF;
+  border-color:#DCE2D7;
+  color:#173B35;
+  box-shadow:0 10px 28px rgba(23,59,53,.065);
+}
+.xp-sub-shell .xp-plan-card.business{background:#FAFBF7}
+.xp-sub-shell .xp-plan-card.premium{background:#F8F9F3}
+.xp-sub-shell .xp-plan-card h2,
+.xp-sub-shell .xp-plan-price{color:#0D2925}
+.xp-sub-shell .xp-plan-kicker,
+.xp-sub-shell .xp-plan-description{color:#718075}
+.xp-sub-shell .xp-plan-divider{background:#E1E6DD}
+.xp-sub-shell .xp-plan-detail{color:#52695B}
+.xp-sub-shell .xp-plan-detail svg{color:#547A5A}
+.xp-sub-shell .xp-plan-tag{background:#173B35;color:#C6FF1A}
+.xp-sub-shell .xp-plan-button{
+  background:#C6FF1A;
+  color:#0D2925;
+  box-shadow:0 6px 15px rgba(154,203,32,.18);
+}
+.xp-sub-shell .xp-plan-button:hover{background:#B7ED12}
+.xp-sub-shell .xp-sub-panel,
+.xp-sub-shell .xp-membership-card{
+  background:#FFFFFF;
+  border-color:#DCE2D7;
+  color:#173B35;
+  box-shadow:0 8px 24px rgba(23,59,53,.055);
+}
+.xp-sub-shell .xp-sub-panel-title h2,
+.xp-sub-shell .xp-proof-panel h2,
+.xp-sub-shell .xp-bank-note h2,
+.xp-sub-shell .xp-membership-card h2,
+.xp-sub-shell .xp-membership-card>strong{color:#0D2925}
+.xp-sub-shell .xp-sub-panel-title .xp-eyebrow,
+.xp-sub-shell .xp-proof-panel .xp-eyebrow{color:#718075}
+.xp-sub-shell .xp-sub-request-line{border-color:#E1E6DD}
+.xp-sub-shell .xp-sub-request-line strong{color:#173B35}
+.xp-sub-shell .xp-sub-request-line small{color:#758378}
+.xp-sub-shell .xp-sub-text-button{color:#315F53}
+.xp-sub-shell .xp-pay-destination,
+.xp-sub-shell .xp-proof-panel,
+.xp-sub-shell .xp-bank-note{background:#FFFFFF}
+.xp-sub-shell .xp-pay-amount{color:#0D2925}
+.xp-sub-shell .xp-pay-receiver{border-color:#E1E6DD}
+.xp-sub-shell .xp-pay-receiver span{color:#758378}
+.xp-sub-shell .xp-pay-receiver strong{color:#0D2925}
+.xp-sub-shell .xp-sub-copy{color:#315F53}
+.xp-sub-shell .xp-proof-panel>p:not(.xp-eyebrow),
+.xp-sub-shell .xp-bank-note p{color:#69796D}
+.xp-sub-shell .xp-sub-field{color:#40584C}
+.xp-sub-shell .xp-sub-field input{
+  background:#F8F9F4;
+  border-color:#D2DACE;
+  color:#173B35;
+}
+.xp-sub-shell .xp-sub-field input:focus{border-color:#547A5A;box-shadow:0 0 0 3px rgba(198,255,26,.22)}
+.xp-sub-shell .xp-proof-upload{background:#F7F8F2;border-color:#B9C7B7;color:#315F53}
+.xp-sub-shell .xp-proof-upload small{color:#758378}
+.xp-sub-shell .xp-sub-primary{background:#C6FF1A;color:#0D2925}
+.xp-sub-shell .xp-sub-primary:hover{background:#B7ED12}
+.xp-sub-shell .xp-profile-row{border-color:#E1E6DD}
+.xp-sub-shell .xp-profile-row span{color:#758378}
+.xp-sub-shell .xp-profile-row strong{color:#173B35}
+.xp-sub-shell .xp-bank-saved{background:#F5F7F0;border-color:#D7DFD2}
+.xp-sub-shell .xp-bank-saved span,
+.xp-sub-shell .xp-bank-saved small{color:#758378}
+.xp-sub-shell .xp-bank-saved strong{color:#173B35}
+.xp-sub-shell .xp-sub-callout{background:#F0F4E6;border-color:#D3DDC6;color:#173B35}
+.xp-sub-shell .xp-sub-callout p{color:#69796D}
+.xp-sub-shell .xp-membership-card>span,
+.xp-sub-shell .xp-membership-card small{color:#718075}
+.xp-sub-shell .xp-mobile-drawer{
+  background:#FFFFFF;
+  border:1px solid #DCE2D7;
+  box-shadow:0 14px 30px rgba(23,59,53,.12);
+}
+.xp-sub-shell .xp-mobile-drawer button{background:#F4F6EF;color:#40584C}
+.xp-sub-shell .xp-mobile-drawer button.active{background:#C6FF1A;color:#0D2925}
+.xp-sub-shell .xp-toast{background:#0D2925;border:1px solid #315F53;color:#C6FF1A}
+.xp-sub-shell .xp-sub-status{background:#F1EBCF;color:#75602A}
+.xp-sub-shell .xp-sub-status.submitted{background:#E8EDD7;color:#526331}
+.xp-sub-shell .xp-sub-status.approved{background:#DCEAD7;color:#315C37}
+.xp-sub-shell .xp-sub-status.rejected{background:#F4E3DE;color:#8B473A}
+.xp-sub-shell .xp-sub-status.awaiting_payment{background:#F1EBCF;color:#75602A}
+.xp-sub-loading{background:#F3F4EC;color:#173B35}
+.xp-sub-loading p{color:#69796D}
+@media(max-width:680px){
+  .xp-sub-shell .xp-sub-content{background:#F3F4EC}
+  .xp-sub-shell .xp-sub-heading h1{color:#173B35}
+}
