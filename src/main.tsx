@@ -66,8 +66,8 @@ function AdminAuth({ children }: { children: React.ReactNode }) {
             <div className="xp-form-eyebrow">WELCOME BACK</div>
             <h1>Sign in to XinPay</h1>
             <p className="xp-form-intro">Enter your administrator credentials to continue.</p>
-            <label className="xp-field">Email address<input type="email" autoComplete="username" placeholder="admin@yourcompany.com" required value={email} onChange={e=>setEmail(e.target.value}/></label>
-            <label className="xp-field">Password<input type="password" autoComplete="current-password" placeholder="Enter your password" required value={password} onChange={e=>setPassword(e.target.value}/></label>
+            <label className="xp-field">Email address<input type="email" autoComplete="username" placeholder="admin@yourcompany.com" required value={email} onChange={e=>setEmail(e.target.value)}/></label>
+            <label className="xp-field">Password<input type="password" autoComplete="current-password" placeholder="Enter your password" required value={password} onChange={e=>setPassword(e.target.value)}/></label>
             <button className="xp-login-submit" type="submit" disabled={submitting}>{submitting ? "Authenticating…" : "Sign in to workspace"}<span>→</span></button>
             {error && <div className="xp-login-error" role="alert">{error}</div>}
             <div className="xp-login-note"><span className="xp-note-icon">⌑</span><span>Access is restricted to authorized XinPay administrators.</span></div>
