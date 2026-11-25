@@ -20,7 +20,7 @@ export default function PaymentSettings() {
     enabled: false,
     qrMode: "generated",
     qrAssetKey: "",
-    qrUrl: "",
+    qrAssetUrl: "",
   };
   const [upiId,setUpiId]=useState(defaults.upiId);
   const [beneficiary,setBeneficiary]=useState(defaults.beneficiary);
@@ -28,7 +28,7 @@ export default function PaymentSettings() {
   const [enabled,setEnabled]=useState(defaults.enabled);
   const [qrMode,setQrMode]=useState<"generated"|"uploaded">("generated");
   const [qrAssetKey,setQrAssetKey]=useState("");
-  const [qrUrl,setQrUrl]=useState("");
+  const [qrAssetUrl,setQrUrl]=useState("");
   const [qrFile,setQrFile]=useState<File|null>(null);
   const [localPreview,setLocalPreview]=useState("");
   const [saved,setSaved]=useState(false);
@@ -47,7 +47,7 @@ export default function PaymentSettings() {
       setEnabled(config.enabled);
       setQrMode(config.qrMode || "generated");
       setQrAssetKey(config.qrAssetKey || "");
-      setQrUrl(config.qrUrl || "");
+      setQrUrl(config.qrAssetUrl || "");
       setUpdatedAt(config.updatedAt || "");
     }).finally(()=>{if(active)setLoading(false)});
     return()=>{active=false};
@@ -117,7 +117,7 @@ export default function PaymentSettings() {
         enabled,
         qrMode,
         qrAssetKey:nextKey,
-        qrUrl,
+        qrAssetUrl,
       };
       const result=await savePaymentConfig(next);
       const previousKey=qrAssetKey;
@@ -127,7 +127,7 @@ export default function PaymentSettings() {
       setEnabled(result.enabled);
       setQrMode(result.qrMode || "generated");
       setQrAssetKey(result.qrAssetKey || "");
-      setQrUrl(result.qrUrl || "");
+      setQrUrl(result.qrAssetUrl || "");
       setQrFile(null);
       setUpdatedAt(result.updatedAt || "");
       setSaved(true);
@@ -200,10 +200,10 @@ export default function PaymentSettings() {
 
       <div className="payment-settings-card qr-settings-card">
         <div className="settings-card-title"><div><h3>Customer preview</h3><p>This is what the payment area will display.</p></div></div>
-        <div className={"qr-preview "+(qrMode==="uploaded"&&(localPreview||qrUrl)?"has-image":"")}>
+        <div className={"qr-preview "+(qrMode==="uploaded"&&(localPreview||qrAssetUrl)?"has-image":"")}>
           {qrMode==="uploaded"
-            ? localPreview||qrUrl
-              ? <img src={localPreview||qrUrl} alt="Uploaded customer payment QR"/>
+            ? localPreview||qrAssetUrl
+              ? <img src={localPreview||qrAssetUrl} alt="Uploaded customer payment QR"/>
               : <div className="qr-empty"><span>QR preview</span><small>Upload a QR image</small></div>
             : qrValue
               ? <QRCodeSVG value={qrValue} size={190} level="M" includeMargin/>
