@@ -1,4 +1,4 @@
-import { context, fail, json, method, rateLimit } from "../../server/xinpay-api.js";
+import { context, fail, json, method, rateLimit, storagePublicUrl } from "../../server/xinpay-api.js";
 
 export default async function handler(req, res) {
   if (!method(req, res, "GET")) return;
@@ -15,7 +15,7 @@ export default async function handler(req, res) {
         .select("plan_key,plan_name,paid_amount_minor,status,activation_request_id,activated_at")
         .eq("customer_id", auth.user.id).maybeSingle(),
       auth.db.from("subscription_payment_requests")
-        .select("id,plan_key,plan_name,amount_minor,currency,status,utr,admin_note,created_at,submitted_at,reviewed_at")
+        .select("id,plan_key,plan_name,amount_minor,currency,status,utr,admin_note,created_at,submitted_at,reviewed_at,receiver_upi_id,receiver_beneficiary,receiver_qr_mode,receiver_qr_asset_key,receiver_config_version")
         .eq("customer_id", auth.user.id)
         .order("created_at", { ascending: false }).limit(50),
       auth.db.from("customer_bank_profiles")
@@ -48,6 +48,18 @@ export default async function handler(req, res) {
         createdAt: row.created_at,
         submittedAt: row.submitted_at,
         reviewedAt: row.reviewed_at,
+        payment: {
+          upiId: row.receiver_upi_id,
+          beneficiary: row.receiver_beneficiary,
+          qrMode: row.receiver_qr_mode,
+          qrAssetUrl: row.receiver_qr_asset_key
+            ? storagePublicUrl("xinpay-payment-qr", row.receiver_qr_asset_key) + "?v=" + Number(row.receiver_config_version || 0)
+            : "",
+          upiUri: "upi://pay?pa=" + encodeURIComponent(row.receiver_upi_id) +
+            "&pn=" + encodeURIComponent(row.receiver_beneficiary) +
+            "&am=" + encodeURIComponent((Number(row.amount_minor) / 100).toFixed(2)) +
+            "&cu=INR&tn=" + encodeURIComponent("XinPay " + row.id),
+        },
       })),
       bankProfile: profileResult.data ? {
         bankName: profileResult.data.bank_name,
