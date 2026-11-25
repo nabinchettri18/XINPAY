@@ -10,14 +10,15 @@ import "./styles.css";
 import "./customer.css";
 
 const path = window.location.pathname;
-const isCustomer = path.startsWith("/customer");
+const isCustomer = path === "/" || path.startsWith("/customer");
+const isAdmin = path.startsWith("/admin");
 const isProofReview = path.startsWith("/admin/proofs");
 const isWithdrawals = path.startsWith("/admin/withdrawals");
 const isWalletTopups = path.startsWith("/admin/topups");
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    {isCustomer ? <CustomerApp /> : isProofReview ? <AdminAuth><ProofReview /></AdminAuth> : isWithdrawals ? <AdminAuth><AdminWithdrawals /></AdminAuth> : isWalletTopups ? <AdminAuth><AdminWalletTopups /></AdminAuth> : <AdminAuth><App /></AdminAuth>}
+    {isCustomer ? <CustomerApp /> : isProofReview ? <AdminAuth><ProofReview /></AdminAuth> : isWithdrawals ? <AdminAuth><AdminWithdrawals /></AdminAuth> : isWalletTopups ? <AdminAuth><AdminWalletTopups /></AdminAuth> : isAdmin ? <AdminAuth><App /></AdminAuth> : <CustomerApp /> }
   </React.StrictMode>
 );
 
