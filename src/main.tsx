@@ -4,6 +4,7 @@ import App from "./App";
 import CustomerApp from "./CustomerApp";
 import "./styles.css";
 import "./customer.css";
+import "./dashboard-theme.css";
 
 const isCustomer = window.location.pathname.startsWith("/customer");
 ReactDOM.createRoot(document.getElementById("root")!).render(
