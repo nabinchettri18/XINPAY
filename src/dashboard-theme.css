@@ -136,3 +136,7 @@ button,input{font-family:inherit}
   .welcome-actions{flex-direction:column}
   .welcome-actions button{width:100%}
 }
+
+.admin-signout{height:34px;display:inline-flex;align-items:center;gap:7px;padding:0 10px;border:1px solid #ecebf4;border-radius:9px;background:#fff;color:#77778f;font-size:9px;font-weight:700;cursor:pointer}
+.admin-signout:hover{border-color:#d9d3fb;background:#faf9ff;color:#6951dc}
+@media(max-width:420px){.admin-signout{width:32px;justify-content:center;padding:0}.admin-signout span{display:none}}
