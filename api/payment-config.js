@@ -31,7 +31,7 @@ export default async function handler(req, res) {
     const instructions = body.instructions.trim().slice(0, 1000);
     const qrMode = body.qrMode;
     const qrAssetKey = body.qrAssetKey.trim();
-    const validUpi = /^[a-zA-Z0-9._-]{2,256}@[a-zA-Z]{2,64}$/.test(upiId);
+    const validUpi = /^[a-zA-Z0-9._-]{2,255}@[a-zA-Z]{2,64}$/.test(upiId);
 
     if (body.enabled && (!validUpi || !beneficiary)) {
       return fail(res, 400, "A valid UPI ID and beneficiary are required before enabling collection.");
