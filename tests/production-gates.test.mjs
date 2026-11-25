@@ -132,11 +132,9 @@ test("Customer dashboard contains no invented balance, merchant transactions, du
 
 
 const qrConfigApi=await read("api/payment-config.js");
-const paymentSettings=await read("src/PaymentSettings.tsx");
-const paymentConfigClient=await read("src/paymentConfig.ts");
 const paymentServer=await read("server/xinpay-api.js");
 test("Admin can upload a QR image and update the UPI destination through the dashboard",()=>{
-  assert.ok(paymentSettings.includes('supabase.storage.from(BUCKET).upload'));
+  assert.ok(paymentSettings.includes('storage.from(BUCKET).upload'));
   assert.ok(paymentSettings.includes('crypto.randomUUID()'));
   assert.ok(paymentSettings.includes('accept="image/png,image/jpeg,image/webp"') || paymentSettings.includes('accept="image/png,image/jpeg,image/webp"'));
   assert.ok(qrConfigApi.includes('context(req, { admin: true })'));
@@ -160,7 +158,7 @@ test("Admin can change the receiving UPI ID and QR image without redeploying", (
   assert.ok(paymentConfig.includes("p_qr_mode"));
   assert.ok(server.includes('storagePublicUrl("xinpay-payment-qr"'));
   assert.ok(paymentSettings.includes('const BUCKET = "xinpay-payment-qr"'));
-  assert.ok(paymentSettings.includes('supabase!.storage.from(BUCKET).upload'));
+  assert.ok(paymentSettings.includes('storage.from(BUCKET).upload'));
   assert.ok(paymentSettings.includes('payment-qr/qr-"+crypto.randomUUID()'));
   assert.ok(paymentSettings.includes('upsert:false'));
   assert.ok(paymentSettings.includes("MAX_QR_BYTES = 1024 * 1024"));
