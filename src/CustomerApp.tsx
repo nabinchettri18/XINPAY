@@ -133,7 +133,7 @@ function CustomerLanding(){
   {authMode&&<div className="ease-auth-overlay" onClick={()=>setAuthMode(null)}><div className="ease-auth-dialog" onClick={e=>e.stopPropagation()}><button className="ease-auth-close" onClick={()=>setAuthMode(null)} aria-label="Close"><X size={18}/></button><CustomerAuth initialMode={authMode}/></div></div>}
  </div>;
 }
-\nfunction PageHeading({title,subtitle}:{title:string;subtitle:string}){return <div className="xp-page-heading"><div><h1>{title}</h1><p className="xp-subtitle">{subtitle}</p></div></div>}
+function PageHeading({title,subtitle}:{title:string;subtitle:string}){return <div className="xp-page-heading"><div><h1>{title}</h1><p className="xp-subtitle">{subtitle}</p></div></div>}
 function TransactionList({items,onSelect}:{items:Tx[];onSelect:(tx:Tx)=>void}){return <div className="xp-transaction-list">{items.map(t=><button className="xp-transaction-row" key={t.id} onClick={()=>onSelect(t)}><div className="xp-transaction-symbol">{t.icon}</div><div className="xp-transaction-info"><strong>{t.name}</strong><small>{t.detail} <span>·</span> {t.date}</small></div><div className="xp-transaction-value"><strong className={t.kind==="Credit"?"credit":""}>{t.kind==="Credit"?"+":"−"}{money(t.amount)}</strong><small className={"xp-status "+t.status.toLowerCase()}>{t.status}</small></div><ChevronRight className="xp-row-chevron" size={16}/></button>)}</div>}
 
 
