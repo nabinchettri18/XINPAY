@@ -1,5 +1,5 @@
 export interface Env {
- DB: D1Database; ASSETS: Fetcher; ALLOWED_ORIGIN?: string;
+ DB: D1Database; ASSETS: Fetcher; ALLOWED_ORIGIN?: string; ALLOWED_ORIGINS?: string;
  ADMIN_TOKEN?: string; // legacy; disabled when Access auth is configured
 
  CF_ACCESS_TEAM_DOMAIN?: string; CF_ACCESS_AUD?: string; ADMIN_EMAILS?: string;
