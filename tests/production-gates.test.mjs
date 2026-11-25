@@ -148,7 +148,7 @@ test("Admin can upload a QR image and update the UPI destination through the das
 });
 test("Customer payment screen refreshes saved QR settings and displays the uploaded image",()=>{
   assert.ok(customerApp.includes("window.setInterval(refresh, 20000)"));
-  assert.ok(customerApp.includes('paymentConfig.qrMode === "uploaded" && paymentConfig.qrAssetUrl'));
+  assert.ok(customerApp.includes('directOrder?.qrMode === "uploaded" && directOrder?.qrAssetUrl'));
   assert.ok(customerApp.includes('className="xc-customer-qr"'));
 });
 
@@ -159,7 +159,9 @@ test("Admin can change the receiving UPI ID and QR image without redeploying", (
   assert.ok(paymentConfig.includes("p_qr_asset_key"));
   assert.ok(paymentConfig.includes("p_qr_mode"));
   assert.ok(server.includes('storagePublicUrl("xinpay-payment-qr"'));
+  assert.ok(paymentSettings.includes('const BUCKET = "xinpay-payment-qr"'));
   assert.ok(paymentSettings.includes('supabase!.storage.from(BUCKET).upload'));
+  assert.ok(paymentSettings.includes('payment-qr/qr-"+crypto.randomUUID()'));
   assert.ok(paymentSettings.includes('upsert:false'));
   assert.ok(paymentSettings.includes("MAX_QR_BYTES = 1024 * 1024"));
   assert.ok(paymentSettings.includes('image/png'));
