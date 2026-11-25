@@ -182,3 +182,38 @@
 .ease-auth-dialog .xp-auth-card .xp-brand-mark{background:linear-gradient(135deg,#7c3aed,#2563eb,#06b6d4);border:0;box-shadow:0 6px 18px rgba(37,99,235,.18)}
 .ease-auth-dialog .xp-auth-card .xp-brand-word{font-weight:900;letter-spacing:.06em}.ease-auth-dialog .xp-auth-card .xp-brand-word small{font-weight:800;letter-spacing:.1em}
 .ease-auth-dialog .xp-auth-card input{height:46px;border-radius:10px;border:1px solid #cbd5e1;background:#fff;padding:0 13px;box-shadow:inset 0 1px 2px rgba(15,23,42,.025)}.ease-auth-dialog .xp-auth-card input:focus{outline:3px solid rgba(37,99,235,.12);border-color:#2563eb}.ease-auth-dialog .xp-auth-card .xp-primary{height:46px;border-radius:10px;font-size:13px}.ease-auth-dialog .xp-auth-card .xp-secondary{height:43px;border-radius:10px}
+
+/* EasePay authentication cards — compact, premium and responsive */
+.xp-auth-wrap{min-height:unset;background:transparent;padding:0}
+.xp-auth-card{width:min(460px,100%);padding:clamp(22px,5vw,34px);border:1px solid rgba(255,255,255,.68);border-radius:24px;background:rgba(255,255,255,.88);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);box-shadow:0 28px 80px rgba(15,23,42,.13),0 2px 10px rgba(15,23,42,.04);gap:16px}
+.xp-auth-brand-row{display:flex;align-items:center;gap:12px;padding-bottom:4px}
+.xp-auth-mark{width:42px;height:42px;display:grid;place-items:center;border-radius:12px;background:#f0f4ff;border:1px solid #e1e8ff}
+.xp-auth-mark .ease-logo-symbol{width:27px;height:25px}
+.xp-auth-mark .ease-wordmark{font-size:10px}
+.xp-auth-brand-caption{font-size:10px;font-weight:850;letter-spacing:.14em;color:#64748b}
+.xp-auth-tabs{display:grid;grid-template-columns:1fr 1fr;padding:4px;border:1px solid #e5eaf1;background:#f4f7fb;border-radius:12px;gap:4px}
+.xp-auth-tabs button{border:0;border-radius:9px;padding:10px 12px;background:transparent;color:#64748b;font-size:13px;font-weight:750;cursor:pointer;transition:all .18s ease}
+.xp-auth-tabs button.active{background:#fff;color:#101e35;box-shadow:0 2px 8px rgba(15,23,42,.08)}
+.xp-auth-heading{display:grid;gap:8px;margin:4px 0 2px}
+.xp-auth-eyebrow{font-size:10px;font-weight:850;letter-spacing:.15em;color:#64748b}
+.xp-auth-card h1{font-size:clamp(23px,4vw,29px);font-weight:850;line-height:1.15;letter-spacing:-.8px}
+.xp-auth-card>label{font-size:12px;font-weight:800;color:#26364d;gap:8px}
+.xp-auth-card input{height:48px;padding:0 14px;border-radius:11px;background:#fff;border:1px solid #dce3ec;font-size:14px;font-weight:550;transition:border-color .16s,box-shadow .16s}
+.xp-auth-card input::placeholder{color:#a0acbb;font-weight:500}
+.xp-auth-card input:focus{outline:none;border-color:#4778dd;box-shadow:0 0 0 3px rgba(71,120,221,.12)}
+.xp-auth-password{position:relative;display:flex;align-items:center}
+.xp-auth-password input{padding-right:85px}
+.xp-auth-password button{position:absolute;right:10px;display:flex;align-items:center;gap:5px;border:0;background:transparent;color:#64748b;font-size:12px;font-weight:750;padding:8px;cursor:pointer}
+.xp-auth-forgot{justify-self:end;margin-top:-8px;border:0;background:none;color:#426bd2;font-size:12px;font-weight:750;cursor:pointer;padding:2px}
+.xp-auth-card .xp-auth-submit{min-height:49px;display:flex;align-items:center;justify-content:center;gap:10px;border-radius:12px;background:#142b43;color:#fff;font-size:14px;font-weight:850;box-shadow:0 8px 18px rgba(20,43,67,.16);transition:transform .16s,box-shadow .16s}
+.xp-auth-card .xp-auth-submit:hover{transform:translateY(-1px);box-shadow:0 12px 22px rgba(20,43,67,.2)}
+.xp-auth-card .xp-auth-submit:disabled{opacity:.7;transform:none}
+.xp-auth-message{padding:11px 12px;border-radius:10px;background:#fff4f2;border:1px solid #ffe1db;color:#a43d2c;font-size:12px;font-weight:650;line-height:1.5}
+.xp-auth-message.success{background:#f0f8f4;border-color:#d5eadc;color:#276849}
+.xp-auth-back{border:0;background:none;color:#53657b;font-size:12px;font-weight:750;cursor:pointer}
+.xp-auth-foot{display:flex;justify-content:center;align-items:center;gap:7px;padding-top:5px;color:#8793a3;font-size:10px;font-weight:650}
+.xp-auth-foot svg{color:#7893a6}
+.ease-auth-dialog{width:min(520px,calc(100vw - 24px));padding:14px;border-radius:26px;background:linear-gradient(140deg,rgba(255,255,255,.92),rgba(246,249,255,.84));border:1px solid rgba(255,255,255,.72);box-shadow:0 28px 90px rgba(2,8,23,.28);backdrop-filter:blur(24px)}
+.ease-auth-dialog .xp-auth-wrap{padding:0}
+.ease-auth-dialog .xp-auth-card{box-shadow:none;border:0;background:transparent;padding:clamp(16px,4vw,26px)}
+@media(max-width:480px){.ease-auth-dialog{padding:5px;border-radius:20px}.ease-auth-dialog .xp-auth-card{padding:20px 16px}.xp-auth-foot{font-size:9px}}
