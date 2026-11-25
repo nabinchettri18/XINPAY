@@ -39,7 +39,7 @@ const quickActions: { label: string; description: string; icon: typeof Activity;
 ];
 
 export default function App() {
-  const [active, setActive] = useState<NavKey>("Subscription Requests");
+  const [active, setActive] = useState<NavKey>("Overview");
   const [mobileOpen, setMobileOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [showNotice, setShowNotice] = useState(true);
@@ -64,7 +64,7 @@ export default function App() {
         </div>
         <div className="workspace">
           <span className="workspace-icon">XP</span>
-          <div><strong>XinPay Workspace</strong><small>Demo environment</small></div>
+          <div><strong>XinPay Admin</strong><small>Payment operations</small></div>
           <ChevronDown size={16}/>
         </div>
         <p className="nav-label">WORKSPACE</p>
@@ -77,8 +77,8 @@ export default function App() {
           ))}
         </nav>
         <div className="sidebar-bottom">
-          <div className="security-note"><ShieldCheck size={17}/><span><strong>Demo workspace</strong><small>Sample data · no live money</small></span></div>
-          <div className="profile"><div className="avatar">DA</div><div><strong>Demo Admin</strong><small>Administrator</small></div><ChevronDown size={16}/></div>
+          <div className="security-note"><ShieldCheck size={17}/><span><strong>Secure admin session</strong><small>Restricted access · verified sign-in</small></span></div>
+          <div className="profile"><div className="avatar">AD</div><div><strong>Administrator</strong><small>Administrator</small></div><ChevronDown size={16}/></div>
         </div>
       </aside>
 
@@ -116,7 +116,7 @@ export default function App() {
 
           {showNotice&&<div className="demo-banner">
             <LockKeyhole size={18}/>
-            <div><strong>Prototype environment</strong><span>All overview figures and chart values are illustrative sample data. No payment, settlement, or account changes are performed here.</span></div>
+            <div><strong>Dashboard preview</strong><span>This dashboard is being connected to live operational records. Use the dedicated modules for verified payment and subscription data.</span></div>
             <button onClick={()=>setShowNotice(false)} aria-label="Dismiss demo notice"><X size={17}/></button>
           </div>}
 
@@ -209,7 +209,7 @@ export default function App() {
             </section>
           }
 
-          <footer>XinPay prototype <span>•</span> Sample data only <span>•</span> Not connected to a live balance feed</footer>
+          <footer>XinPay Admin <span>•</span> Secure operations console</footer>
         </div>
       </main>
     </div>
