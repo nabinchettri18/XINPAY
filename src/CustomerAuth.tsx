@@ -75,10 +75,13 @@ export default function CustomerAuth({onAuthenticated}:Props) {
       }else{
         const {error}=await supabase.auth.updateUser({password});
         if(error)throw error;
+        const {error:signOutError}=await supabase.auth.signOut();
+        if(signOutError)throw signOutError;
+        window.history.replaceState({},"","/customer");
         setPassword("");
         setConfirmPassword("");
         setMode("login");
-        setMessage("Your password has been updated. You can continue with your account.");
+        setMessage("Your password has been updated. Sign in with your new password.");
       }
     }catch(err){
       const text=err instanceof Error?err.message:"Something went wrong. Please try again.";
