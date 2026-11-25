@@ -55,10 +55,6 @@ export default function AdminSubscriptionRequests() {
       if(!response.ok)throw new Error(data.error||"Could not load subscription requests.");
       const rows=Array.isArray(data.requests)?data.requests:[];
       setRequests(rows);
-      if(selected) {
-        const current=rows.find((row:SubscriptionRequest)=>row.id===selected.id);
-        setSelected(current||null);
-      }
     } catch(err) {
       setError(err instanceof Error?err.message:"Could not load subscription requests.");
     } finally {
