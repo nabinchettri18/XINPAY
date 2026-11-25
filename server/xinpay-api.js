@@ -126,23 +126,13 @@ export async function context(req, { admin = false, allowAnonymous = false } = {
   return { db, user, token };
 }
 
-const localRateBuckets = new Map();
-
-export async function rateLimit(req, _db, scope, limit = 30) {
-  const ip = getHeader(req, "x-forwarded-for").split(",")[0].trim() ||
-    getHeader(req, "x-real-ip") || "unknown";
-  const ipHash = await sha256(ip);
-  const minute = Math.floor(Date.now() / 60000);
-  const key = scope + ":" + ipHash + ":" + minute;
-  const hits = (localRateBuckets.get(key) || 0) + 1;
-  localRateBuckets.set(key, hits);
-  if (localRateBuckets.size > 5000) {
-    for (const bucket of localRateBuckets.keys()) {
-      const bucketMinute = Number(bucket.slice(bucket.lastIndexOf(":") + 1));
-      if (!Number.isFinite(bucketMinute) || bucketMinute < minute - 2) localRateBuckets.delete(bucket);
-    }
-  }
-  return hits <= limit;
+export async function rateLimit(_req, db, scope, limit = 30) {
+  const { data, error } = await db.rpc("consume_rate_limit", {
+    p_scope: scope,
+    p_limit: limit,
+  });
+  if (error) throw new Error("Rate limit service is unavailable.");
+  return data === true;
 }
 
 export async function publicConfig() {
