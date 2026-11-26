@@ -2,8 +2,8 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import PaymentSettings from "./PaymentSettings";
 import { supabase } from "./paymentConfig";
 import {
-  Activity, ArrowDownLeft, ArrowUpRight, Bell, Building2, ChevronDown, CircleHelp,
-  CreditCard, FileCheck, LayoutDashboard, LockKeyhole, Menu, Search, Settings,
+  Activity, ArrowUpRight, Bell, Building2, ChevronDown, CircleHelp,
+  CreditCard, FileCheck, LayoutDashboard, Menu, Search, Settings,
   ShieldCheck, Wallet, X, Users, LogOut, RefreshCw, ClipboardList
 } from "lucide-react";
 
@@ -94,8 +94,8 @@ export default function App(){
     {error&&<div className="proof-error">{error}</div>}
     {active==="Overview"?<>
       <section className="metrics">
-        <Metric title="Approved proof payments" value={money(totalReceived)} change={proofs.filter(p=>p.status==="approved").length+" proofs"} icon={Wallet} note="Approved payment records"/>
-        <Metric title="Customers" value={customers.length.toLocaleString("en-IN")} change="Accounts" icon={Users} note="Loaded from admin customer RPC"/>
+        <Metric title="Approved payment records" value={money(totalReceived)} change={proofs.filter(p=>p.status==="approved").length+" proofs"} icon={Wallet} note="Approved payment records"/>
+        <Metric title="Customers loaded" value={customers.length.toLocaleString("en-IN")} change="Accounts" icon={Users} note="Loaded from admin customer RPC"/>
         <Metric title="Pending reviews" value={(pendingProofs.length+pendingTopups.length).toString()} change={pendingProofs.length+" proofs · "+pendingTopups.length+" top-ups"} icon={FileCheck} note="Requires admin action"/>
         <Metric title="Withdrawal queue" value={pendingWithdrawals.length.toString()} change="Requested" icon={ArrowUpRight} note="Awaiting review"/>
       </section>
