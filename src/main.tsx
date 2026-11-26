@@ -13,25 +13,24 @@ import EasePayLogo from "./EasePayLogo";
 import "./styles.css";
 import "./customer.css";
 
-const path=window.location.pathname;
-const isLanding=path==="/";
-const isCustomer=path==="/login"||path==="/signup"||path.startsWith("/customer");
-const isProofReview=path.startsWith("/admin/proofs");
-const isWithdrawals=path.startsWith("/admin/withdrawals");
-const isWalletTopups=path.startsWith("/admin/topups");
-const isReferrals=path.startsWith("/admin/referrals");
-
-ReactDOM.createRoot(document.getElementById("root")!).render(
-  <React.StrictMode>
-    {isLanding?<LandingPage />:
-      isCustomer?<CustomerApp />:
-      isProofReview?<AdminAuth><ProofReview /></AdminAuth>:
-      isWithdrawals?<AdminAuth><AdminWithdrawals /></AdminAuth>:
-      isWalletTopups?<AdminAuth><AdminWalletTopups /></AdminAuth>:
-      isReferrals?<AdminAuth><AdminReferrals /></AdminAuth>:
-      <AdminAuth><App /></AdminAuth>}
-  </React.StrictMode>
-);
+function Root(){
+  const [path,setPath]=useState(window.location.pathname);
+  useEffect(()=>{const onPop=()=>setPath(window.location.pathname);window.addEventListener("popstate",onPop);return()=>window.removeEventListener("popstate",onPop);},[]);
+  useEffect(()=>{if(path==="/auth/callback"){window.location.replace("/customer");return;}if(path==="/forgot-password"){window.location.replace("/login");return;}const known=path==="/"||path==="/login"||path==="/signup"||path.startsWith("/customer")||path.startsWith("/admin");if(!known)window.location.replace("/");},[path]);
+  const isLanding=path==="/";
+  const isCustomer=path==="/login"||path==="/signup"||path.startsWith("/customer");
+  if(isLanding)return <LandingPage/>;
+  if(isCustomer)return <CustomerApp/>;
+  if(path.startsWith("/admin")){
+    if(path==="/admin/proofs"||path.startsWith("/admin/proofs/"))return <AdminAuth><ProofReview/></AdminAuth>;
+    if(path==="/admin/withdrawals"||path.startsWith("/admin/withdrawals/"))return <AdminAuth><AdminWithdrawals/></AdminAuth>;
+    if(path==="/admin/topups"||path.startsWith("/admin/topups/"))return <AdminAuth><AdminWalletTopups/></AdminAuth>;
+    if(path==="/admin/referrals"||path.startsWith("/admin/referrals/"))return <AdminAuth><AdminReferrals/></AdminAuth>;
+    return <AdminAuth><App/></AdminAuth>;
+  }
+  return <div className="xp-auth-loading">Redirecting…</div>;
+}
+ReactDOM.createRoot(document.getElementById("root")!).render(<React.StrictMode><Root/></React.StrictMode>);
 
 type AdminState="checking"|"signed_out"|"denied"|"mfa_setup"|"mfa_challenge"|"allowed";
 function AdminAuth({children}:{children:React.ReactNode}){
