@@ -8,6 +8,6 @@ export default function EasePayLogo({className="",compact=false,inverse=false}:{
  <path fill={"url(#"+id+")"} d="M17 49 Q5 49 1 65 L-2 83 Q-4 96 10 96 L59 96 Q75 96 82 82 L91 63 L40 63 Q32 63 30 73 L26 79 L56 79 Q67 79 71 68 L75 57 L26 57Z"/>
  <path fill="#fff" d="M42 42 64 53 42 66 Q38 68 38 63 L44 54 38 46 Q38 41 42 42Z"/>
  </g>
- {#if !compact}<text x="112" y="75" className="easepay-logo-word">EASE<tspan fill={"url(#"+id+")"}>PAY</tspan></text><path d="M154 99 Q270 70 390 95" fill="none" stroke={"url(#"+id+")"} strokeWidth="3.5" strokeLinecap="round"/>{/if}
+ {!compact && <><text x="112" y="75" className="easepay-logo-word">EASE<tspan fill={"url(#"+id+")"}>PAY</tspan></text><path d="M154 99 Q270 70 390 95" fill="none" stroke={"url(#"+id+")"} strokeWidth="3.5" strokeLinecap="round"/></>}
  </svg>;
 }
