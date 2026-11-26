@@ -81,7 +81,7 @@ export default function CustomerApp() {
   const walletWithdrawals=(wallet?.withdrawals||[]);
   const latestSubscription=subscriptionHistory[0]||null;
   const subscriptionStatus=latestSubscription?.status||"not_started";
-  const customerName=authUser.metadata?.full_name||authUser.metadata?.name||"Customer";
+  const customerName=authUser?.metadata?.full_name||authUser?.metadata?.name||"Customer";
   const customerInitials=customerName.split(/\s+/).filter(Boolean).slice(0,2).map((part:string)=>part[0]?.toUpperCase()||"").join("")||"CU";
   const subscriptionStatusLabel=subscriptionStatus==="approved"?"Active":subscriptionStatus==="submitted"?"Under review":subscriptionStatus==="rejected"?"Action required":"Not active";
   const subscriptionStatusTone=subscriptionStatus==="approved"?"success":subscriptionStatus==="submitted"?"pending":subscriptionStatus==="rejected"?"danger":"neutral";
