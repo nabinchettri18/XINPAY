@@ -285,3 +285,23 @@
 .xp-reference-card .xp-plan-select{margin-top:auto;padding:12px 14px;text-align:center;border-radius:9px;border:1px solid #dfe6ef;background:#f8fafc;color:#42536b!important;font-size:11px;font-weight:800}
 .xp-reference-card.selected .xp-plan-select{background:#2563eb;border-color:#2563eb;color:#fff!important}
 @media(max-width:900px){.xp-reference-grid{grid-template-columns:1fr}.xp-reference-card{min-height:unset!important}.xp-plan-features{margin:15px 0 18px}}
+
+/* Dashboard order and blue-forward action palette */
+.xp-overview-plans{margin:24px 0 22px}
+.xp-overview-plans .xp-panel-heading{margin-bottom:14px}
+.xp-overview-plans .xp-panel-heading h3{font-size:22px;color:#17243a;margin:4px 0}
+.xp-overview-plans .xp-panel-heading p{font-size:12px;color:#718198;margin:0}
+.xp-plan-count{font-size:10px;font-weight:800;letter-spacing:.08em;color:#718198}
+.xp-overview-plan-grid .xp-reference-card{min-height:unset}
+.xp-overview-plan-grid .xp-plan-select{display:flex;justify-content:center;align-items:center;gap:8px;background:#2563eb!important;color:#fff!important;border-color:#2563eb!important}
+.xp-overview-plan-grid .xp-reference-card:hover .xp-plan-select{background:#1d4ed8!important}
+.xp-overview-plan-grid .xp-reference-card.selected{background:#f7faff!important;border-color:#2563eb!important}
+.xp-overview-plan-grid .xp-plan-badge.popular,.xp-overview-plan-grid .xp-plan-badge.business,.xp-overview-plan-grid .xp-plan-badge.premium{background:#eaf2ff!important;border-color:#c9dcff!important;color:#245db4!important}
+.xp-overview-plan-grid .xp-plan-features li:before{background:#eaf2ff!important;color:#2563eb!important}
+.xp-shell button.xp-primary,.xp-shell .xp-subscription-cta,.xp-shell .xp-withdraw-card>button,.xp-shell .xp-balance-actions button:first-child,.xp-shell .xp-balance-actions button:nth-child(2),.xp-shell .xp-quick-actions button,.xp-shell .xp-text-button{background:#2563eb!important;border-color:#2563eb!important;color:#fff!important}
+.xp-shell button.xp-primary:hover,.xp-shell .xp-subscription-cta:hover,.xp-shell .xp-withdraw-card>button:hover,.xp-shell .xp-balance-actions button:hover,.xp-shell .xp-quick-actions button:hover{background:#1d4ed8!important;border-color:#1d4ed8!important;color:#fff!important}
+.xp-shell .xp-secondary,.xp-shell .xp-icon-button,.xp-shell .xp-mobile-menu,.xp-shell .xp-filters button{background:#fff!important;color:#2563eb!important;border-color:#c9dcff!important}
+.xp-shell .xp-filters button.active{background:#2563eb!important;color:#fff!important;border-color:#2563eb!important}
+.xp-shell .xp-quick-icon{background:#eaf2ff!important;color:#2563eb!important}
+.xp-shell .xp-balance-actions .xp-withdraw-action{background:#fff!important;color:#2563eb!important;border-color:#c9dcff!important}
+@media(max-width:700px){.xp-overview-plan-grid{grid-template-columns:1fr}.xp-overview-plans{margin:20px 0}}
