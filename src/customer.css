@@ -342,3 +342,15 @@
 .xp-progress-step{font-size:11px!important;color:#52647c!important}.xp-progress-step.done{color:#334155!important}
 .xp-subscription-hero-footer small{font-size:12px!important;color:#52647c!important}.xp-subscription-cta{font-size:12px!important}
 @media(max-width:600px){.xp-subscription-hero-copy{display:grid!important;grid-template-columns:42px minmax(0,1fr)!important;gap:10px!important}.xp-subscription-hero-copy>div:last-child{min-width:0}.xp-subscription-status{grid-column:1/-1;justify-self:start}.xp-subscription-progress{gap:2px}.xp-progress-step{font-size:10px!important;gap:4px}.xp-progress-step i{width:24px;height:24px;flex-shrink:0}.xp-progress-line{margin:0 5px}.xp-subscription-hero-footer{align-items:flex-start;flex-direction:column}.xp-subscription-hero-footer small{font-size:12px!important}.xp-subscription-cta{width:100%;justify-content:center}.xp-info-banner{font-size:12px}}
+
+.xp-history-actions{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.xp-history-clear{background:#fff!important;color:#b42318!important;border:1px solid #fecaca!important;border-radius:8px;padding:8px 11px;font-size:12px;font-weight:800}
+.xp-history-clear:hover:not(:disabled){background:#fff1f2!important;border-color:#fda4af!important}
+.xp-history-clear:disabled{opacity:.45;cursor:not-allowed}
+.xp-subscription-history .xp-transaction-list{width:100%;min-width:0;overflow:hidden;border-radius:12px}
+.xp-subscription-history .xp-transaction-row{width:100%;min-width:0;box-sizing:border-box}
+.xp-subscription-history .xp-transaction-info{min-width:0;overflow:hidden}
+.xp-subscription-history .xp-transaction-info small{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:block}
+.xp-subscription-history .xp-transaction-value{min-width:0;max-width:42%;text-align:right;overflow-wrap:anywhere}
+.xp-subscription-history .xp-transaction-value strong,.xp-subscription-history .xp-transaction-value small{white-space:normal;overflow-wrap:anywhere}
+@media(max-width:600px){.xp-subscription-history .xp-panel-heading{align-items:flex-start;gap:10px}.xp-history-actions{flex-direction:column;align-items:stretch}.xp-history-actions button{font-size:11px;padding:7px 9px}.xp-subscription-history .xp-transaction-row{gap:8px;padding:12px}.xp-subscription-history .xp-transaction-symbol{flex-shrink:0}.xp-subscription-history .xp-transaction-value{max-width:38%}}
