@@ -190,6 +190,7 @@ function ReferralPanel({info,loading,url,refresh,toast}:{info:any;loading:boolea
 }
 function CustomerAuth(){
  const [mode,setMode]=useState<"signin"|"signup">(window.location.pathname==="/signup"?"signup":"signin");
+ const [showPassword,setShowPassword]=useState(false);
  useEffect(()=>{let alive=true;supabase.auth.getSession().then(({data})=>{if(alive&&data.session)window.location.replace("/customer")});const {data:{subscription}}=supabase.auth.onAuthStateChange((event,session)=>{if(session&&(event==="SIGNED_IN"||event==="TOKEN_REFRESHED"))window.location.replace("/customer");});const onPop=()=>setMode(window.location.pathname==="/signup"?"signup":"signin");window.addEventListener("popstate",onPop);return()=>{alive=false;subscription.unsubscribe();window.removeEventListener("popstate",onPop)};},[]);
  const [fullName,setFullName]=useState("");
  const [email,setEmail]=useState("");
@@ -198,7 +199,7 @@ function CustomerAuth(){
  const [message,setMessage]=useState("");
  const [messageTone,setMessageTone]=useState<"error"|"success">("error");
  function switchMode(next:"signin"|"signup"){
-  setMode(next);setMessage("");setFullName("");setPassword("");
+  setMode(next);setMessage("");setFullName("");setPassword("");setShowPassword(false);
   const referral=new URLSearchParams(window.location.search).get("ref");
   const url=next==="signup"?(referral?"/signup?ref="+encodeURIComponent(referral):"/signup"):"/login";
   window.history.pushState({}, "", url);
@@ -223,18 +224,18 @@ function CustomerAuth(){
   }catch(err){setMessageTone("error");setMessage(err instanceof Error?err.message:"Authentication failed.");}
   finally{setBusy(false);}
  }
- return <div className="xp-auth-wrap"><form className="xp-auth-card" onSubmit={submit}>
-  <a className="xp-auth-home" href="/" aria-label="Return to EasePay home"><EasePayLogo inverse /></a>
-  <div className="xp-auth-kicker">CUSTOMER PORTAL</div><h1>{mode==="signin"?"Welcome back":"Create your account"}</h1>
-  <p>{mode==="signin"?"Sign in to manage your account, payments and activity.":"Create your secure EasePay account to continue to setup and your dashboard."}</p>
-  {mode==="signup"&&<label>Full name<input type="text" value={fullName} onChange={e=>setFullName(e.target.value)} required minLength={2} maxLength={80} autoComplete="name" placeholder="Your full name"/></label>}
-  <label>Email address<input type="email" value={email} onChange={e=>setEmail(e.target.value)} required autoComplete="email" placeholder="you@example.com"/></label>
-  <label>Password<input type="password" value={password} onChange={e=>setPassword(e.target.value)} required minLength={6} autoComplete={mode==="signin"?"current-password":"new-password"} placeholder="At least 6 characters"/></label>
-  <button className="xp-primary" disabled={busy}>{busy?"Please wait…":mode==="signin"?"Sign in":"Create account"}</button>
+ return <div className="xp-auth-wrap"><div className="xp-auth-layout"><aside className="xp-auth-aside"><a className="xp-auth-home" href="/" aria-label="Return to EasePay home"><EasePayLogo inverse /></a><div className="xp-auth-aside-copy"><span className="xp-auth-aside-label">PAYMENTS MADE CLEAR</span><h2>Everything you need.<br/><em>Nothing you don't.</em></h2><p>One secure place to manage your account, payment requests and activity.</p><div className="xp-auth-benefits"><span><ShieldCheck size={17}/> Secure account access</span><span><Activity size={17}/> Clear payment activity</span></div></div><div className="xp-auth-aside-bottom">EASEPAY <span>·</span> SIMPLE. SECURE. CLEAR.</div></aside><form className="xp-auth-card" onSubmit={submit}>
+  <div className="xp-auth-card-top"><span className="xp-auth-kicker">CUSTOMER PORTAL</span><span className="xp-auth-secure-chip"><ShieldCheck size={14}/> Secure sign-in</span></div>
+  <h1>{mode==="signin"?"Welcome back":"Create your account"}</h1>
+  <p>{mode==="signin"?"Sign in to pick up where you left off.":"Set up your account to continue to payment setup and your dashboard."}</p>
+  {mode==="signup"&&<label className="xp-auth-field"><span>Full name</span><input type="text" value={fullName} onChange={e=>setFullName(e.target.value)} required minLength={2} maxLength={80} autoComplete="name" placeholder="Your full name"/></label>}
+  <label className="xp-auth-field"><span>Email address</span><input type="email" value={email} onChange={e=>setEmail(e.target.value)} required autoComplete="email" placeholder="you@example.com"/></label>
+  <label className="xp-auth-field"><span>Password</span><div className="xp-password-wrap"><input type={showPassword?"text":"password"} value={password} onChange={e=>setPassword(e.target.value)} required minLength={6} autoComplete={mode==="signin"?"current-password":"new-password"} placeholder="At least 6 characters"/><button type="button" className="xp-password-toggle" onClick={()=>setShowPassword(v=>!v)} aria-label={showPassword?"Hide password":"Show password"}>{showPassword?<EyeOff size={18}/>:<Eye size={18}/>}</button></div></label>
+  <button className="xp-primary xp-auth-submit" disabled={busy}>{busy?<><span className="xp-auth-spinner"/>Please wait…</>:mode==="signin"?"Sign in":"Create account"}<span className="xp-auth-arrow">→</span></button>
   {message&&<div className={messageTone==="success"?"xp-auth-message success":"xp-proof-error"} role="status">{message}</div>}
-  <button type="button" className="xp-secondary" onClick={()=>switchMode(mode==="signin"?"signup":"signin")}>{mode==="signin"?"New to EasePay? Create account":"Already registered? Sign in"}</button>
-  <div className="xp-auth-foot"><ShieldCheck size={15}/> Secure account access <span>·</span> <a href="/">Back to home</a></div>
- </form></div>
+  <div className="xp-auth-switch">{mode==="signin"?"New to EasePay?":"Already registered?"}<button type="button" onClick={()=>switchMode(mode==="signin"?"signup":"signin")}>{mode==="signin"?"Create account":"Sign in"}</button></div>
+  <div className="xp-auth-foot"><ShieldCheck size={16}/> Your credentials are encrypted and protected <a href="/">Back to home</a></div>
+ </form></div></div>
 }
 function CustomerSetup({name,setName,busy,error,submit}:{name:string;setName:(v:string)=>void;busy:boolean;error:string;submit:(e:any)=>void}){return <div className="xp-auth-wrap"><form className="xp-auth-card xp-setup-card" onSubmit={submit}><div className="xp-brand"><EasePayLogo inverse /></div><div className="xp-auth-kicker">ACCOUNT SETUP · 1 OF 1</div><h1>Complete your profile</h1><p>Tell us what name to use on your customer account and payment records.</p><label>Full name<input value={name} onChange={e=>setName(e.target.value)} required minLength={2} maxLength={80} autoComplete="name" placeholder="Your full name"/></label><button className="xp-primary" disabled={busy||name.trim().length<2}>{busy?"Saving…":"Continue to dashboard"}</button>{error&&<div className="xp-proof-error">{error}</div>}<div className="xp-auth-foot"><ShieldCheck size={15}/> Secure account access</div></form></div>}
 function PageHeading({title,subtitle}:{title:string;subtitle:string}){return <div className="xp-page-heading"><div><h1>{title}</h1><p className="xp-subtitle">{subtitle}</p></div></div>}
