@@ -97,7 +97,7 @@ export default function CustomerApp() {
   if(!(authUser.metadata?.full_name||authUser.metadata?.name))return <CustomerSetup name={setupName} setName={setSetupName} busy={setupBusy} error={setupError} submit={async(e:any)=>{e.preventDefault();setSetupBusy(true);setSetupError("");const {data,error}=await supabase.auth.updateUser({data:{full_name:setupName.trim(),name:setupName.trim()}});if(error)setSetupError(error.message);else setAuthUser({id:authUser.id,email:authUser.email,metadata:data.user.user_metadata});setSetupBusy(false);}}/>;
   return <div className="xp-shell">
     <aside className="xp-sidebar">
-      <div className="xp-brand"><EasePayLogo /></div>
+      <div className="xp-brand"><EasePayLogo inverse /></div>
       <div className="xp-account"><div className="xp-avatar">{customerInitials}</div><div className="xp-account-text"><strong>{authUser.email||"Customer"}</strong><small>Customer account</small></div><ChevronRight size={15}/></div>
       <div className="xp-nav-label">YOUR ACCOUNT</div><nav>{nav.filter(item=>item.name!=="Referrals"||!!referralInfo?.link_code).map(({name,icon:Icon})=><button key={name} className={section===name?"xp-nav active":"xp-nav"} onClick={()=>go(name)}><Icon size={18}/><span>{name}</span>{name==="Transactions"&&<small>—</small>}</button>)}</nav>
       <div className="xp-sidebar-bottom"><div className="xp-secure"><ShieldCheck size={17}/><div><strong>Secure by design</strong><small>Account security</small></div></div><button className="xp-signout" onClick={()=>supabase.auth.signOut()}><LogOut size={16}/> Sign out</button></div>
@@ -219,7 +219,7 @@ function CustomerAuth(){
   finally{setBusy(false);}
  }
  return <div className="xp-auth-wrap"><form className="xp-auth-card" onSubmit={submit}>
-  <a className="xp-auth-home" href="/" aria-label="Return to EasePay home"><EasePayLogo/></a>
+  <a className="xp-auth-home" href="/" aria-label="Return to EasePay home"><EasePayLogo inverse /></a>
   <div className="xp-auth-kicker">CUSTOMER PORTAL</div><h1>{mode==="signin"?"Welcome back":"Create your account"}</h1>
   <p>{mode==="signin"?"Sign in to manage your account, payments and activity.":"Create your secure EasePay account to continue to setup and your dashboard."}</p>
   {mode==="signup"&&<label>Full name<input type="text" value={fullName} onChange={e=>setFullName(e.target.value)} required minLength={2} maxLength={80} autoComplete="name" placeholder="Your full name"/></label>}
@@ -231,7 +231,7 @@ function CustomerAuth(){
   <div className="xp-auth-foot"><ShieldCheck size={15}/> Secure account access <span>·</span> <a href="/">Back to home</a></div>
  </form></div>
 }
-function CustomerSetup({name,setName,busy,error,submit}:{name:string;setName:(v:string)=>void;busy:boolean;error:string;submit:(e:any)=>void}){return <div className="xp-auth-wrap"><form className="xp-auth-card xp-setup-card" onSubmit={submit}><div className="xp-brand"><EasePayLogo /></div><div className="xp-auth-kicker">ACCOUNT SETUP · 1 OF 1</div><h1>Complete your profile</h1><p>Tell us what name to use on your customer account and payment records.</p><label>Full name<input value={name} onChange={e=>setName(e.target.value)} required minLength={2} maxLength={80} autoComplete="name" placeholder="Your full name"/></label><button className="xp-primary" disabled={busy||name.trim().length<2}>{busy?"Saving…":"Continue to dashboard"}</button>{error&&<div className="xp-proof-error">{error}</div>}<div className="xp-auth-foot"><ShieldCheck size={15}/> Secure account access</div></form></div>}
+function CustomerSetup({name,setName,busy,error,submit}:{name:string;setName:(v:string)=>void;busy:boolean;error:string;submit:(e:any)=>void}){return <div className="xp-auth-wrap"><form className="xp-auth-card xp-setup-card" onSubmit={submit}><div className="xp-brand"><EasePayLogo inverse /></div><div className="xp-auth-kicker">ACCOUNT SETUP · 1 OF 1</div><h1>Complete your profile</h1><p>Tell us what name to use on your customer account and payment records.</p><label>Full name<input value={name} onChange={e=>setName(e.target.value)} required minLength={2} maxLength={80} autoComplete="name" placeholder="Your full name"/></label><button className="xp-primary" disabled={busy||name.trim().length<2}>{busy?"Saving…":"Continue to dashboard"}</button>{error&&<div className="xp-proof-error">{error}</div>}<div className="xp-auth-foot"><ShieldCheck size={15}/> Secure account access</div></form></div>}
 function PageHeading({title,subtitle}:{title:string;subtitle:string}){return <div className="xp-page-heading"><div><h1>{title}</h1><p className="xp-subtitle">{subtitle}</p></div></div>}
 function TransactionList({items,onSelect}:{items:Tx[];onSelect:(tx:Tx)=>void}){return <div className="xp-transaction-list">{items.map(t=><button className="xp-transaction-row" key={t.id} onClick={()=>onSelect(t)}><div className="xp-transaction-symbol">{t.icon}</div><div className="xp-transaction-info"><strong>{t.name}</strong><small>{t.detail} <span>·</span> {t.date}</small></div><div className="xp-transaction-value"><strong className={t.kind==="Credit"?"credit":""}>{t.kind==="Credit"?"+":"−"}{money(t.amount)}</strong><small className={"xp-status "+t.status.toLowerCase()}>{t.status}</small></div><ChevronRight className="xp-row-chevron" size={16}/></button>)}</div>}
 
