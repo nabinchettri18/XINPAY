@@ -1,6 +1,6 @@
 import {useCallback,useEffect,useState} from "react";
 import {supabase} from "./paymentConfig";
-import {Copy,Link2,RefreshCw,Search,ShieldCheck,Users,Revoke} from "lucide-react";
+import {Copy,Link2,RefreshCw,Search,ShieldCheck,Users} from "lucide-react";
 import "./referrals.css";
 type Row={customer_id:string;email:string|null;full_name:string;referral_code:string|null;link_created_at:string|null;link_revoked_at:string|null;referral_count:number;qualified_count:number;rewarded_minor:number};
 export default function AdminReferrals(){
