@@ -9,7 +9,6 @@ import AdminWalletTopups from "./AdminWalletTopups";
 import AdminReferrals from "./AdminReferrals";
 import { supabase } from "./paymentConfig";
 import { ShieldCheck } from "lucide-react";
-import EasePayLogo from "./EasePayLogo";
 import "./styles.css";
 import "./customer.css";
 
