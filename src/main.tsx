@@ -42,8 +42,8 @@ function AdminAuth({children}:{children:React.ReactNode}){
     const {data:{user},error:userError}=await supabase.auth.getUser();
     if(userError||!user){setAdminEmail("");setState("signed_out");return false;}
     setAdminEmail(user.email||"");
-    const {data,isError}=await supabase.rpc("is_xinpay_admin");
-    if(isError||data!==true){setState("denied");return false;}
+    const {data,error:roleError}=await supabase.rpc("is_xinpay_admin");
+    if(roleError||data!==true){setState("denied");return false;}
     setState("allowed");
     return true;
   };
@@ -61,7 +61,7 @@ function AdminAuth({children}:{children:React.ReactNode}){
       // Defer network auth checks until Supabase finishes its auth event.
       window.setTimeout(()=>{if(active)void checkAdmin();},0);
     });
-    const onFocus=()=>{if(document.visibilityState==="visible"&&state==="allowed")void checkAdmin();};
+    const onFocus=()=>{if(document.visibilityState==="visible")void checkAdmin();};
     document.addEventListener("visibilitychange",onFocus);
     return()=>{active=false;subscription.unsubscribe();document.removeEventListener("visibilitychange",onFocus);};
   },[]);
