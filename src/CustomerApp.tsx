@@ -20,7 +20,8 @@ const nav: {name:Section; icon:any}[] = [{name:"Overview",icon:Home},{name:"Tran
 export default function CustomerApp() {
   const [section,setSection] = useState<Section>("Overview");
   const [authReady,setAuthReady]=useState(false);
-  const [authUser,setAuthUser]=useState<{id:string;email?:string;metadata?:any}|null>(null);\n  const [referralInfo,setReferralInfo]=useState<any>(null);\n  const [referralLoading,setReferralLoading]=useState(false);
+  const [authUser,setAuthUser]=useState<{id:string;email?:string;metadata?:any}|null>(null);
+  const [referralInfo,setReferralInfo]=useState<any>(null);\n  const [referralLoading,setReferralLoading]=useState(false);
   useEffect(()=>{supabase.auth.getSession().then(({data})=>{setAuthUser(data.session?.user?{id:data.session.user.id,email:data.session.user.email,metadata:data.session.user.user_metadata}:null);setAuthReady(true)});const {data:{subscription}}=supabase.auth.onAuthStateChange((_event,session)=>setAuthUser(session?.user?{id:session.user.id,email:session.user.email,metadata:session.user.user_metadata}:null));return()=>subscription.unsubscribe()},[]);
   const [balanceVisible,setBalanceVisible] = useState(true);
   const [notice,setNotice] = useState(true);
