@@ -1,9 +1,10 @@
 import { useState } from "react";
 import PaymentSettings from "./PaymentSettings";
+import { supabase } from "./paymentConfig";
 import {
   Activity, ArrowDownLeft, ArrowUpRight, Bell, Building2, ChevronDown,
   CircleHelp, CreditCard, FileCheck, LayoutDashboard, LockKeyhole, Menu, Search,
-  Settings, ShieldCheck, Wallet, X, Users
+  Settings, ShieldCheck, Wallet, X, Users, LogOut
 } from "lucide-react";
 
 type NavKey = "Overview" | "Transactions" | "Settlements" | "Accounts" | "Customers" | "Support" | "Payment Settings" | "Payment Proof Review" | "Withdrawal Requests" | "Wallet Top-ups" | "Referrals" | "Settings";
@@ -46,7 +47,7 @@ export default function App() {
       </aside>
       {mobileOpen && <button className="scrim" onClick={()=>setMobileOpen(false)} aria-label="Close navigation"/>}
       <main className="main">
-        <header className="topbar"><button className="icon-btn mobile-menu" onClick={()=>setMobileOpen(true)}><Menu/></button><div className="breadcrumbs">Workspace <span>/</span> <strong>{active}</strong></div><div className="top-actions"><button className="icon-btn" aria-label="Search (coming soon)" title="Search is not connected" disabled><Search size={18}/></button><button className="icon-btn notification" aria-label="Notifications (coming soon)" title="Notifications are not connected" disabled><Bell size={18}/><i/></button><div className="avatar small">DA</div></div></header>
+        <header className="topbar"><button className="icon-btn mobile-menu" onClick={()=>setMobileOpen(true)}><Menu/></button><div className="breadcrumbs">Workspace <span>/</span> <strong>{active}</strong></div><div className="top-actions"><button className="icon-btn" aria-label="Search (coming soon)" title="Search is not connected" disabled><Search size={18}/></button><button className="icon-btn notification" aria-label="Notifications (coming soon)" title="Notifications are not connected" disabled><Bell size={18}/><i/></button><button className="admin-signout" onClick={()=>supabase.auth.signOut()} title="Sign out of admin portal"><LogOut size={16}/><span>Sign out</span></button></div></header>
         <div className="page-content">
           <div className="page-heading"><div><p className="eyebrow">MONITORING & OPERATIONS</p><h1>{active}</h1><p className="subheading">Monitor activity and manage your payment operations.</p></div><button className="date-button" disabled aria-label="Date filter unavailable in demo">Today <ChevronDown size={16}/></button></div>
           {showNotice&&<div className="demo-banner"><LockKeyhole size={18}/><div><strong>Prototype environment</strong><span>Sample figures and transactions are illustrative. No payment, settlement, or account changes are performed.</span></div><button onClick={()=>setShowNotice(false)} aria-label="Dismiss"><X size={17}/></button></div>}
