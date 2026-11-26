@@ -1,8 +1,21 @@
 import { createClient } from "@supabase/supabase-js";
-const url=import.meta.env.VITE_SUPABASE_URL as string|undefined;
-const key=(import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY||import.meta.env.VITE_SUPABASE_ANON_KEY) as string|undefined;
-if(!url||!key)console.warn("XinPay Supabase frontend environment variables are missing.");
-export const supabase=createClient(url||"https://placeholder.supabase.co",key||"placeholder-key",{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
+
+// Supabase's project URL and publishable key are safe for browser use.
+// Access is controlled by Auth and RLS; never place a secret/service-role key here.
+const SUPABASE_URL = "https://tybmrgfcyjjuxlnsuqdo.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_u1EbOSVfGucnj-Bq2cFCVw_2we26-v2";
+
+const url = (import.meta.env.VITE_SUPABASE_URL as string | undefined) || SUPABASE_URL;
+const key = (import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY || import.meta.env.VITE_SUPABASE_ANON_KEY) as string | undefined || SUPABASE_PUBLISHABLE_KEY;
+
+export const supabase = createClient(url, key, {
+  auth: {
+    persistSession: true,
+    autoRefreshToken: true,
+    detectSessionInUrl: true,
+  },
+});
+
 export type PaymentConfig={upiId:string;beneficiary:string;instructions:string;enabled:boolean;version?:number;updatedAt?:string};
 const DEFAULTS:PaymentConfig={upiId:"",beneficiary:"",instructions:"Use the payment details shown here and keep your transaction reference for your records.",enabled:false};
 export async function loadPaymentConfig():Promise<PaymentConfig>{try{const {data,error}=await supabase.from("payment_config").select("receiving_upi_id,beneficiary_display_name,instructions,enabled,version,updated_at").eq("id","primary").single();if(error)throw error;return {upiId:data.receiving_upi_id||"",beneficiary:data.beneficiary_display_name||"",instructions:data.instructions||DEFAULTS.instructions,enabled:!!data.enabled,version:data.version,updatedAt:data.updated_at};}catch{return DEFAULTS}}
