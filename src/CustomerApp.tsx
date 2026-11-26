@@ -184,7 +184,53 @@ function ReferralPanel({info,loading,url,refresh,toast}:{info:any;loading:boolea
     </>
   );
 }
-function CustomerAuth(){const [mode,setMode]=useState<"signin"|"signup">(window.location.pathname==="/signup"?"signup":"signin");const [fullName,setFullName]=useState("");const [email,setEmail]=useState("");const [password,setPassword]=useState("");const [busy,setBusy]=useState(false);const [message,setMessage]=useState("");async function submit(e:React.FormEvent){e.preventDefault();setBusy(true);setMessage("");try{if(mode==="signup"){const {data,error}=await supabase.auth.signUp({email:email.trim(),password,options:{data:{full_name:fullName.trim(),name:fullName.trim(),referral_code:(new URLSearchParams(window.location.search).get("ref")||"").trim().toUpperCase()}}});if(error)throw error;if(!data.session){setMessage("Account created. Check your email to confirm, then sign in.");return;}}else{const {error}=await supabase.auth.signInWithPassword({email:email.trim(),password});if(error)throw error;}}catch(err){setMessage(err instanceof Error?err.message:"Authentication failed.");}finally{setBusy(false)}}return <div className="xp-auth-wrap"><form className="xp-auth-card" onSubmit={submit}><div className="xp-brand"><EasePayLogo /></div><div className="xp-auth-kicker">CUSTOMER PORTAL</div><h1>{mode==="signin"?"Welcome back":"Create your account"}</h1><p>{mode==="signin"?"Sign in to manage your account, payments and activity.":"Get started with your EasePay customer account."}</p>{mode==="signup"&&<label>Full name<input type="text" value={fullName} onChange={e=>setFullName(e.target.value)} required minLength={2} maxLength={80} autoComplete="name" placeholder="Your full name"/></label>}<label>Email address<input type="email" value={email} onChange={e=>setEmail(e.target.value)} required autoComplete="email" placeholder="you@example.com"/></label><label>Password<input type="password" value={password} onChange={e=>setPassword(e.target.value)} required minLength={6} autoComplete={mode==="signin"?"current-password":"new-password"} placeholder="At least 6 characters"/></label><button className="xp-primary" disabled={busy}>{busy?"Please wait…":mode==="signin"?"Sign in":"Create account"}</button>{message&&<div className="xp-proof-error">{message}</div>}<button type="button" className="xp-secondary" onClick={()=>{setMode(mode==="signin"?"signup":"signin");setMessage("");setFullName("")}}>{mode==="signin"?"New to EasePay? Create account":"Already registered? Sign in"}</button><div className="xp-auth-foot"><ShieldCheck size={15}/> Secure account access</div></form></div>}
+function CustomerAuth(){
+ const [mode,setMode]=useState<"signin"|"signup">(window.location.pathname==="/signup"?"signup":"signin");
+ const [fullName,setFullName]=useState("");
+ const [email,setEmail]=useState("");
+ const [password,setPassword]=useState("");
+ const [busy,setBusy]=useState(false);
+ const [message,setMessage]=useState("");
+ const [messageTone,setMessageTone]=useState<"error"|"success">("error");
+ function switchMode(next:"signin"|"signup"){
+  setMode(next);setMessage("");setFullName("");setPassword("");
+  const referral=new URLSearchParams(window.location.search).get("ref");
+  const url=next==="signup"?(referral?"/signup?ref="+encodeURIComponent(referral):"/signup"):"/login";
+  window.history.pushState({}, "", url);
+ }
+ async function submit(e:React.FormEvent){
+  e.preventDefault();setBusy(true);setMessage("");
+  try{
+   if(mode==="signup"){
+    const {data,error}=await supabase.auth.signUp({email:email.trim(),password,options:{data:{full_name:fullName.trim(),name:fullName.trim(),referral_code:(new URLSearchParams(window.location.search).get("ref")||"").trim().toUpperCase()}}});
+    if(error)throw error;
+    if(!data.session){
+     setMessageTone("success");setMessage("Account created. Check your email to confirm your address, then sign in.");
+     switchMode("signin");setMessageTone("success");setMessage("Account created. Check your email to confirm your address, then sign in.");
+     return;
+    }
+    window.location.replace("/customer");return;
+   }
+   const {data,error}=await supabase.auth.signInWithPassword({email:email.trim(),password});
+   if(error)throw error;
+   if(!data.session)throw new Error("Sign-in did not create a session. Please try again.");
+   window.location.replace("/customer");
+  }catch(err){setMessageTone("error");setMessage(err instanceof Error?err.message:"Authentication failed.");}
+  finally{setBusy(false);}
+ }
+ return <div className="xp-auth-wrap"><form className="xp-auth-card" onSubmit={submit}>
+  <a className="xp-auth-home" href="/" aria-label="Return to EasePay home"><EasePayLogo/></a>
+  <div className="xp-auth-kicker">CUSTOMER PORTAL</div><h1>{mode==="signin"?"Welcome back":"Create your account"}</h1>
+  <p>{mode==="signin"?"Sign in to manage your account, payments and activity.":"Create your secure EasePay account to continue to setup and your dashboard."}</p>
+  {mode==="signup"&&<label>Full name<input type="text" value={fullName} onChange={e=>setFullName(e.target.value)} required minLength={2} maxLength={80} autoComplete="name" placeholder="Your full name"/></label>}
+  <label>Email address<input type="email" value={email} onChange={e=>setEmail(e.target.value)} required autoComplete="email" placeholder="you@example.com"/></label>
+  <label>Password<input type="password" value={password} onChange={e=>setPassword(e.target.value)} required minLength={6} autoComplete={mode==="signin"?"current-password":"new-password"} placeholder="At least 6 characters"/></label>
+  <button className="xp-primary" disabled={busy}>{busy?"Please wait…":mode==="signin"?"Sign in":"Create account"}</button>
+  {message&&<div className={messageTone==="success"?"xp-auth-message success":"xp-proof-error"} role="status">{message}</div>}
+  <button type="button" className="xp-secondary" onClick={()=>switchMode(mode==="signin"?"signup":"signin")}>{mode==="signin"?"New to EasePay? Create account":"Already registered? Sign in"}</button>
+  <div className="xp-auth-foot"><ShieldCheck size={15}/> Secure account access <span>·</span> <a href="/">Back to home</a></div>
+ </form></div>
+}
 function CustomerSetup({name,setName,busy,error,submit}:{name:string;setName:(v:string)=>void;busy:boolean;error:string;submit:(e:any)=>void}){return <div className="xp-auth-wrap"><form className="xp-auth-card xp-setup-card" onSubmit={submit}><div className="xp-brand"><EasePayLogo /></div><div className="xp-auth-kicker">ACCOUNT SETUP · 1 OF 1</div><h1>Complete your profile</h1><p>Tell us what name to use on your customer account and payment records.</p><label>Full name<input value={name} onChange={e=>setName(e.target.value)} required minLength={2} maxLength={80} autoComplete="name" placeholder="Your full name"/></label><button className="xp-primary" disabled={busy||name.trim().length<2}>{busy?"Saving…":"Continue to dashboard"}</button>{error&&<div className="xp-proof-error">{error}</div>}<div className="xp-auth-foot"><ShieldCheck size={15}/> Secure account access</div></form></div>}
 function PageHeading({title,subtitle}:{title:string;subtitle:string}){return <div className="xp-page-heading"><div><h1>{title}</h1><p className="xp-subtitle">{subtitle}</p></div></div>}
 function TransactionList({items,onSelect}:{items:Tx[];onSelect:(tx:Tx)=>void}){return <div className="xp-transaction-list">{items.map(t=><button className="xp-transaction-row" key={t.id} onClick={()=>onSelect(t)}><div className="xp-transaction-symbol">{t.icon}</div><div className="xp-transaction-info"><strong>{t.name}</strong><small>{t.detail} <span>·</span> {t.date}</small></div><div className="xp-transaction-value"><strong className={t.kind==="Credit"?"credit":""}>{t.kind==="Credit"?"+":"−"}{money(t.amount)}</strong><small className={"xp-status "+t.status.toLowerCase()}>{t.status}</small></div><ChevronRight className="xp-row-chevron" size={16}/></button>)}</div>}
