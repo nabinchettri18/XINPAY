@@ -9,7 +9,7 @@ import { supabase } from "./paymentConfig";
 import "./styles.css";
 import "./customer.css";
 const path=window.location.pathname;
-const isCustomer=path.startsWith("/customer");
+const isCustomer=path==="/"||path.startsWith("/customer");
 const isProofReview=path.startsWith("/admin/proofs");
 const isWithdrawals=path.startsWith("/admin/withdrawals");
 const isWalletTopups=path.startsWith("/admin/topups");
