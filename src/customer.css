@@ -152,3 +152,26 @@
 .xp-methods-empty p{font-size:11px;line-height:1.6;color:#8592a1;max-width:430px;margin:8px 0 18px}
 .xp-methods-empty .xp-primary{width:auto}
 @media(max-width:760px){.xp-subscription-overview{align-items:flex-start;flex-direction:column;gap:13px;padding:15px}.xp-subscription-status{max-width:none;border-left:0;border-top:1px solid #edf0f3;padding:10px 0 0;width:100%}.xp-subscription-cta{width:100%;justify-content:center}}
+
+/* Locked withdrawal access in customer profile */
+.xp-profile-withdraw{margin-top:16px}
+.xp-profile-withdraw-head{display:flex;align-items:center;gap:12px}
+.xp-profile-withdraw-icon{width:42px;height:42px;display:grid;place-items:center;border-radius:12px;background:#eef2f7;color:#526a83;flex-shrink:0}
+.xp-profile-withdraw-head>div:nth-child(2){flex:1;min-width:0}
+.xp-profile-withdraw-head h3{margin:4px 0;color:var(--xp-brand);font-size:15px}
+.xp-profile-withdraw-head p{margin:0;color:var(--xp-muted);font-size:12px;line-height:1.5}
+.xp-lock-pill{display:inline-flex;align-items:center;gap:5px;border:1px solid #e6d9b9;background:#fff8e9;color:#9b762b;border-radius:999px;padding:6px 9px;font-size:10px;font-weight:700;white-space:nowrap}
+.xp-profile-withdraw-info{display:grid;gap:5px;margin:17px 0;padding:14px;background:#f7f9fc;border:1px solid #e5ebf2;border-radius:11px}
+.xp-profile-withdraw-info span,.xp-profile-withdraw-info small{font-size:11px;color:#748399}
+.xp-profile-withdraw-info strong{font-size:22px;color:var(--xp-brand)}
+.xp-profile-withdraw-info small{line-height:1.5}
+.xp-profile-withdraw-button{width:100%;display:flex;align-items:center;justify-content:center;gap:8px;border:1px solid #dce3eb;background:#f1f4f8;color:#738198;border-radius:10px;padding:12px;font-size:12px;font-weight:700;cursor:pointer}
+.xp-profile-withdraw-button span{font-size:10px;text-transform:uppercase;letter-spacing:.06em;border-radius:6px;background:#e3e8ef;padding:4px 6px}
+.xp-profile-withdraw-button:hover{background:#e8edf3}
+.xp-activation-modal{width:min(430px,calc(100vw - 28px));background:#fff;border:1px solid #e5ebf2;border-radius:18px;padding:24px;box-shadow:0 22px 70px #101c2b30;text-align:center}
+.xp-activation-icon{width:54px;height:54px;display:grid;place-items:center;border-radius:16px;background:#edf3f8;color:#315f91;margin:0 auto 14px}
+.xp-activation-copy h2{margin:0;color:#172238;font-size:20px;letter-spacing:-.3px}
+.xp-activation-copy p{margin:10px 0 0;color:#64748b;font-size:13px;line-height:1.65}
+.xp-activation-actions{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:22px}
+.xp-activation-actions button{min-height:42px;display:flex;align-items:center;justify-content:center;border-radius:10px;font-size:12px;font-weight:700;cursor:pointer}
+@media(max-width:600px){.xp-profile-withdraw-head{align-items:flex-start;flex-wrap:wrap}.xp-lock-pill{margin-left:auto}.xp-activation-modal{padding:20px}.xp-activation-actions{grid-template-columns:1fr}}
