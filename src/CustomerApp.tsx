@@ -16,10 +16,12 @@ type Section = "Overview" | "Transactions" | "Payments" | "Payment methods" | "P
 type Tx = { id: string; name: string; detail: string; date: string; amount: number; status: "Completed" | "Pending" | "Failed"; kind: "Credit" | "Debit"; icon: string };
 const transactions: Tx[] = [];
 const money = (n:number) => new Intl.NumberFormat("en-IN", { style:"currency", currency:"INR", maximumFractionDigits:2 }).format(n);
+const sectionFromPath=(path:string):Section=>({"/customer/transactions":"Transactions","/customer/payments":"Payments","/customer/payment-methods":"Payment methods","/customer/profile":"Profile","/customer/referrals":"Referrals","/customer/help":"Help"} as Record<string,Section>)[path]||"Overview";
+const pathFromSection=(section:Section)=>({ "Overview":"/customer/dashboard","Transactions":"/customer/transactions","Payments":"/customer/payments","Payment methods":"/customer/payment-methods","Profile":"/customer/profile","Referrals":"/customer/referrals","Help":"/customer/help"} as Record<Section,string>)[section];
 const nav: {name:Section; icon:any}[] = [{name:"Overview",icon:Home},{name:"Transactions",icon:Activity},{name:"Payments",icon:ArrowUpRight},{name:"Payment methods",icon:CreditCard},{name:"Profile",icon:Settings},{name:"Referrals",icon:Gift},{name:"Help",icon:CircleHelp}];
 
 export default function CustomerApp() {
-  const [section,setSection] = useState<Section>("Overview");
+  const [section,setSection] = useState<Section>(()=>sectionFromPath(window.location.pathname));
   const [authReady,setAuthReady]=useState(false);
   const [authUser,setAuthUser]=useState<{id:string;email?:string;metadata?:any}|null>(null);
   const [referralInfo,setReferralInfo]=useState<any>(null);
@@ -73,7 +75,7 @@ export default function CustomerApp() {
   const [proofError,setProofError] = useState("");
   const upiUri = useMemo(()=>`upi://pay?pa=${encodeURIComponent(upiId)}&pn=${encodeURIComponent(upiName)}&am=${encodeURIComponent(paymentAmount)}&cu=INR&tn=${encodeURIComponent(paymentPurpose)}`,[upiId,upiName,paymentAmount,paymentPurpose]);
   const showToast=(m:string)=>{setToast(m);window.setTimeout(()=>setToast(""),2600)};
-  const go=(s:Section)=>{setSection(s);setMobileNav(false);setSearch("");};
+  const go=(s:Section)=>{setSection(s);setMobileNav(false);setSearch("");const target=pathFromSection(s);if(window.location.pathname!==target)window.history.pushState({easepaySection:s},"",target);};\n  useEffect(()=>{const onPop=()=>setSection(sectionFromPath(window.location.pathname));window.addEventListener("popstate",onPop);return()=>window.removeEventListener("popstate",onPop);},[]);\n  useEffect(()=>{if(!authReady||!authUser)return;const hasName=!!(authUser.metadata?.full_name||authUser.metadata?.name);if(!hasName&&window.location.pathname!=="/customer/setup")window.history.replaceState({},"","/customer/setup");if(hasName&&window.location.pathname==="/customer/setup")window.history.replaceState({},"","/customer/dashboard");},[authReady,authUser?.id,authUser?.metadata?.full_name,authUser?.metadata?.name]);
   const loadSubscriptionHistory=async()=>{if(!authUser)return;setHistoryLoading(true);const {data,error}=await supabase.from("subscription_payment_requests").select("id,plan_key,plan_name,amount_minor,status,utr,submitted_at,created_at,admin_note").eq("customer_id",authUser.id).order("created_at",{ascending:false}).limit(30);if(!error)setSubscriptionHistory(data||[]);else setSubscriptionHistory([]);setHistoryLoading(false);};
   const refreshWallet=async()=>{setWalletLoading(true);const {data,error}=await supabase.rpc("customer_wallet_summary");if(!error&&data)setWallet(data);else if(error)showToast("Balance unavailable: "+error.message);setWalletLoading(false);};
   useEffect(()=>{if(authUser){refreshWallet();loadSubscriptionHistory();setSetupName(authUser.metadata?.full_name||authUser.metadata?.name||"");loadReferralInfo();}},[authUser?.id]);
