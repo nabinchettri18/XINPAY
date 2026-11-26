@@ -194,3 +194,5 @@
 .xp-totp-enrollment code{display:block;word-break:break-all;letter-spacing:1px;background:#eef2f7;border-radius:7px;padding:8px;color:#24364b;font-size:11px}
 .xp-totp-enrollment small{font-size:10px;color:#8b98a7;text-align:center}
 .xp-admin-mfa-card>button.xp-secondary{width:100%;justify-content:center}
+
+.xp-brand{display:flex;align-items:center;justify-content:center;margin-bottom:26px}.xp-brand .easepay-logo{width:min(210px,100%);height:auto;display:block}.xp-auth-card .xp-brand{margin-bottom:28px}
