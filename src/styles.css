@@ -18,3 +18,5 @@
 .admin-signout{display:inline-flex;align-items:center;gap:7px;padding:8px 10px;border:1px solid #e2e7ec;border-radius:8px;background:#fff;color:#596779;font-size:11px;font-weight:600}
 .admin-signout:hover{background:#f5f7f9;color:#27384b}
 @media(max-width:700px){.admin-signout span{display:none}.admin-signout{padding:8px}}
+
+.brand .easepay-logo{width:165px;height:auto;display:block}.xp-auth-wrap .xp-brand .easepay-logo{width:min(215px,100%);height:auto}
