@@ -84,3 +84,7 @@
 .xp-telegram-status.error{background:#fff1f1;color:#b42318}
 .xp-telegram-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
 .xp-telegram-verification .xp-secondary{display:inline-flex;align-items:center;justify-content:center;text-decoration:none;min-height:38px;padding:8px 12px;border:1px solid #d7dde7;border-radius:9px;background:white;color:inherit;font-size:13px}
+
+/* Customer journey refinements */
+.xp-setup-card{animation:xp-enter .28s ease-out}.xp-auth-kicker{font-size:10px;font-weight:800;letter-spacing:1.5px;color:#668279;margin-top:2px}.xp-subscription-history{margin-top:18px}.xp-subscription-history .xp-transaction-row{cursor:default}.xp-subscription-history .xp-transaction-value{min-width:100px}.xp-status.awaiting_payment,.xp-status.submitted,.xp-status.pending{color:#a17a36}.xp-status.approved,.xp-status.active{color:#38845e}.xp-status.rejected,.xp-status.failed{color:#b55c5c}
+@keyframes xp-enter{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
