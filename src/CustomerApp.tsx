@@ -22,7 +22,13 @@ export default function CustomerApp() {
   const [authReady,setAuthReady]=useState(false);
   const [authUser,setAuthUser]=useState<{id:string;email?:string;metadata?:any}|null>(null);
   const [referralInfo,setReferralInfo]=useState<any>(null);
-  const [referralLoading,setReferralLoading]=useState(false);\n  const [subscriptionHistory,setSubscriptionHistory]=useState<any[]>([]);\n  const [historyLoading,setHistoryLoading]=useState(false);\n  const [setupName,setSetupName]=useState("");\n  const [setupBusy,setSetupBusy]=useState(false);\n  const [setupError,setSetupError]=useState("");\n  const [subscriptionRequestId,setSubscriptionRequestId]=useState("");
+  const [referralLoading,setReferralLoading]=useState(false);
+  const [subscriptionHistory,setSubscriptionHistory]=useState<any[]>([]);
+  const [historyLoading,setHistoryLoading]=useState(false);
+  const [setupName,setSetupName]=useState("");
+  const [setupBusy,setSetupBusy]=useState(false);
+  const [setupError,setSetupError]=useState("");
+  const [subscriptionRequestId,setSubscriptionRequestId]=useState("");
   useEffect(()=>{supabase.auth.getSession().then(({data})=>{setAuthUser(data.session?.user?{id:data.session.user.id,email:data.session.user.email,metadata:data.session.user.user_metadata}:null);setAuthReady(true)});const {data:{subscription}}=supabase.auth.onAuthStateChange((_event,session)=>setAuthUser(session?.user?{id:session.user.id,email:session.user.email,metadata:session.user.user_metadata}:null));return()=>subscription.unsubscribe()},[]);
   const [balanceVisible,setBalanceVisible] = useState(true);
   const [notice,setNotice] = useState(true);
