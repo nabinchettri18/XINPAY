@@ -210,3 +210,6 @@
 .xp-auth-foot{color:#8EA4BD!important}.xp-auth-foot a,.xp-auth-home{color:#60A5FA!important}.xp-auth-home{display:block;text-decoration:none;margin-bottom:2px}.xp-auth-home .easepay-logo{max-width:160px}
 .xp-auth-message.success{background:#123A33;border:1px solid #1D6B53;color:#6EE7B7;padding:11px 12px;border-radius:10px;font-size:13px;line-height:1.5}
 .xp-auth-card .xp-proof-error{background:#3A1722;color:#FDA4AF;border-color:#6B2636}
+
+/* Consistent full-width EasePay wordmark */
+.easepay-logo{display:block;max-width:100%;height:auto;overflow:visible}.xp-auth-home .easepay-logo{width:min(235px,100%);height:auto}.xp-brand .easepay-logo{width:min(180px,100%);height:auto}.xp-auth-home{display:flex;align-items:center;justify-content:flex-start;min-height:54px;margin-bottom:6px}
