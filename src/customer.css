@@ -175,3 +175,11 @@
 .xp-activation-actions{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:22px}
 .xp-activation-actions button{min-height:42px;display:flex;align-items:center;justify-content:center;border-radius:10px;font-size:12px;font-weight:700;cursor:pointer}
 @media(max-width:600px){.xp-profile-withdraw-head{align-items:flex-start;flex-wrap:wrap}.xp-lock-pill{margin-left:auto}.xp-activation-modal{padding:20px}.xp-activation-actions{grid-template-columns:1fr}}
+
+/* Admin authorization gate */
+.xp-admin-denied{gap:13px}
+.xp-admin-security-icon{width:52px;height:52px;display:grid;place-items:center;border-radius:15px;background:#fff1f1;color:#b42318;font-size:25px;margin-bottom:2px}
+.xp-admin-denied h1{margin:0}
+.xp-admin-denied .xp-primary{width:100%;justify-content:center;margin-top:4px}
+.xp-admin-identity{padding:10px 12px;border:1px solid #e5eaf0;border-radius:9px;background:#f7f9fc;color:#516176;font-size:12px;overflow-wrap:anywhere}
+.xp-admin-login-note{padding-top:11px;border-top:1px solid #edf0f3;color:#8b98a7;font-size:10px;line-height:1.55}
