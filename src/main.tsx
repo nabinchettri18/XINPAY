@@ -15,11 +15,29 @@ import "./customer.css";
 
 function Root(){
   const [path,setPath]=useState(window.location.pathname);
+  const [rootSessionChecked,setRootSessionChecked]=useState(false);
   useEffect(()=>{const onPop=()=>setPath(window.location.pathname);window.addEventListener("popstate",onPop);return()=>window.removeEventListener("popstate",onPop);},[]);
+  useEffect(()=>{
+    if(path==="/"){
+      let active=true;
+      supabase.auth.getSession().then(({data:{session}})=>{
+        if(!active)return;
+        if(session){window.history.replaceState({},"","/customer/dashboard");setPath("/customer/dashboard");}
+        else setRootSessionChecked(true);
+      });
+      const {data:{subscription}}=supabase.auth.onAuthStateChange((_event,session)=>{
+        if(active&&session&&window.location.pathname==="/"){
+          window.history.replaceState({},"","/customer/dashboard");setPath("/customer/dashboard");
+        }
+      });
+      return()=>{active=false;subscription.unsubscribe();};
+    }
+    setRootSessionChecked(true);
+  },[path]);
   useEffect(()=>{if(path==="/auth/callback"){window.location.replace("/customer");return;}if(path==="/forgot-password"){window.location.replace("/login");return;}const known=path==="/"||path==="/login"||path==="/signup"||path.startsWith("/customer")||path.startsWith("/admin");if(!known)window.location.replace("/");},[path]);
   const isLanding=path==="/";
   const isCustomer=path==="/login"||path==="/signup"||path.startsWith("/customer");
-  if(isLanding)return <LandingPage/>;
+  if(isLanding)return rootSessionChecked?<LandingPage/>:<div className="xp-auth-loading">Checking your session…</div>;
   if(isCustomer)return <CustomerApp/>;
   if(path.startsWith("/admin")){
     if(path==="/admin/proofs"||path.startsWith("/admin/proofs/"))return <AdminAuth><ProofReview/></AdminAuth>;
