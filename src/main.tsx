@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App";
 import CustomerApp from "./CustomerApp";
+import LandingPage from "./LandingPage";
 import ProofReview from "./ProofReview";
 import AdminWithdrawals from "./AdminWithdrawals";
 import AdminWalletTopups from "./AdminWalletTopups";
@@ -12,7 +13,8 @@ import "./styles.css";
 import "./customer.css";
 
 const path=window.location.pathname;
-const isCustomer=path==="/"||path.startsWith("/customer");
+const isLanding=path==="/";
+const isCustomer=path==="/login"||path==="/signup"||path.startsWith("/customer");
 const isProofReview=path.startsWith("/admin/proofs");
 const isWithdrawals=path.startsWith("/admin/withdrawals");
 const isWalletTopups=path.startsWith("/admin/topups");
@@ -20,7 +22,8 @@ const isReferrals=path.startsWith("/admin/referrals");
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    {isCustomer?<CustomerApp />:
+    {isLanding?<LandingPage />:
+      isCustomer?<CustomerApp />:
       isProofReview?<AdminAuth><ProofReview /></AdminAuth>:
       isWithdrawals?<AdminAuth><AdminWithdrawals /></AdminAuth>:
       isWalletTopups?<AdminAuth><AdminWalletTopups /></AdminAuth>:
