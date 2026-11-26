@@ -363,3 +363,19 @@
 .xp-info-note{background:#eff6ff!important;border:1px solid #d4e4ff!important;border-radius:12px!important;color:#35577e!important;padding:13px!important;display:flex!important;gap:10px!important;align-items:flex-start!important;line-height:1.55!important;margin:14px 0!important}.xp-info-note svg{color:#2563eb!important;flex-shrink:0!important}
 .xp-proof-submit{background:#fff!important;border:1px solid #dbe5f1!important;border-radius:18px!important;padding:clamp(15px,4vw,22px)!important;margin:16px 0!important}.xp-proof-submit h3{color:#17243a!important;font-size:18px!important;font-weight:800!important}.xp-proof-submit>p{color:#60738b!important;font-size:13px!important;line-height:1.6!important}.xp-proof-submit label{color:#34465d!important;font-size:13px!important;gap:8px!important;margin:16px 0!important}.xp-proof-submit input:not([type=file]){background:#fff!important;color:#17243a!important;border:1px solid #cbd7e5!important;border-radius:12px!important;min-height:52px!important;font-size:15px!important;padding:12px 14px!important}.xp-proof-submit input::placeholder{color:#718198!important;opacity:1!important}.xp-proof-submit input[type=file]{background:#f8fafc!important;border:1px dashed #b8c9df!important;border-radius:12px!important;color:#34465d!important;padding:13px!important;font-size:13px!important}.xp-proof-submit small{color:#60738b!important;font-size:12px!important}.xp-proof-submit .xp-primary{background:#2563eb!important;color:#fff!important;border:1px solid #2563eb!important;border-radius:12px!important;min-height:50px!important;font-weight:800!important}.xp-proof-submit .xp-primary:disabled{background:#a9c5f7!important;border-color:#a9c5f7!important;color:#fff!important}.xp-collect-view>.xp-secondary{display:block!important;margin:18px auto 0!important;padding:0 22px!important;background:#fff!important;color:#2563eb!important;border-color:#cbdcf7!important}.xp-proof-error{background:#fff1f2!important;color:#b42318!important;border:1px solid #fecaca!important;border-radius:10px!important;padding:12px!important;font-size:13px!important}
 @media(max-width:600px){.xp-payment-panel{padding:15px!important}.xp-collect-method,.xp-qr-demo{padding:15px!important}.xp-collect-amount{margin-top:14px!important}.xp-proof-submit{margin:14px 0!important}.xp-proof-submit input[type=file]{font-size:12px}}
+
+/* Profile Buy History and expiry countdown */
+.xp-buy-history{overflow:hidden}
+.xp-buy-history .xp-panel-heading{align-items:flex-start;gap:12px}
+.xp-buy-history .xp-transaction-list{border-radius:14px;overflow:hidden}
+.xp-buy-history-row{align-items:center;min-width:0}
+.xp-buy-history-row .xp-transaction-info{min-width:0;flex:1}
+.xp-buy-history-row .xp-transaction-info small{overflow-wrap:anywhere}
+.xp-payment-countdown{display:inline-flex!important;align-items:center;gap:5px;margin-top:5px;color:#2563eb!important;font-weight:700}
+.xp-payment-countdown strong{font-variant-numeric:tabular-nums;background:#eff6ff;border:1px solid #dbeafe;border-radius:6px;padding:2px 6px;color:#1d4ed8}
+.xp-buy-history .xp-status.failed{background:#fff1f2;color:#b42318;border:1px solid #fecaca}
+.xp-buy-history .xp-status.awaiting_payment{background:#fff7ed;color:#b45309}
+.xp-buy-history .xp-status.submitted{background:#eff6ff;color:#1d4ed8}
+.xp-buy-history .xp-status.approved{background:#ecfdf5;color:#047857}
+.xp-buy-history .xp-status.rejected{background:#fff1f2;color:#b42318}
+@media(max-width:600px){.xp-buy-history .xp-panel-heading{display:flex;flex-direction:column}.xp-buy-history .xp-history-actions{flex-direction:row;align-items:center}.xp-buy-history-row{gap:8px;padding:12px}.xp-buy-history-row .xp-transaction-value{max-width:38%;text-align:right}.xp-payment-countdown{font-size:11px!important}}
