@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import PaymentSettings from "./PaymentSettings";
 import { supabase } from "./paymentConfig";
+import EasePayLogo from "./EasePayLogo";
 import {
   Activity, ArrowUpRight, Bell, Building2, ChevronDown, CircleHelp,
   CreditCard, FileCheck, LayoutDashboard, Menu, Search, Settings,
@@ -82,7 +83,7 @@ export default function App(){
   const go=(label:NavKey)=>{if(label==="Payment Proof Review"){window.location.href="/admin/proofs";return;}if(label==="Withdrawal Requests"){window.location.href="/admin/withdrawals";return;}if(label==="Wallet Top-ups"){window.location.href="/admin/topups";return;}if(label==="Referrals"){window.location.href="/admin/referrals";return;}setActive(label);setMobileOpen(false);setQuery("");};
   return <div className="app-shell">
     <aside className={mobileOpen?"sidebar open":"sidebar"}>
-      <div className="brand"><div className="brand-mark">E</div><div><strong>easepay</strong><small>PAYMENT OPERATIONS</small></div></div>
+      <div className="brand"><EasePayLogo /></div>
       <div className="workspace"><span className="workspace-icon">EP</span><div><strong>EasePay Workspace</strong><small>Live operations</small></div><ChevronDown size={16}/></div>
       <p className="nav-label">WORKSPACE</p><nav>{navItems.map(({label,icon:Icon})=><button key={label} className={active===label?"nav-item active":"nav-item"} onClick={()=>go(label)}><Icon size={18}/><span>{label}</span>{label==="Payment Proof Review"&&pendingProofs.length>0&&<span className="nav-count">{pendingProofs.length}</span>}{label==="Withdrawal Requests"&&pendingWithdrawals.length>0&&<span className="nav-count">{pendingWithdrawals.length}</span>}</button>)}</nav>
       <div className="sidebar-bottom"><div className="security-note"><ShieldCheck size={17}/><span><strong>Secure admin session</strong><small>MFA verified · AAL2</small></span></div><div className="profile"><div className="avatar">AD</div><div><strong>Administrator</strong><small>Verified account</small></div><ChevronDown size={16}/></div></div>
