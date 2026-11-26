@@ -88,3 +88,44 @@
 /* Customer journey refinements */
 .xp-setup-card{animation:xp-enter .28s ease-out}.xp-auth-kicker{font-size:10px;font-weight:800;letter-spacing:1.5px;color:#668279;margin-top:2px}.xp-subscription-history{margin-top:18px}.xp-subscription-history .xp-transaction-row{cursor:default}.xp-subscription-history .xp-transaction-value{min-width:100px}.xp-status.awaiting_payment,.xp-status.submitted,.xp-status.pending{color:#a17a36}.xp-status.approved,.xp-status.active{color:#38845e}.xp-status.rejected,.xp-status.failed{color:#b55c5c}
 @keyframes xp-enter{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* EasePay official customer palette — light surfaces + signature deep-navy */
+:root{--xp-brand:#172238;--xp-brand-deep:#111827;--xp-brand-mid:#263449;--xp-accent:#315f91;--xp-page:#f1f5fb;--xp-surface:#fff;--xp-border:#d8e0e9;--xp-muted:#64748b;--xp-success:#10b981;--xp-pending:#f59e0b}
+.xp-shell{background:var(--xp-page);color:var(--xp-brand-deep)}
+.xp-content{background:transparent}
+.xp-topbar,.xp-sidebar{background:#fff;border-color:var(--xp-border)}
+.xp-brand-mark{background:var(--xp-brand);color:#fff}
+.xp-brand-word{color:var(--xp-brand)}
+.xp-nav.active{background:#e8eef6;color:var(--xp-brand)}
+.xp-nav.active svg{color:var(--xp-accent)}
+.xp-page-heading h1,.xp-quick-card>div:first-child h3,.xp-panel-heading h3{color:var(--xp-brand-deep)}
+.xp-balance-panel,.xp-method-card{background:linear-gradient(135deg,#172238 0%,#263449 100%);color:#fff;border:1px solid #33445c}
+.xp-balance-panel{border-radius:18px;box-shadow:0 12px 28px #17223816}
+.xp-balance-panel h2{color:#fff}
+.xp-balance-head,.xp-balance-panel>p{color:#c3cedd}
+.xp-balance-actions button{background:#ffffff;color:#172238;border:1px solid #ffffff}
+.xp-balance-actions .xp-withdraw-action{background:transparent;border-color:#ffffff40;color:#fff}
+.xp-stat-card,.xp-quick-card,.xp-panel,.xp-withdraw-card{background:#fff;border-color:var(--xp-border);box-shadow:0 3px 15px #17223805}
+.xp-stat-card strong,.xp-transaction-value strong,.xp-transaction-info strong{color:var(--xp-brand)}
+.xp-primary{background:var(--xp-brand);color:#fff;border-color:var(--xp-brand);transition:background .16s,transform .16s}
+.xp-primary:hover:not(:disabled){background:#263449;transform:translateY(-1px)}
+.xp-secondary{border-color:var(--xp-border);background:#fff;color:#40536a}
+.xp-text-button{color:var(--xp-accent)}
+.xp-quick-icon.purple{background:#eaf0f7;color:#315f91}
+.xp-quick-icon.green{background:#e9f7f0;color:#16845b}
+.xp-quick-icon.grey{background:#eef2f6;color:#52677e}
+.xp-quick-icon.amber{background:#fff5df;color:#a8791c}
+.xp-transaction-symbol{background:#f1f5fb;border-color:#e2e8f0;color:#415b77}
+.xp-transaction-row:hover .xp-transaction-info strong{color:var(--xp-accent)}
+.xp-payment-stepper span.done{background:var(--xp-brand)}
+.xp-payment-form input:focus,.xp-auth-card input:focus,.xp-telegram-verification input:focus{outline:2px solid #315f9120;border-color:var(--xp-accent)}
+.xp-auth-wrap,.xp-auth-loading{background:radial-gradient(ellipse at 15% 12%,#dce5f0 0,transparent 42%),radial-gradient(ellipse at 85% 90%,#e7ebf2 0,transparent 44%),var(--xp-page)}
+.xp-auth-card{background:#ffffffed;border-color:#ffffffc7;box-shadow:0 24px 70px #17223812}
+.xp-auth-card h1{color:var(--xp-brand)}
+.xp-auth-kicker{color:var(--xp-accent)}
+.xp-auth-foot{color:#64748b}
+.xp-telegram-status{background:#edf3f9;color:#334155}
+.xp-telegram-status.success{background:#eaf8f0;color:#147a50}
+.xp-status.completed,.xp-status.approved,.xp-status.active{color:#10b981}
+.xp-status.pending,.xp-status.submitted,.xp-status.awaiting_payment{color:#b77912}
+@media(prefers-reduced-motion:reduce){.xp-setup-card,.xp-primary{animation:none;transition:none}}
