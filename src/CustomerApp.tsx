@@ -27,7 +27,9 @@ export default function CustomerApp() {
   const [referralInfo,setReferralInfo]=useState<any>(null);
   const [referralLoading,setReferralLoading]=useState(false);
   const [subscriptionHistory,setSubscriptionHistory]=useState<any[]>([]);
-  const [historyLoading,setHistoryLoading]=useState(false);\n  const [clockNow,setClockNow]=useState(Date.now());\n  useEffect(()=>{const timer=setInterval(()=>setClockNow(Date.now()),1000);return()=>clearInterval(timer);},[]);
+  const [historyLoading,setHistoryLoading]=useState(false);
+  const [clockNow,setClockNow]=useState(Date.now());
+  useEffect(()=>{const timer=setInterval(()=>setClockNow(Date.now()),1000);return()=>clearInterval(timer);},[]);
   const [setupName,setSetupName]=useState("");
   const [setupBusy,setSetupBusy]=useState(false);
   const [setupError,setSetupError]=useState("");
