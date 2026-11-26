@@ -185,7 +185,8 @@ function ReferralPanel({info,loading,url,refresh,toast}:{info:any;loading:boolea
   );
 }
 function CustomerAuth(){
- const [mode,setMode]=useState<"signin"|"signup">(window.location.pathname==="/signup"?"signup":"signin");\n useEffect(()=>{let alive=true;supabase.auth.getSession().then(({data})=>{if(alive&&data.session)window.location.replace("/customer")});const {data:{subscription}}=supabase.auth.onAuthStateChange((event,session)=>{if(session&&(event==="SIGNED_IN"||event==="TOKEN_REFRESHED"))window.location.replace("/customer");});const onPop=()=>setMode(window.location.pathname==="/signup"?"signup":"signin");window.addEventListener("popstate",onPop);return()=>{alive=false;subscription.unsubscribe();window.removeEventListener("popstate",onPop)};},[]);
+ const [mode,setMode]=useState<"signin"|"signup">(window.location.pathname==="/signup"?"signup":"signin");
+ useEffect(()=>{let alive=true;supabase.auth.getSession().then(({data})=>{if(alive&&data.session)window.location.replace("/customer")});const {data:{subscription}}=supabase.auth.onAuthStateChange((event,session)=>{if(session&&(event==="SIGNED_IN"||event==="TOKEN_REFRESHED"))window.location.replace("/customer");});const onPop=()=>setMode(window.location.pathname==="/signup"?"signup":"signin");window.addEventListener("popstate",onPop);return()=>{alive=false;subscription.unsubscribe();window.removeEventListener("popstate",onPop)};},[]);
  const [fullName,setFullName]=useState("");
  const [email,setEmail]=useState("");
  const [password,setPassword]=useState("");
