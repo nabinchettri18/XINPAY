@@ -213,3 +213,39 @@
 
 /* Consistent full-width EasePay wordmark */
 .easepay-logo{display:block;max-width:100%;height:auto;overflow:visible}.xp-auth-home .easepay-logo{width:min(235px,100%);height:auto}.xp-brand .easepay-logo{width:min(180px,100%);height:auto}.xp-auth-home{display:flex;align-items:center;justify-content:flex-start;min-height:54px;margin-bottom:6px}
+
+/* Premium, responsive EasePay authentication redesign */
+.xp-auth-wrap{padding:clamp(16px,4vw,48px)!important;min-height:100svh!important;display:flex!important;align-items:center!important;justify-content:center!important;background:radial-gradient(ellipse at 5% 8%,#102f58 0,transparent 34%),radial-gradient(ellipse at 92% 92%,#10284a 0,transparent 36%),#06101e!important}
+.xp-auth-layout{width:min(100%,980px);display:grid;grid-template-columns:minmax(0,1fr) minmax(380px,440px);gap:clamp(24px,5vw,72px);align-items:center}
+.xp-auth-aside{min-height:520px;display:flex;flex-direction:column;justify-content:space-between;padding:14px 8px 8px;color:#eef5ff}
+.xp-auth-aside .xp-auth-home{margin:0 0 40px;min-height:60px}
+.xp-auth-aside .easepay-logo{width:min(260px,100%)}
+.xp-auth-aside-copy{max-width:430px}
+.xp-auth-aside-label{display:inline-flex;align-items:center;gap:9px;color:#60c8ff;font-size:11px;font-weight:800;letter-spacing:2px}
+.xp-auth-aside-label:before{content:"";width:7px;height:7px;border-radius:50%;background:#00c8ff;box-shadow:0 0 14px #00c8ff}
+.xp-auth-aside-copy h2{font-size:clamp(34px,4.5vw,52px);line-height:1.08;letter-spacing:-1.8px;margin:20px 0;color:#f4f8ff;font-weight:800}
+.xp-auth-aside-copy h2 em{font-style:normal;color:#48baff}
+.xp-auth-aside-copy>p{max-width:380px;font-size:15px;line-height:1.8;color:#9fb4cc;margin:18px 0 28px}
+.xp-auth-benefits{display:grid;gap:12px;color:#c7d7ea;font-size:13px}
+.xp-auth-benefits span{display:flex;align-items:center;gap:9px}.xp-auth-benefits svg{color:#43c4ff}
+.xp-auth-aside-bottom{color:#607a98;font-size:10px;font-weight:800;letter-spacing:1.7px}.xp-auth-aside-bottom span{padding:0 8px;color:#2b80cb}
+.xp-auth-card{width:100%!important;box-sizing:border-box;max-width:440px!important;margin:0!important;padding:clamp(24px,4vw,38px)!important;border-radius:24px!important;background:linear-gradient(155deg,#0e1d31 0%,#0b1728 72%,#0a1423)!important;border:1px solid #243a56!important;box-shadow:0 28px 90px #0005,0 0 0 1px #102744 inset!important;gap:17px!important}
+.xp-auth-card-top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:3px}
+.xp-auth-card-top .xp-auth-kicker{margin:0!important;font-size:10px!important;letter-spacing:1.8px!important}
+.xp-auth-secure-chip{display:inline-flex;align-items:center;gap:6px;padding:6px 9px;border:1px solid #1c3a55;border-radius:99px;background:#0a2035;color:#7bcaff;font-size:10px;font-weight:650;white-space:nowrap}
+.xp-auth-card h1{font-size:clamp(26px,4vw,32px)!important;letter-spacing:-1px!important;line-height:1.12!important;margin:2px 0 0!important}
+.xp-auth-card>p{font-size:13px!important;line-height:1.65!important;margin:0 0 2px!important;color:#93a9c2!important}
+.xp-auth-field{gap:8px!important;color:#c5d4e5!important;font-size:12px!important}
+.xp-auth-card input{height:48px!important;padding:0 14px!important;border-radius:11px!important;background:#071321!important;border-color:#263d59!important;font-size:14px!important;transition:border .15s,box-shadow .15s}
+.xp-auth-card input:focus{border-color:#378cf5!important;box-shadow:0 0 0 3px #2563eb20!important;outline:none!important}
+.xp-password-wrap{position:relative}.xp-password-wrap input{padding-right:48px!important}.xp-password-toggle{position:absolute;right:7px;top:50%;transform:translateY(-50%);width:36px;height:36px;border:0;background:transparent;color:#7891ad;border-radius:8px;display:grid;place-items:center;cursor:pointer}.xp-password-toggle:hover{background:#13263e;color:#c8d9ec}
+.xp-auth-card .xp-auth-submit{height:50px!important;border-radius:11px!important;margin-top:3px;font-size:13px!important;box-shadow:0 8px 24px #2563eb30!important;position:relative}
+.xp-auth-arrow{position:absolute;right:17px;font-size:19px;transition:transform .15s}.xp-auth-submit:hover .xp-auth-arrow{transform:translateX(3px)}
+.xp-auth-switch{display:flex;justify-content:center;align-items:center;gap:5px;flex-wrap:wrap;border:1px solid #243a56;border-radius:11px;padding:13px 10px;color:#91a8c2;font-size:12px}
+.xp-auth-switch button{border:0;background:none;color:#67baff;font:inherit;font-weight:700;cursor:pointer;padding:0}.xp-auth-switch button:hover{text-decoration:underline}
+.xp-auth-card .xp-auth-foot{margin-top:1px;display:flex;gap:8px;flex-wrap:wrap;text-align:center;line-height:1.5;font-size:10px;color:#7d94ae!important}.xp-auth-card .xp-auth-foot svg{color:#44c1ff}.xp-auth-card .xp-auth-foot a{margin-left:auto;color:#68baff!important;text-decoration:none}.xp-auth-card .xp-auth-foot a:hover{text-decoration:underline}
+.xp-auth-message.success{margin-top:0}
+.xp-auth-spinner{width:14px;height:14px;border:2px solid #ffffff55;border-top-color:white;border-radius:50%;display:inline-block;animation:xp-auth-spin .65s linear infinite}@keyframes xp-auth-spin{to{transform:rotate(360deg)}}
+@media(max-width:760px){.xp-auth-layout{grid-template-columns:1fr;max-width:480px}.xp-auth-aside{min-height:0;padding:0 2px 6px}.xp-auth-aside .xp-auth-home{margin:0 0 20px;min-height:48px}.xp-auth-aside .easepay-logo{width:min(210px,75%)}.xp-auth-aside-copy{display:none}.xp-auth-aside-bottom{display:none}.xp-auth-card{max-width:none!important}}
+@media(max-width:420px){.xp-auth-wrap{padding:14px!important}.xp-auth-card{padding:23px 19px!important;border-radius:20px!important;gap:15px!important}.xp-auth-card h1{font-size:27px!important}.xp-auth-card-top{align-items:flex-start}.xp-auth-secure-chip{font-size:9px;padding:5px 7px}.xp-auth-card .xp-auth-foot a{margin-left:0}}
+@media(prefers-reduced-motion:reduce){.xp-auth-spinner{animation:none}.xp-auth-arrow{transition:none}}
