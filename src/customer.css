@@ -63,9 +63,9 @@
 .xp-proof-submit{margin-top:26px;padding-top:22px;border-top:1px solid var(--xp-border,#e5eaf0);display:grid;gap:14px}.xp-proof-submit h3{margin:0;font-size:18px}.xp-proof-submit p{margin:-7px 0 2px;color:var(--xp-muted,#687789);font-size:13px;line-height:1.55}.xp-proof-submit label{display:grid;gap:7px;font-size:13px;font-weight:600}.xp-proof-submit input{width:100%;box-sizing:border-box;padding:11px 12px;border:1px solid #dbe2ea;border-radius:9px;background:#fff;color:#172a40;font:inherit}.xp-proof-submit input[type=file]{font-weight:400;font-size:12px}.xp-proof-submit small{font-size:12px;color:#6b7788;font-weight:400}.xp-proof-error{padding:11px 13px;border-radius:9px;background:#fff1f1;color:#a82b2b;font-size:13px;border:1px solid #ffd6d6}.xp-proof-submit .xp-primary{width:100%;justify-content:center}
 
 /* Supabase-authenticated portals */
-.xp-auth-wrap{min-height:100vh;display:grid;place-items:center;background:#f5f7fa;padding:20px;box-sizing:border-box}
-.xp-auth-card{width:min(430px,100%);background:#fff;border:1px solid #e4eaf0;border-radius:18px;padding:28px;box-shadow:0 18px 50px #13233a0c;display:grid;gap:15px}
-.xp-auth-card h1{margin:5px 0 0;font-size:24px;color:#172b46}
+.xp-auth-wrap{min-height:100vh;display:grid;place-items:center;background:radial-gradient(ellipse at 15% 12%,#dcebe7 0,transparent 42%),radial-gradient(ellipse at 85% 90%,#e7e9f0 0,transparent 44%),#f5f7fa;padding:24px;box-sizing:border-box}
+.xp-auth-card{width:min(440px,100%);background:#ffffffd9;backdrop-filter:blur(16px);border:1px solid #ffffffb8;border-radius:22px;padding:32px;box-shadow:0 24px 70px #172b4612;display:grid;gap:15px}
+.xp-auth-card h1{margin:0;font-size:27px;color:#172b46;letter-spacing:-.7px}.xp-auth-kicker{font-size:10px;font-weight:800;letter-spacing:1.5px;color:#668279;margin-top:2px}.xp-auth-foot{display:flex;justify-content:center;align-items:center;gap:6px;color:#839194;font-size:11px;margin-top:4px}
 .xp-auth-card>p{margin:0;color:#718094;font-size:13px;line-height:1.5}
 .xp-auth-card label{display:grid;gap:7px;color:#526176;font-size:12px;font-weight:700}
 .xp-auth-card input{width:100%;box-sizing:border-box;padding:12px;border:1px solid #dbe2ea;border-radius:9px;font:inherit;color:#172b46}
