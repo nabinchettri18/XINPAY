@@ -66,7 +66,7 @@ function AdminAuth({children}:{children:React.ReactNode}){
     }
 
     // Clean up an unfinished enrollment, then start a fresh enrollment.
-    const pending=factors.totp?.find(f=>f.status==="unverified");
+    const pending=(factors.totp as Array<{id:string;status:string}>|undefined)?.find(f=>f.status==="unverified");
     if(pending){await supabase.auth.mfa.unenroll({factorId:pending.id});}
     const enrolled=await supabase.auth.mfa.enroll({factorType:"totp",friendlyName:"EasePay Admin"});
     if(enrolled.error){setError("Authenticator setup failed. Check Supabase MFA settings and retry.");setState("denied");return false;}
