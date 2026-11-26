@@ -314,3 +314,31 @@
 .xp-activation-actions button.xp-primary{background:#2563eb!important;color:#ffffff!important;border:1px solid #2563eb!important}
 .xp-activation-actions button.xp-primary:hover{background:#1d4ed8!important;color:#fff!important}
 .xp-activation-icon{background:#eaf2ff!important;color:#2563eb!important}
+
+/* Readability audit — global type system and contrast */
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap');
+.xp-shell,.xp-shell button,.xp-shell input,.xp-shell select,.xp-shell textarea{font-family:"Manrope",Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif!important}
+.xp-shell{font-size:14px;line-height:1.5}
+.xp-shell h1,.xp-shell h2,.xp-shell h3,.xp-shell h4,.xp-shell strong{letter-spacing:-.025em}
+.xp-shell p,.xp-shell small,.xp-shell label,.xp-shell .xp-subtitle,.xp-shell .xp-panel-copy,.xp-shell .xp-muted{color:#52647c}
+.xp-shell button{font-weight:700}
+.xp-shell input,.xp-shell textarea,.xp-shell select{color:#17243a!important;background:#fff!important;border-color:#cbd7e5!important}
+.xp-shell input::placeholder,.xp-shell textarea::placeholder{color:#64748b!important;opacity:1}
+.xp-shell .xp-eyebrow{color:#61738a!important}
+.xp-shell .xp-nav{color:#b8c8dc!important}.xp-shell .xp-nav.active{color:#fff!important}
+.xp-shell .xp-info-banner{display:flex;align-items:center;gap:10px;background:#eaf2ff!important;border:1px solid #c9dcff!important;color:#1d4ed8!important;border-radius:12px;padding:12px 14px;margin:0 0 16px}
+.xp-shell .xp-info-banner>div{display:flex;align-items:center;gap:8px;flex:1;min-width:0;flex-wrap:wrap}
+.xp-shell .xp-info-banner strong{color:#1d4ed8!important;font-size:12px}
+.xp-shell .xp-info-banner .xp-banner-status{font-size:12px;font-weight:800;color:#1d4ed8!important}
+.xp-shell .xp-info-banner button{width:30px;height:30px;display:grid;place-items:center;background:#fff!important;color:#1d4ed8!important;border:1px solid #c9dcff!important;border-radius:8px;flex-shrink:0}
+.xp-subscription-overview-redesign{overflow:hidden}
+.xp-subscription-hero-copy{align-items:flex-start;flex-wrap:wrap}
+.xp-subscription-hero-copy>div:last-child{flex:1;min-width:160px}
+.xp-subscription-hero-copy .xp-eyebrow{display:block;color:#61738a!important;font-size:10px;font-weight:800;letter-spacing:.12em;margin-bottom:4px}
+.xp-subscription-hero-copy h3{font-size:18px!important;line-height:1.3}
+.xp-subscription-hero-copy p{font-size:12px!important;color:#52647c!important}
+.xp-subscription-status{margin-left:0!important;flex-shrink:0;font-size:12px!important;padding:8px 12px!important}
+.xp-subscription-progress{max-width:none!important}
+.xp-progress-step{font-size:11px!important;color:#52647c!important}.xp-progress-step.done{color:#334155!important}
+.xp-subscription-hero-footer small{font-size:12px!important;color:#52647c!important}.xp-subscription-cta{font-size:12px!important}
+@media(max-width:600px){.xp-subscription-hero-copy{display:grid!important;grid-template-columns:42px minmax(0,1fr)!important;gap:10px!important}.xp-subscription-hero-copy>div:last-child{min-width:0}.xp-subscription-status{grid-column:1/-1;justify-self:start}.xp-subscription-progress{gap:2px}.xp-progress-step{font-size:10px!important;gap:4px}.xp-progress-step i{width:24px;height:24px;flex-shrink:0}.xp-progress-line{margin:0 5px}.xp-subscription-hero-footer{align-items:flex-start;flex-direction:column}.xp-subscription-hero-footer small{font-size:12px!important}.xp-subscription-cta{width:100%;justify-content:center}.xp-info-banner{font-size:12px}}
