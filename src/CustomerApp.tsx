@@ -185,7 +185,7 @@ function ReferralPanel({info,loading,url,refresh,toast}:{info:any;loading:boolea
   );
 }
 function CustomerAuth(){
- const [mode,setMode]=useState<"signin"|"signup">(window.location.pathname==="/signup"?"signup":"signin");
+ const [mode,setMode]=useState<"signin"|"signup">(window.location.pathname==="/signup"?"signup":"signin");\n useEffect(()=>{let alive=true;supabase.auth.getSession().then(({data})=>{if(alive&&data.session)window.location.replace("/customer")});const {data:{subscription}}=supabase.auth.onAuthStateChange((event,session)=>{if(session&&(event==="SIGNED_IN"||event==="TOKEN_REFRESHED"))window.location.replace("/customer");});const onPop=()=>setMode(window.location.pathname==="/signup"?"signup":"signin");window.addEventListener("popstate",onPop);return()=>{alive=false;subscription.unsubscribe();window.removeEventListener("popstate",onPop)};},[]);
  const [fullName,setFullName]=useState("");
  const [email,setEmail]=useState("");
  const [password,setPassword]=useState("");
@@ -202,7 +202,7 @@ function CustomerAuth(){
   e.preventDefault();setBusy(true);setMessage("");
   try{
    if(mode==="signup"){
-    const {data,error}=await supabase.auth.signUp({email:email.trim(),password,options:{data:{full_name:fullName.trim(),name:fullName.trim(),referral_code:(new URLSearchParams(window.location.search).get("ref")||"").trim().toUpperCase()}}});
+    const {data,error}=await supabase.auth.signUp({email:email.trim(),password,options:{emailRedirectTo:window.location.origin+"/customer",data:{full_name:fullName.trim(),name:fullName.trim(),referral_code:(new URLSearchParams(window.location.search).get("ref")||"").trim().toUpperCase()}}});
     if(error)throw error;
     if(!data.session){
      setMessageTone("success");setMessage("Account created. Check your email to confirm your address, then sign in.");
