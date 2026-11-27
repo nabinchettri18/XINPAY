@@ -569,3 +569,19 @@
  .xp-shell .xp-profile-row strong{max-width:55vw!important}
  .xp-shell .xp-footer{flex-wrap:wrap!important;gap:8px!important}
 }
+
+/* Customer settings page */
+.xp-settings-panel,.xp-settings-support{padding:24px!important}
+.xp-settings-section-head{display:flex;align-items:flex-start;gap:14px;margin-bottom:22px}
+.xp-settings-icon{width:46px;height:46px;flex:0 0 46px;display:grid;place-items:center;border-radius:14px;background:#eaf2ff;color:#2563eb}
+.xp-settings-icon.support{background:#e8f6ef;color:#16805d}
+.xp-settings-section-head h3{margin:0 0 5px;color:#17243a;font-size:19px}
+.xp-settings-section-head p{margin:0;color:#64748b;line-height:1.6}
+.xp-settings-password-form{display:grid;gap:15px}
+.xp-settings-password-form label{display:grid;gap:7px;color:#334155;font-weight:600}
+.xp-settings-password-form input{width:100%;box-sizing:border-box;min-height:48px;border:1px solid #d8e2ee;border-radius:12px;padding:12px 14px;background:#fff;color:#17243a;font:inherit}
+.xp-settings-password-form input:focus{outline:2px solid #bfdbfe;border-color:#2563eb}
+.xp-settings-password-form .xp-primary{width:100%;min-height:48px}
+.xp-settings-support-actions{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.xp-settings-support-actions button{min-height:48px;display:flex;align-items:center;justify-content:center;gap:8px}
+@media(max-width:600px){.xp-settings-panel,.xp-settings-support{padding:18px!important}.xp-settings-support-actions{grid-template-columns:1fr}.xp-settings-section-head p{font-size:14px}}
