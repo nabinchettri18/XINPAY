@@ -15,6 +15,7 @@ async function verifyTelegramOtp(verificationId:string,otp:string):Promise<{veri
 type Section = "Overview" | "Transactions" | "Payments" | "Payment methods" | "Profile" | "Buy history" | "Referrals" | "Help";
 type Tx = { id: string; name: string; detail: string; date: string; amount: number; status: "Completed" | "Pending" | "Failed"; kind: "Credit" | "Debit"; icon: string };
 const transactions: Tx[] = [];
+const customerPublicId=(uuid:string)=>{let h=2166136261;for(let i=0;i<uuid.length;i++){h^=uuid.charCodeAt(i);h=Math.imul(h,16777619);}return "EP-"+String((h>>>0)%900000+100000);};
 const money = (n:number) => new Intl.NumberFormat("en-IN", { style:"currency", currency:"INR", maximumFractionDigits:2 }).format(n);
 const sectionFromPath=(path:string):Section=>({"/customer/transactions":"Transactions","/customer/payments":"Payments","/customer/payment-methods":"Payment methods","/customer/profile":"Profile","/customer/buyhistory":"Buy history","/customer/referrals":"Referrals","/customer/help":"Help"} as Record<string,Section>)[path]||"Overview";
 const pathFromSection=(section:Section)=>({ "Overview":"/customer/dashboard","Transactions":"/customer/transactions","Payments":"/customer/payments","Payment methods":"/customer/payment-methods","Profile":"/customer/profile","Buy history":"/customer/buyhistory","Referrals":"/customer/referrals","Help":"/customer/help"} as Record<Section,string>)[section];
