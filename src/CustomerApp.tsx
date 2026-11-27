@@ -221,11 +221,6 @@ function CustomerAuth(){
   return()=>{alive=false;subscription.unsubscribe();window.removeEventListener("popstate",onPop)};
  },[]);
 
- const [email,setEmail]=useState("");
- const [password,setPassword]=useState("");
- const [busy,setBusy]=useState(false);
- const [message,setMessage]=useState("");
- const [messageTone,setMessageTone]=useState<"error"|"success">("error");
  function switchMode(next:"signin"|"signup"){
   setMode(next);setMessage("");setFullName("");setPassword("");setShowPassword(false);
   const referral=new URLSearchParams(window.location.search).get("ref");
