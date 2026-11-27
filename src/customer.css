@@ -617,3 +617,19 @@
 .xp-shell .xp-info-banner strong{color:#be123c!important}
 .xp-shell .xp-info-banner .xp-banner-status{color:#be123c!important}
 .xp-shell .xp-info-banner button{background:#fff!important;color:#be123c!important;border-color:#fecaca!important}
+
+/* Checkout payment method selector */
+.xp-payment-method-picker{display:grid;gap:10px;margin:18px 0}
+.xp-payment-method-picker>.xp-eyebrow{margin-bottom:2px}
+.xp-payment-method-option{display:flex;align-items:center;gap:12px;border:1px solid #dce5ef;border-radius:14px;background:#fff;padding:13px 14px;min-width:0}
+.xp-payment-method-option.active{border-color:#2563eb;background:#f5f8ff;box-shadow:0 0 0 1px rgba(37,99,235,.12)}
+.xp-payment-method-option.disabled{background:#f8fafc;opacity:.72}
+.xp-payment-method-mark{width:38px;height:38px;border-radius:11px;background:#eaf1ff;color:#2563eb;display:grid;place-items:center;font-size:21px;font-weight:750;flex:0 0 auto}
+.xp-payment-method-mark.usdt{background:#e8f7ef;color:#159568}
+.xp-payment-method-option>span:nth-child(2){display:grid;gap:3px;flex:1;min-width:0}
+.xp-payment-method-option strong{font-size:15px;color:#17243a}
+.xp-payment-method-option small{font-size:12px;color:#64748b;line-height:1.4}
+.xp-payment-method-selected,.xp-payment-method-coming{font-size:11px;font-weight:700;white-space:nowrap;border-radius:999px;padding:6px 9px}
+.xp-payment-method-selected{background:#e4edff;color:#255ac7}
+.xp-payment-method-coming{background:#eef2f6;color:#64748b}
+.xp-payment-method-note{margin:0;color:#64748b;font-size:12px;line-height:1.5}
