@@ -34,7 +34,7 @@ function Root(){
     }
     setRootSessionChecked(true);
   },[path]);
-  useEffect(()=>{if(path==="/auth/callback"){window.location.replace("/customer");return;}if(path==="/forgot-password"){window.location.replace("/login");return;}const adminBase="/admin236794";
+  const adminBase="/admin236794";
   const adminPath=path.startsWith(adminBase)?(path.slice(adminBase.length)||"/"):(path==="/admin"||path.startsWith("/admin/")?path.slice("/admin".length)||"/":null);
   useEffect(()=>{if(path==="/auth/callback"){window.location.replace("/customer");return;}if(path==="/forgot-password"){window.location.replace("/login");return;}const known=path==="/"||path==="/login"||path==="/signup"||path.startsWith("/customer")||path===adminBase||path.startsWith(adminBase+"/")||path==="/admin"||path.startsWith("/admin/");if(!known)window.location.replace("/");},[path]);
   const isLanding=path==="/";
