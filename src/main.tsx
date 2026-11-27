@@ -34,16 +34,18 @@ function Root(){
     }
     setRootSessionChecked(true);
   },[path]);
-  useEffect(()=>{if(path==="/auth/callback"){window.location.replace("/customer");return;}if(path==="/forgot-password"){window.location.replace("/login");return;}const known=path==="/"||path==="/login"||path==="/signup"||path.startsWith("/customer")||path.startsWith("/admin");if(!known)window.location.replace("/");},[path]);
+  useEffect(()=>{if(path==="/auth/callback"){window.location.replace("/customer");return;}if(path==="/forgot-password"){window.location.replace("/login");return;}const adminBase="/admin236794";
+  const adminPath=path.startsWith(adminBase)?(path.slice(adminBase.length)||"/"):(path==="/admin"||path.startsWith("/admin/")?path.slice("/admin".length)||"/":null);
+  useEffect(()=>{if(path==="/auth/callback"){window.location.replace("/customer");return;}if(path==="/forgot-password"){window.location.replace("/login");return;}const known=path==="/"||path==="/login"||path==="/signup"||path.startsWith("/customer")||path===adminBase||path.startsWith(adminBase+"/")||path==="/admin"||path.startsWith("/admin/");if(!known)window.location.replace("/");},[path]);
   const isLanding=path==="/";
   const isCustomer=path==="/login"||path==="/signup"||path.startsWith("/customer");
   if(isLanding)return rootSessionChecked?<LandingPage/>:<div className="xp-auth-loading">Checking your session…</div>;
   if(isCustomer)return <CustomerApp/>;
-  if(path.startsWith("/admin")){
-    if(path==="/admin/proofs"||path.startsWith("/admin/proofs/"))return <AdminAuth><ProofReview/></AdminAuth>;
-    if(path==="/admin/withdrawals"||path.startsWith("/admin/withdrawals/"))return <AdminAuth><AdminWithdrawals/></AdminAuth>;
-    if(path==="/admin/topups"||path.startsWith("/admin/topups/"))return <AdminAuth><AdminWalletTopups/></AdminAuth>;
-    if(path==="/admin/referrals"||path.startsWith("/admin/referrals/"))return <AdminAuth><AdminReferrals/></AdminAuth>;
+  if(adminPath!==null){
+    if(adminPath==="/proofs"||adminPath.startsWith("/proofs/"))return <AdminAuth><ProofReview/></AdminAuth>;
+    if(adminPath==="/withdrawals"||adminPath.startsWith("/withdrawals/"))return <AdminAuth><AdminWithdrawals/></AdminAuth>;
+    if(adminPath==="/topups"||adminPath.startsWith("/topups/"))return <AdminAuth><AdminWalletTopups/></AdminAuth>;
+    if(adminPath==="/referrals"||adminPath.startsWith("/referrals/"))return <AdminAuth><AdminReferrals/></AdminAuth>;
     return <AdminAuth><App/></AdminAuth>;
   }
   return <div className="xp-auth-loading">Redirecting…</div>;
