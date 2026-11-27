@@ -37,7 +37,13 @@ export default function CustomerApp() {
   const [setupError,setSetupError]=useState("");
   const [subscriptionRequestId,setSubscriptionRequestId]=useState("");
   useEffect(()=>{supabase.auth.getSession().then(({data})=>{setAuthUser(data.session?.user?{id:data.session.user.id,email:data.session.user.email,metadata:data.session.user.user_metadata}:null);setAuthReady(true)});const {data:{subscription}}=supabase.auth.onAuthStateChange((_event,session)=>setAuthUser(session?.user?{id:session.user.id,email:session.user.email,metadata:session.user.user_metadata}:null));return()=>subscription.unsubscribe()},[]);
-  const [balanceVisible,setBalanceVisible] = useState(true);\n  const [passwordCurrent,setPasswordCurrent]=useState("");\n  const [passwordNew,setPasswordNew]=useState("");\n  const [passwordConfirm,setPasswordConfirm]=useState("");\n  const [passwordBusy,setPasswordBusy]=useState(false);\n  const [passwordMessage,setPasswordMessage]=useState("");\n  const [passwordError,setPasswordError]=useState("");
+  const [balanceVisible,setBalanceVisible] = useState(true);
+  const [passwordCurrent,setPasswordCurrent]=useState("");
+  const [passwordNew,setPasswordNew]=useState("");
+  const [passwordConfirm,setPasswordConfirm]=useState("");
+  const [passwordBusy,setPasswordBusy]=useState(false);
+  const [passwordMessage,setPasswordMessage]=useState("");
+  const [passwordError,setPasswordError]=useState("");
   const [notificationPreferences,setNotificationPreferences]=useState(()=>{try{return JSON.parse(localStorage.getItem("easepay-notification-preferences")||"{}")}catch{return {}}});
   useEffect(()=>{try{localStorage.setItem("easepay-notification-preferences",JSON.stringify(notificationPreferences))}catch{}},[notificationPreferences]);
   const [notice,setNotice] = useState(true);
