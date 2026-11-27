@@ -479,3 +479,17 @@
 .xp-profile-withdraw-info>span{font-size:11px;color:#8190a4}.xp-profile-withdraw-info>strong{font-size:20px;color:#1e293b}.xp-profile-withdraw-info>small{font-size:10px;line-height:1.5;color:#8795a7}
 .xp-profile-withdraw-button{width:100%;display:flex;align-items:center;justify-content:center;gap:8px;border:1px solid #dbe5f1;background:#f8fafc;color:#64748b;border-radius:12px;padding:12px;font-weight:700}.xp-profile-withdraw-button span{font-size:10px;background:#e2e8f0;border-radius:99px;padding:4px 7px}
 @media(max-width:600px){.xp-profile-hero{padding:24px 16px 20px!important}.xp-profile-details{padding:14px 16px 10px!important}.xp-profile-row{gap:7px!important}.xp-profile-row>span{min-width:100px!important}.xp-profile-details-heading{margin-bottom:6px}.xp-profile-section-title{padding:14px 16px!important}.xp-buy-history,.xp-profile-withdraw{margin-top:12px!important}.xp-profile-withdraw{padding:15px!important}.xp-profile-withdraw-head{align-items:flex-start}.xp-lock-pill{margin-left:auto}}
+
+
+/* Compact buy-history preview with an explicit view action */
+.xp-buy-history-compact{padding:18px 20px!important}
+.xp-buy-history-summary{display:flex;align-items:center;gap:14px;min-width:0}
+.xp-buy-history-summary-icon{width:46px;height:46px;flex:0 0 46px;display:grid;place-items:center;border-radius:14px;background:#eaf1ff;color:#2563eb;border:1px solid #d6e4ff}
+.xp-buy-history-summary-copy{min-width:0;flex:1}
+.xp-buy-history-summary-copy h3{margin:0 0 5px!important;font-size:17px!important}
+.xp-buy-history-summary-copy p{margin:0!important;font-size:13px!important;line-height:1.45!important;color:#7b8798!important}
+.xp-buy-history-count{display:inline-block;margin-top:6px;font-size:12px;font-weight:700;color:#2563eb}
+.xp-buy-history-view{display:inline-flex;align-items:center;justify-content:center;gap:6px;flex-shrink:0;background:#2563eb!important;color:#fff!important;border:0;border-radius:11px;padding:11px 14px;font-size:13px;font-weight:800;box-shadow:0 4px 10px #2563eb22}
+.xp-buy-history-full{scroll-margin-top:18px}
+.xp-buy-history-back{display:inline-flex;margin:0 0 14px;background:#f1f5f9!important;color:#475569!important;border:1px solid #dbe3ed!important;border-radius:9px;padding:8px 12px;font-size:12px;font-weight:700}
+@media(max-width:480px){.xp-buy-history-compact{padding:15px!important}.xp-buy-history-summary{gap:10px;align-items:flex-start}.xp-buy-history-summary-icon{width:40px;height:40px;flex-basis:40px}.xp-buy-history-summary-copy p{max-width:190px}.xp-buy-history-view{padding:10px 11px;font-size:12px;align-self:center}}
