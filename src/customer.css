@@ -515,3 +515,57 @@
 .xp-shell .xp-subscription-overview p,.xp-shell .xp-subscription-status small{color:#64748b!important}
 .xp-shell .xp-transaction-info strong,.xp-shell .xp-transaction-value strong{color:#17243a!important}
 .xp-shell .xp-transaction-info small{color:#64748b!important}
+
+
+/* Final mobile and payment-flow readability pass */
+.xp-shell .xp-payment-panel .xp-plan-intro h2,
+.xp-shell .xp-payment-panel h2,
+.xp-shell .xp-payment-panel .xp-panel-heading h3,
+.xp-shell .xp-payment-panel .xp-plan-intro p,
+.xp-shell .xp-payment-panel .xp-plan-secure,
+.xp-shell .xp-payment-panel .xp-plan-name,
+.xp-shell .xp-payment-panel .xp-plan-price,
+.xp-shell .xp-payment-panel .xp-plan-caption,
+.xp-shell .xp-payment-panel .xp-plan-features li{color:#17243a!important}
+.xp-shell .xp-payment-panel .xp-plan-intro p,
+.xp-shell .xp-payment-panel .xp-plan-caption,
+.xp-shell .xp-payment-panel .xp-plan-features li{color:#52647a!important}
+.xp-shell .xp-payment-panel .xp-plan-secure{background:#eaf2ff!important;border-color:#c9dcff!important;color:#315f91!important}
+.xp-shell .xp-payment-panel .xp-plan-card{background:#fff!important;border-color:#dce6f2!important;color:#17243a!important}
+.xp-shell .xp-payment-panel .xp-plan-card.selected{background:#f5f9ff!important;border-color:#2563eb!important}
+.xp-shell .xp-payment-panel .xp-plan-check{color:#315f91!important;border-color:#cbd8e8!important}
+.xp-shell .xp-payment-panel .xp-plan-card.selected .xp-plan-check{color:#fff!important;background:#2563eb!important}
+.xp-shell .xp-payment-panel .xp-plan-select{background:#2563eb!important;color:#fff!important;border-color:#2563eb!important}
+.xp-shell .xp-payment-panel .xp-plan-badge{color:#315f91!important;background:#eaf2ff!important;border-color:#c9dcff!important}
+.xp-shell .xp-payment-panel .xp-plan-badge.business{color:#475569!important;background:#f1f5f9!important;border-color:#dbe3ec!important}
+.xp-shell .xp-payment-panel .xp-plan-badge.premium{color:#92400e!important;background:#fff7ed!important;border-color:#fed7aa!important}
+.xp-shell .xp-payment-panel .xp-payment-stepper-three span{color:#64748b!important;background:#f1f5f9!important;border-color:#dbe3ec!important}
+.xp-shell .xp-payment-panel .xp-payment-stepper-three span.done{color:#fff!important;background:#2563eb!important;border-color:#2563eb!important}
+.xp-shell .xp-payment-panel .xp-payment-stepper-three small{color:#64748b!important}
+.xp-shell .xp-payment-panel .xp-payment-stepper-three span.done small{color:#fff!important}
+.xp-shell .xp-payment-panel .xp-payment-stepper-three i{background:#cbd5e1!important}
+.xp-shell .xp-buy-history-summary-copy{min-width:0}
+.xp-shell .xp-buy-history-summary-copy h3{color:#17243a!important}
+.xp-shell .xp-buy-history-summary-copy p{color:#52647a!important}
+.xp-shell .xp-profile-row{min-width:0}
+.xp-shell .xp-profile-row span,.xp-shell .xp-profile-row strong{overflow-wrap:anywhere}
+.xp-shell .xp-footer{color:#64748b!important}
+.xp-shell .xp-panel-heading p,.xp-shell .xp-subtitle{color:#64748b!important}
+.xp-shell button,.xp-shell a{max-width:100%}
+@media(max-width:600px){
+ .xp-shell{overflow-x:hidden!important}
+ .xp-shell .xp-payment-panel{padding:16px!important}
+ .xp-shell .xp-plan-intro{align-items:flex-start!important;flex-direction:column!important;gap:10px!important}
+ .xp-shell .xp-plan-intro h2{font-size:22px!important;line-height:1.3!important}
+ .xp-shell .xp-plan-secure{white-space:normal!important}
+ .xp-shell .xp-payment-stepper-three{margin-bottom:22px!important}
+ .xp-shell .xp-payment-stepper-three i{min-width:12px!important}
+ .xp-shell .xp-plan-grid{grid-template-columns:minmax(0,1fr)!important}
+ .xp-shell .xp-plan-card{width:100%!important;box-sizing:border-box!important}
+ .xp-shell .xp-buy-history-summary{align-items:flex-start!important;flex-wrap:wrap!important}
+ .xp-shell .xp-buy-history-summary-copy{flex:1 1 150px!important}
+ .xp-shell .xp-buy-history-view{width:100%!important}
+ .xp-shell .xp-profile-row{gap:8px!important}
+ .xp-shell .xp-profile-row strong{max-width:55vw!important}
+ .xp-shell .xp-footer{flex-wrap:wrap!important;gap:8px!important}
+}
