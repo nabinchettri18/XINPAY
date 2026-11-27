@@ -633,3 +633,14 @@
 .xp-payment-method-selected{background:#e4edff;color:#255ac7}
 .xp-payment-method-coming{background:#eef2f6;color:#64748b}
 .xp-payment-method-note{margin:0;color:#64748b;font-size:12px;line-height:1.5}
+
+/* Checkout method switch */
+.xp-checkout-switch{display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:5px;border-radius:14px;background:#edf2f8;margin:0 0 16px}
+.xp-checkout-switch button{border:0;border-radius:11px;background:transparent;color:#52647a;padding:12px 10px;font-size:13px;font-weight:700;cursor:pointer;line-height:1.3}
+.xp-checkout-switch button.active{background:#fff;color:#245fce;box-shadow:0 1px 4px rgba(18,38,64,.12)}
+.xp-binance-coming{display:grid;justify-items:center;text-align:center;gap:10px;padding:26px 18px;border:1px solid #dce5ef;border-radius:18px;background:#f8fafc}
+.xp-binance-mark{display:grid;place-items:center;width:54px;height:54px;border-radius:16px;background:#fff4d6;color:#b88900;font-size:28px;font-weight:800}
+.xp-binance-coming strong{font-size:18px;color:#1b2b43}
+.xp-binance-coming span{font-size:13px;font-weight:700;color:#64748b}
+.xp-binance-coming p{margin:0;color:#64748b;font-size:13px;line-height:1.55;max-width:360px}
+@media(max-width:420px){.xp-checkout-switch button{padding:10px 6px;font-size:12px}}
