@@ -493,3 +493,25 @@
 .xp-buy-history-full{scroll-margin-top:18px}
 .xp-buy-history-back{display:inline-flex;margin:0 0 14px;background:#f1f5f9!important;color:#475569!important;border:1px solid #dbe3ed!important;border-radius:9px;padding:8px 12px;font-size:12px;font-weight:700}
 @media(max-width:480px){.xp-buy-history-compact{padding:15px!important}.xp-buy-history-summary{gap:10px;align-items:flex-start}.xp-buy-history-summary-icon{width:40px;height:40px;flex-basis:40px}.xp-buy-history-summary-copy p{max-width:190px}.xp-buy-history-view{padding:10px 11px;font-size:12px;align-self:center}}
+
+
+/* Contrast audit fixes: readable text on light customer surfaces */
+.xp-shell{color:#17243a!important}
+.xp-shell .xp-page-heading h1,.xp-shell .xp-plan-intro h2,.xp-shell .xp-overview-plans .xp-panel-heading h3,.xp-shell .xp-panel-heading h3,.xp-shell .xp-quick-card h3,.xp-shell .xp-buy-history-summary-copy h3,.xp-shell .xp-methods-empty h3,.xp-shell .xp-profile-details-heading h3{color:#17243a!important}
+.xp-shell .xp-plan-intro p,.xp-shell .xp-page-heading .xp-subtitle,.xp-shell .xp-panel-heading p,.xp-shell .xp-buy-history-summary-copy p,.xp-shell .xp-methods-empty p{color:#64748b!important}
+.xp-shell .xp-plan-intro .xp-plan-secure{color:#315f91!important;background:#eaf2ff!important;border-color:#c9dcff!important}
+.xp-shell .xp-reference-card{background:#fff!important;color:#17243a!important}
+.xp-shell .xp-reference-card .xp-plan-name,.xp-shell .xp-reference-card .xp-plan-price{color:#17243a!important}
+.xp-shell .xp-reference-card .xp-plan-caption{color:#718198!important}
+.xp-shell .xp-reference-card .xp-plan-features li{color:#475569!important}
+.xp-shell .xp-reference-card .xp-plan-select{color:#fff!important}
+.xp-shell .xp-buy-history-summary-copy h3{color:#17243a!important}
+.xp-shell .xp-buy-history-summary-copy p{color:#64748b!important}
+.xp-shell .xp-footer{color:#64748b!important}
+.xp-shell .xp-profile-row strong,.xp-shell .xp-profile-details-heading h3{color:#17243a!important}
+.xp-shell .xp-stat-card>span,.xp-shell .xp-stat-card small{color:#64748b!important}
+.xp-shell .xp-stat-card strong{color:#17243a!important}
+.xp-shell .xp-subscription-overview h3{color:#24364b!important}
+.xp-shell .xp-subscription-overview p,.xp-shell .xp-subscription-status small{color:#64748b!important}
+.xp-shell .xp-transaction-info strong,.xp-shell .xp-transaction-value strong{color:#17243a!important}
+.xp-shell .xp-transaction-info small{color:#64748b!important}
