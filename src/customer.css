@@ -610,3 +610,10 @@
 .xp-legal-list p{color:#64748b;line-height:1.55;margin:7px 0 0}
 .xp-legal-list .xp-primary{margin-top:12px}
 @media(max-width:600px){.xp-settings-grid{grid-template-columns:1fr;gap:10px}.xp-settings-tile{padding:15px;border-radius:15px}.xp-notification-list{padding:5px 16px!important}.xp-notification-row{gap:12px;padding:15px 0}.xp-legal-list{padding:0 16px!important}}
+
+/* Panel status banner: red inactive-state treatment */
+.xp-shell .xp-info-banner{background:#fff1f2!important;border-color:#fecaca!important;color:#be123c!important}
+.xp-shell .xp-info-banner>svg{color:#be123c!important}
+.xp-shell .xp-info-banner strong{color:#be123c!important}
+.xp-shell .xp-info-banner .xp-banner-status{color:#be123c!important}
+.xp-shell .xp-info-banner button{background:#fff!important;color:#be123c!important;border-color:#fecaca!important}
