@@ -198,8 +198,29 @@ function CustomerAuth(){
  const confirmationLanding=new URLSearchParams(window.location.search).get("confirmed")==="1";
  const [mode,setMode]=useState<"signin"|"signup">(window.location.pathname==="/signup"?"signup":"signin");
  const [showPassword,setShowPassword]=useState(false);
- useEffect(()=>{let alive=true;supabase.auth.getSession().then(({data})=>{if(!alive)return;if(confirmationLanding){if(data.session){supabase.auth.signOut().finally(()=>{if(alive){setMessageTone("success");setMessage("Email confirmed successfully. Please sign in to continue.");}});}else{setMessageTone("success");setMessage("Email confirmed successfully. Please sign in to continue.");}}else if(data.session)window.location.replace("/customer");});const {data:{subscription}}=supabase.auth.onAuthStateChange((event,session)=>{if(!confirmationLanding&&session&&(event==="SIGNED_IN"||event==="TOKEN_REFRESHED"))window.location.replace("/customer");});const onPop=()=>setMode(window.location.pathname==="/signup"?"signup":"signin");window.addEventListener("popstate",onPop);return()=>{alive=false;subscription.unsubscribe();window.removeEventListener("popstate",onPop)};},[]);
  const [fullName,setFullName]=useState("");
+ const [email,setEmail]=useState("");
+ const [password,setPassword]=useState("");
+ const [busy,setBusy]=useState(false);
+ const [message,setMessage]=useState("");
+ const [messageTone,setMessageTone]=useState<"error"|"success">("error");
+ useEffect(()=>{
+  let alive=true;
+  supabase.auth.getSession().then(async({data})=>{
+   if(!alive)return;
+   if(confirmationLanding){
+    if(data.session)await supabase.auth.signOut();
+    if(alive){setMessageTone("success");setMessage("Email confirmed successfully. Please sign in to continue.");}
+   }else if(data.session){window.location.replace("/customer");}
+  });
+  const {data:{subscription}}=supabase.auth.onAuthStateChange((event,session)=>{
+   if(!confirmationLanding&&session&&(event==="SIGNED_IN"||event==="TOKEN_REFRESHED"))window.location.replace("/customer");
+  });
+  const onPop=()=>setMode(window.location.pathname==="/signup"?"signup":"signin");
+  window.addEventListener("popstate",onPop);
+  return()=>{alive=false;subscription.unsubscribe();window.removeEventListener("popstate",onPop)};
+ },[]);
+
  const [email,setEmail]=useState("");
  const [password,setPassword]=useState("");
  const [busy,setBusy]=useState(false);
