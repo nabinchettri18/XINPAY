@@ -52,3 +52,10 @@
 @media(max-width:950px){.payment-settings-grid{grid-template-columns:1fr}.verification-steps{grid-template-columns:1fr}}
 @media(max-width:600px){.payment-settings-head{flex-direction:column}.payment-settings-head h2{font-size:22px}.payment-settings-card{padding:14px}.settings-toggle-row{align-items:flex-start;flex-direction:column}.verification-card .settings-card-title{flex-direction:column}.qr-preview{height:190px}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
+
+.settings-label select{width:100%;border:1px solid #e1e6ef;border-radius:8px;padding:11px 12px;background:#fbfcfe;color:#29364c;font:12px 'DM Sans',sans-serif;outline:none;transition:border-color .16s,box-shadow .16s}
+.settings-label select:focus{border-color:#7188f5;box-shadow:0 0 0 3px rgba(100,125,240,.1)}
+.payment-settings-savebar{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-top:16px;padding:14px 16px;background:#0D1B2D;border:1px solid #20324A;border-radius:12px}
+.payment-settings-savebar .settings-message{margin:0;flex:1}
+.qr-preview-inner{display:grid;place-items:center;width:100%;height:100%;background:#fff;padding:10px}
+.payment-settings-card .upload-qr-button:disabled{opacity:.45;cursor:not-allowed}
