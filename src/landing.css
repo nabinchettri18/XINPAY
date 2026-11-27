@@ -21,3 +21,14 @@
 /* Refined logo sizing/contrast */
 .el-logo-link{display:flex;align-items:center;min-width:0}.el-logo-link .easepay-logo{display:block;width:clamp(165px,21vw,245px);height:auto;overflow:visible}.el-nav{min-height:82px}.el-brand{flex-shrink:0}
 @media(max-width:600px){.el-nav{padding:0 20px}.el-logo-link .easepay-logo{width:clamp(145px,39vw,190px)}.el-nav nav{display:none}.el-nav-actions{gap:12px}.el-login{font-size:12px}.el-cta{padding:11px 14px}}
+
+/* Landing-page contrast correction */
+.ease-landing .el-mark{color:#fff!important;background:#0D1B2D!important}
+.ease-landing .el-card .el-mark{color:#fff!important;background:#0D1B2D!important}
+.ease-landing .el-card-label{color:#52647a!important}
+.ease-landing .el-card-row>svg{color:#64748b!important}
+.ease-landing .el-card-foot{color:#52647a!important}
+.ease-landing .el-floating b{color:#17243a!important}
+.ease-landing .el-strip>span{color:#52647a!important}
+.ease-landing .el-cta{color:#fff!important}
+@media(max-width:520px){.ease-landing{overflow-x:hidden}.el-nav-actions{min-width:0}.el-cta{white-space:nowrap}.el-hero-visual{width:100%;min-width:0}.el-card{max-width:100%;box-sizing:border-box}.el-floating{max-width:calc(100% - 12px);box-sizing:border-box}}
