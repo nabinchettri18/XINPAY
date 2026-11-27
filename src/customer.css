@@ -437,3 +437,15 @@
 .xp-drawer-account.xp-account-profile{border-radius:12px;padding:12px 10px 16px;margin-bottom:8px}
 .xp-drawer-account.xp-account-profile:hover{background:#142943!important}
 .xp-drawer-account.xp-account-profile>svg{color:#9eb2ca}
+
+/* Profile refresh */
+.xp-profile-card{overflow:hidden!important;padding:0!important}
+.xp-profile-hero{display:flex;align-items:center;gap:16px;padding:22px 22px 20px;background:linear-gradient(130deg,#f8fbff,#edf4ff);border-bottom:1px solid #e5edf8}
+.xp-profile-avatar{flex-shrink:0}
+.xp-profile-card .xp-avatar.large{width:64px;height:64px;border-radius:20px;font-size:20px;background:#dbeafe!important;color:#1d4ed8!important;border:1px solid #c5ddff}
+.xp-profile-identity{min-width:0;flex:1}.xp-profile-identity h3{margin:0;font-size:17px;line-height:1.4;color:#15253b!important;overflow-wrap:anywhere}.xp-profile-identity p{margin:5px 0 10px;color:#718198!important;font-size:13px}
+.xp-profile-status{display:inline-flex;align-items:center;gap:7px;border-radius:99px;padding:6px 10px;font-size:11px;font-weight:700;background:#fff;border:1px solid #e2e8f0;color:#64748b}.xp-profile-status-dot{width:7px;height:7px;border-radius:50%;background:#94a3b8}.xp-profile-status.active{background:#ecfdf5;color:#047857;border-color:#a7f3d0}.xp-profile-status.active .xp-profile-status-dot{background:#10b981}.xp-profile-status.inactive{background:#fff7ed;color:#b45309;border-color:#fed7aa}.xp-profile-status.inactive .xp-profile-status-dot{background:#f59e0b}
+.xp-profile-details{padding:5px 22px 12px}.xp-profile-row{display:flex;align-items:center;gap:10px;min-height:56px;border-bottom:1px solid #edf1f6;padding:12px 0}.xp-profile-row:last-child{border-bottom:0}.xp-profile-row>span{display:flex;align-items:center;gap:8px;color:#718198!important;font-size:12px;min-width:120px}.xp-profile-row>span svg{color:#8da2bc}.xp-profile-row>strong{margin-left:auto;color:#26364d!important;text-align:right;font-size:12px;overflow-wrap:anywhere;max-width:60%}.xp-profile-row .xp-profile-id{font-size:10px;line-height:1.5}.xp-profile-copy{border:1px solid #dbe5f1;background:#f8fafc;color:#2563eb;border-radius:9px;padding:8px;display:flex;flex-shrink:0;cursor:pointer}
+.xp-profile-section-title{padding:17px 22px 12px;border-top:1px solid #edf1f6}.xp-profile-section-title>div{display:flex;flex-direction:column;gap:4px}.xp-profile-section-title span{font-size:10px;letter-spacing:1.5px;font-weight:800;color:#74849a}.xp-profile-section-title small{font-size:12px;color:#94a3b8}
+.xp-profile-card .xp-phone-verification-wrap{margin:0 16px 12px}.xp-profile-card .xp-info-note{margin:0 16px 18px}
+@media(max-width:600px){.xp-profile-hero{padding:18px 16px}.xp-profile-details{padding:3px 16px 8px}.xp-profile-row>span{min-width:100px;font-size:11px}.xp-profile-row>strong{max-width:58%}.xp-profile-row .xp-profile-id{font-size:9px}.xp-profile-copy{padding:7px}.xp-profile-section-title{padding:15px 16px 11px}.xp-profile-card .xp-phone-verification-wrap{margin:0 10px 10px}.xp-profile-card .xp-info-note{margin:0 10px 14px}}
