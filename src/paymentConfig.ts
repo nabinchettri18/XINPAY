@@ -20,13 +20,13 @@ export type PaymentConfig={
 const DEFAULTS:PaymentConfig={
   upiId:"",beneficiary:"",
   instructions:"Use the payment details shown here and keep your transaction reference for your records.",enabled:false,
-  cryptoEnabled:false,cryptoAsset:"USDT",cryptoNetwork:"TRC20",cryptoAddress:"",
+  cryptoEnabled:false,cryptoAsset:"USDT",cryptoNetwork:"TRC20 (Tron)",cryptoAddress:"",
   cryptoInstructions:"Send only the selected asset on the exact network shown. Payments are manually reviewed."
 };
 const CONFIG_FIELDS="receiving_upi_id,beneficiary_display_name,instructions,enabled,crypto_enabled,crypto_asset,crypto_network,crypto_address,crypto_instructions,version,updated_at";
 function fromRow(data:any):PaymentConfig{return {
   upiId:data.receiving_upi_id||"",beneficiary:data.beneficiary_display_name||"",instructions:data.instructions||DEFAULTS.instructions,enabled:!!data.enabled,
-  cryptoEnabled:!!data.crypto_enabled,cryptoAsset:data.crypto_asset||"USDT",cryptoNetwork:data.crypto_network||"TRC20",cryptoAddress:data.crypto_address||"",cryptoInstructions:data.crypto_instructions||DEFAULTS.cryptoInstructions,
+  cryptoEnabled:!!data.crypto_enabled,cryptoAsset:data.crypto_asset||"USDT",cryptoNetwork:data.crypto_network||"TRC20 (Tron)",cryptoAddress:data.crypto_address||"",cryptoInstructions:data.crypto_instructions||DEFAULTS.cryptoInstructions,
   version:data.version,updatedAt:data.updated_at
 };}
 export async function loadPaymentConfig():Promise<PaymentConfig>{
