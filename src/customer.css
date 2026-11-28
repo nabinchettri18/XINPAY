@@ -644,3 +644,8 @@
 .xp-binance-coming span{font-size:13px;font-weight:700;color:#64748b}
 .xp-binance-coming p{margin:0;color:#64748b;font-size:13px;line-height:1.55;max-width:360px}
 @media(max-width:420px){.xp-checkout-switch button{padding:10px 6px;font-size:12px}}
+
+/* Customer portal breadcrumb home link */
+.xp-breadcrumb{user-select:none;-webkit-user-select:none;touch-action:manipulation}
+.xp-breadcrumb-home{appearance:none;-webkit-appearance:none;border:0;background:transparent;padding:6px 2px;margin:0;color:inherit;font:inherit;cursor:pointer;border-radius:5px;user-select:none;-webkit-user-select:none;touch-action:manipulation}
+.xp-breadcrumb-home:hover,.xp-breadcrumb-home:focus-visible{color:#2563eb!important;text-decoration:underline;outline:none}
