@@ -6,7 +6,7 @@ import LandingPage from "./LandingPage";
 import ProofReview from "./ProofReview";
 import AdminWithdrawals from "./AdminWithdrawals";
 import AdminWalletTopups from "./AdminWalletTopups";
-import AdminReferrals from "./AdminReferrals";
+import AdminReferrals from "./AdminReferrals";\nimport AdminModuleShell from "./AdminModuleShell";
 import { supabase } from "./paymentConfig";
 import { ShieldCheck } from "lucide-react";
 import EasePayLogo from "./EasePayLogo";
@@ -42,10 +42,10 @@ function Root(){
   if(isLanding)return rootSessionChecked?<LandingPage/>:<div className="xp-auth-loading">Checking your session…</div>;
   if(isCustomer)return <CustomerApp/>;
   if(adminPath!==null){
-    if(adminPath==="/proofs"||adminPath.startsWith("/proofs/"))return <AdminAuth><ProofReview/></AdminAuth>;
-    if(adminPath==="/withdrawals"||adminPath.startsWith("/withdrawals/"))return <AdminAuth><AdminWithdrawals/></AdminAuth>;
-    if(adminPath==="/topups"||adminPath.startsWith("/topups/"))return <AdminAuth><AdminWalletTopups/></AdminAuth>;
-    if(adminPath==="/referrals"||adminPath.startsWith("/referrals/"))return <AdminAuth><AdminReferrals/></AdminAuth>;
+    if(adminPath==="/proofs"||adminPath.startsWith("/proofs/"))return <AdminAuth><AdminModuleShell active="Payment Proof Review"><ProofReview/></AdminModuleShell></AdminAuth>;
+    if(adminPath==="/withdrawals"||adminPath.startsWith("/withdrawals/"))return <AdminAuth><AdminModuleShell active="Withdrawal Requests"><AdminWithdrawals/></AdminModuleShell></AdminAuth>;
+    if(adminPath==="/topups"||adminPath.startsWith("/topups/"))return <AdminAuth><AdminModuleShell active="Wallet Top-ups"><AdminWalletTopups/></AdminModuleShell></AdminAuth>;
+    if(adminPath==="/referrals"||adminPath.startsWith("/referrals/"))return <AdminAuth><AdminModuleShell active="Referrals"><AdminReferrals/></AdminModuleShell></AdminAuth>;
     return <AdminAuth><App/></AdminAuth>;
   }
   return <div className="xp-auth-loading">Redirecting…</div>;
