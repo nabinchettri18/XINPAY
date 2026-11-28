@@ -201,6 +201,7 @@ function CustomerAuth(){
  const [mode,setMode]=useState<"signin"|"signup">(window.location.pathname==="/signup"?"signup":"signin");
  const [showPassword,setShowPassword]=useState(false);
  const [fullName,setFullName]=useState("");
+ const [referralCode,setReferralCode]=useState(()=>((new URLSearchParams(window.location.search).get("ref")||"").trim().toUpperCase()));
  const [email,setEmail]=useState("");
  const [password,setPassword]=useState("");
  const [busy,setBusy]=useState(false);
@@ -233,7 +234,7 @@ function CustomerAuth(){
   e.preventDefault();setBusy(true);setMessage("");
   try{
    if(mode==="signup"){
-    const {data,error}=await supabase.auth.signUp({email:email.trim(),password,options:{emailRedirectTo:window.location.origin+"/login?confirmed=1",data:{full_name:fullName.trim(),name:fullName.trim(),referral_code:(new URLSearchParams(window.location.search).get("ref")||"").trim().toUpperCase()}}});
+    const {data,error}=await supabase.auth.signUp({email:email.trim(),password,options:{emailRedirectTo:window.location.origin+"/login?confirmed=1",data:{full_name:fullName.trim(),name:fullName.trim(),referral_code:referralCode.trim().toUpperCase()}}});
     if(error)throw error;
     if(!data.session){
      setMessageTone("success");setMessage("Account created. Check your email to confirm your address, then sign in.");
@@ -255,6 +256,7 @@ function CustomerAuth(){
   <p>{mode==="signin"?"Sign in to pick up where you left off.":"Set up your account to continue to payment setup and your dashboard."}</p>
   {mode==="signup"&&<label className="xp-auth-field"><span>Full name</span><input type="text" value={fullName} onChange={e=>setFullName(e.target.value)} required minLength={2} maxLength={80} autoComplete="name" placeholder="Your full name"/></label>}
   <label className="xp-auth-field"><span>Email address</span><input type="email" value={email} onChange={e=>setEmail(e.target.value)} required autoComplete="email" placeholder="you@example.com"/></label>
+  {mode==="signup"&&<label className="xp-auth-field"><span>Referral ID <small>(optional)</small></span><input type="text" value={referralCode} onChange={e=>setReferralCode(e.target.value.toUpperCase())} autoComplete="off" maxLength={32} placeholder="Enter referral ID"/></label>}
   <label className="xp-auth-field"><span>Password</span><div className="xp-password-wrap"><input type={showPassword?"text":"password"} value={password} onChange={e=>setPassword(e.target.value)} required minLength={6} autoComplete={mode==="signin"?"current-password":"new-password"} placeholder="At least 6 characters"/><button type="button" className="xp-password-toggle" onClick={()=>setShowPassword(v=>!v)} aria-label={showPassword?"Hide password":"Show password"}>{showPassword?<EyeOff size={18}/>:<Eye size={18}/>}</button></div></label>
   <button className="xp-primary xp-auth-submit" disabled={busy}>{busy?<><span className="xp-auth-spinner"/>Please wait…</>:mode==="signin"?"Sign in":"Create account"}<span className="xp-auth-arrow">→</span></button>
   {message&&<div className={messageTone==="success"?"xp-auth-message success":"xp-proof-error"} role="status">{message}</div>}
