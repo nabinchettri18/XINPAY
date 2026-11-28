@@ -79,7 +79,8 @@ export default function CustomerApp() {
   const [paymentPurpose,setPaymentPurpose] = useState("");
   const [paymentStep,setPaymentStep] = useState(0);const [checkoutMethod,setCheckoutMethod]=useState<"upi"|"binance">("upi");
   const [proofFile,setProofFile] = useState<File|null>(null);
-  const [proofUtr,setProofUtr] = useState("");\n  const [cryptoTxid,setCryptoTxid] = useState("");\n  const [cryptoAmountSent,setCryptoAmountSent] = useState("");
+  const [proofUtr,setProofUtr] = useState("");
+  const [cryptoAmountSent,setCryptoAmountSent] = useState("");
   const [proofName,setProofName] = useState("");
   const [proofEmail,setProofEmail] = useState("");
   const [proofSubmitting,setProofSubmitting] = useState(false);
