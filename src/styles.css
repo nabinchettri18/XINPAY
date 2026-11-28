@@ -87,3 +87,54 @@ td,th{vertical-align:middle}
  .status-label{white-space:nowrap}
  footer{line-height:1.7}
 }
+
+/* Premium light admin theme */
+body,.main,.app-shell{background:#f4f7fb!important;color:#172337!important}
+.sidebar{background:#0b1730!important;color:#eaf2ff!important;border-right:1px solid #1e2d47!important}
+.workspace{background:#13233d!important;border-color:#243754!important}
+.workspace strong,.security-note strong,.profile strong{color:#f4f7ff!important}
+.workspace small,.security-note small,.profile small{color:#a9bad2!important}
+.nav-item{color:#a9bad2!important}
+.nav-item:hover{background:#172a46!important;color:#f4f7ff!important}
+.nav-item.active{background:#1b3152!important;color:#f4f7ff!important}
+.nav-item.active svg{color:#70a7ff!important}
+.sidebar-bottom .security-note{background:#101f37!important}
+.topbar{background:#fff!important;border-bottom:1px solid #e5eaf2!important}
+.breadcrumbs{color:#78869a!important}.breadcrumbs strong{color:#25344b!important}
+.icon-btn{color:#64748b!important}
+.admin-signout{background:#fff!important;color:#42526a!important;border-color:#dce4ee!important}
+.admin-signout:hover{background:#f4f7fb!important;color:#142238!important}
+.page-heading h1{color:#172337!important}
+.eyebrow{color:#64748b!important}
+.subheading{color:#66758b!important}
+.date-button,.secondary-button{background:#fff!important;border-color:#dce4ee!important;color:#40516a!important}
+.date-button:hover,.secondary-button:hover{background:#f7f9fc!important;border-color:#c7d3e3!important}
+.demo-banner{background:#eff6ff!important;border-color:#bfdbfe!important;color:#1d4ed8!important}
+.demo-banner span{color:#425d82!important}
+.proof-error{background:#fff1f2!important;border-color:#fecdd3!important;color:#9f1239!important}
+.metric-card,.panel{background:#fff!important;border-color:#e4eaf2!important;box-shadow:0 5px 18px rgba(25,42,68,.045)!important}
+.metric-top,.metric-bottom{color:#64748b!important}
+.metric-value,.panel-heading h2,.status-row strong,.queue-row strong{color:#172337!important}
+.metric-icon,.empty-icon{background:#eff6ff!important;color:#2563eb!important}
+.metric-change,.status-label{color:#2563eb!important}
+.status-row{border-color:#edf1f6!important}
+.status-row small,.activity-footer,.panel-heading p{color:#718096!important}
+.status-dot.green{background:#16a34a!important}.status-dot.amber{background:#d97706!important}
+.queue-row{background:transparent!important;color:#25344b!important}
+.queue-row>svg{color:#2563eb!important}
+.queue-row small{color:#718096!important}
+.queue-row:hover{background:#f6f9fd!important;border-color:#e5edf7!important}
+.queue-row .nav-count{background:#eaf2ff!important;color:#1d4ed8!important}
+.queue-row .status-label{color:#718096!important}
+th{background:#f8fafc!important;color:#66758b!important;border-color:#e5eaf2!important}
+td{background:#fff!important;color:#34445b!important;border-color:#edf1f6!important}
+.id-cell{color:#42638e!important}.amount-cell{color:#1f2d42!important}.date-cell{color:#718096!important}
+.search-field{background:#fff!important;border-color:#dce4ee!important;color:#718096!important}
+.search-field input{color:#25344b!important}
+.search-field input::placeholder{color:#8b98aa!important}
+.pill.completed{background:#dcfce7!important;color:#166534!important}
+.pill.pending{background:#fef3c7!important;color:#92400e!important}
+.pill.failed{background:#ffe4e6!important;color:#9f1239!important}
+.no-results{color:#718096!important}
+.section-panel h2{color:#172337!important}.section-panel p{color:#718096!important}
+footer{color:#718096!important}
