@@ -9,7 +9,13 @@ export default function PaymentSettings() {
   const [upiId,setUpiId]=useState(defaults.upiId);
   const [beneficiary,setBeneficiary]=useState(defaults.beneficiary);
   const [instructions,setInstructions]=useState(defaults.instructions);
-  const [enabled,setEnabled]=useState(defaults.enabled);\n  const [cryptoEnabled,setCryptoEnabled]=useState(defaults.cryptoEnabled);\n  const [cryptoAsset,setCryptoAsset]=useState(defaults.cryptoAsset);\n  const [cryptoNetwork,setCryptoNetwork]=useState(defaults.cryptoNetwork);\n  const [cryptoWalletAddress,setCryptoWalletAddress]=useState(defaults.cryptoWalletAddress);\n  const [cryptoMemo,setCryptoMemo]=useState(defaults.cryptoMemo);\n  const [cryptoInstructions,setCryptoInstructions]=useState(defaults.cryptoInstructions);
+  const [enabled,setEnabled]=useState(defaults.enabled);
+  const [cryptoEnabled,setCryptoEnabled]=useState(defaults.cryptoEnabled);
+  const [cryptoAsset,setCryptoAsset]=useState(defaults.cryptoAsset);
+  const [cryptoNetwork,setCryptoNetwork]=useState(defaults.cryptoNetwork);
+  const [cryptoWalletAddress,setCryptoWalletAddress]=useState(defaults.cryptoWalletAddress);
+  const [cryptoMemo,setCryptoMemo]=useState(defaults.cryptoMemo);
+  const [cryptoInstructions,setCryptoInstructions]=useState(defaults.cryptoInstructions);
   const [saved,setSaved]=useState(false);
   const [message,setMessage]=useState("");
 
