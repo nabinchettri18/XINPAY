@@ -23,3 +23,67 @@
 
 /* EasePay admin console dark-bright system */
 :root{--ease-navy:#07111F;--ease-blue:#2563EB;--ease-bronze:#00C8FF;--ease-ivory:#07111F;--ink:#EAF2FF;--muted:#8EA4BD;--line:#20324A;--accent:#3B82F6;--accent-soft:#13263E;--nav:#07111F;--nav-muted:#9CB0C7;color:#EAF2FF;background:#07111F!important}body{background:#07111F!important;color:#EAF2FF!important}.sidebar{background:#07111F!important;color:#EAF2FF!important;border-color:#20324A!important}.workspace,.workspace-icon,.nav-count,.nav-item.active{background:#13263E!important;border-color:#20324A!important}.nav-item{color:#9CB0C7!important}.nav-item.active{color:#F2F7FF!important;box-shadow:inset 2px 0 #3B82F6!important}.nav-item.active svg,.brand .easepay-logo{color:#60A5FA!important}.security-note,.profile{border-color:#20324A!important}.security-note strong,.profile strong{color:#EAF2FF!important}.main{background:#07111F!important}.topbar,.panel,.metric-card,.date-button,.secondary-button,.demo-banner{background:#0D1B2D!important;border-color:#20324A!important;color:#EAF2FF!important}.breadcrumbs,.breadcrumbs strong,.page-heading h1,.panel-heading h2,.metric-value,.status-row strong,.amount-cell,.search-field input{color:#EAF2FF!important}.page-heading h1{color:#F2F7FF!important}.eyebrow,.subheading,.metric-top,.metric-bottom,.panel-heading p,.status-row small,.activity-footer,.date-button,.secondary-button,.search-field,td,.no-results,.module-list,footer{color:#8EA4BD!important}.metric-icon,.type-icon,.empty-icon{background:#13263E!important;color:#60A5FA!important}.metric-change,.status-label{color:#38BDF8!important}.chart-grid span{border-color:#20324A!important;color:#8EA4BD!important}.chart-legend i{background:#3B82F6!important}.status-row,.transaction-heading,th,td{border-color:#20324A!important}th{background:#102038!important;color:#9CB0C7!important}td{background:#0D1B2D!important}.demo-banner{color:#60A5FA!important}.demo-banner span{color:#9CB0C7!important}.pill.completed{background:#123A33!important;color:#34D399!important}.pill.pending{background:#3B2D13!important;color:#FBBF24!important}.pill.failed{background:#3A1722!important;color:#FB7185!important}.section-panel,.transactions-panel{background:#0D1B2D!important;border-color:#20324A!important}.section-panel h2{color:#EAF2FF!important}
+
+/* Admin UI readability + responsive layout fixes */
+.proof-error{display:flex;align-items:flex-start;gap:10px;padding:14px 16px;margin:0 0 18px;border:1px solid #7f3546;border-radius:10px;background:#321824;color:#fecdd3;font-size:12px;line-height:1.5;overflow-wrap:anywhere}
+.queue-row{width:100%;border:1px solid transparent;background:transparent!important;color:#dbeafe!important;text-align:left;border-radius:9px;padding:12px 10px;cursor:pointer;transition:background .15s,border-color .15s;display:flex;align-items:center;gap:12px}
+.queue-row>svg{flex:0 0 auto;color:#60a5fa}
+.queue-row>div{min-width:0;flex:1}
+.queue-row strong{color:#eaf2ff!important;font-size:12px}
+.queue-row small{color:#94a3b8!important}
+.queue-row:hover{background:#14263d!important;border-color:#263e5c}
+.queue-row .nav-count{background:#1e3a5f;color:#bfdbfe}
+.queue-row .status-label{color:#94a3b8!important}
+.admin-signout{background:#13263e!important;border-color:#263e5c!important;color:#dbeafe!important}
+.admin-signout:hover{background:#1a3150!important;color:#fff!important}
+.search-field input::placeholder{color:#71849b!important}
+.search-field input{background:transparent!important;color:#eaf2ff!important}
+.metric-card,.panel{box-shadow:0 4px 16px rgba(0,0,0,.12)}
+.status-row{min-width:0}
+.status-row div{min-width:0}
+.status-row strong,.status-row small{overflow-wrap:anywhere}
+td,th{vertical-align:middle}
+.id-cell{max-width:240px;overflow:hidden;text-overflow:ellipsis}
+.table-wrap{max-width:100%;overscroll-behavior-x:contain}
+.date-button:disabled{opacity:.65;cursor:wait}
+@media(max-width:900px){
+ .sidebar{width:270px;transform:translateX(-100%);transition:transform .22s ease}
+ .sidebar.open{transform:translateX(0)}
+ .main{margin-left:0;width:100%}
+ .mobile-menu{display:grid}
+ .scrim{display:block;position:fixed;inset:0;background:rgba(0,0,0,.55);border:0;z-index:4}
+ .topbar{height:60px;padding:0 14px;gap:8px}
+ .breadcrumbs{margin-left:8px;margin-right:auto;white-space:nowrap}
+ .page-content{padding:18px 14px}
+ .metrics{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+ .content-grid{grid-template-columns:1fr;gap:12px}
+ .panel{padding:15px}
+ .transactions-panel{padding:0}
+ .transaction-heading{padding:15px}
+ .table-wrap{overflow-x:auto}
+ .table-actions{width:100%}
+ .search-field{flex:1;min-width:0}
+ .search-field input{width:100%;min-width:0}
+ .page-heading h1{font-size:24px}
+}
+@media(max-width:480px){
+ .metrics{grid-template-columns:1fr 1fr}
+ .metric-card{padding:12px}
+ .metric-top{gap:8px;align-items:flex-start}
+ .metric-top>span{line-height:1.4}
+ .metric-value{font-size:20px}
+ .metric-bottom{display:block;line-height:1.5}
+ .metric-bottom span{display:block;margin-top:3px}
+ .page-heading{align-items:flex-start;gap:12px}
+ .page-heading h1{font-size:22px}
+ .subheading{max-width:240px;line-height:1.45}
+ .date-button{white-space:nowrap;padding:8px 9px}
+ .demo-banner{padding:11px;gap:9px}
+ .panel-heading{align-items:flex-start;gap:10px}
+ .panel-heading h2{font-size:14px}
+ .queue-row{padding:11px 8px}
+ .queue-row small{font-size:10px}
+ .status-row{gap:8px}
+ .status-label{white-space:nowrap}
+ footer{line-height:1.7}
+}
