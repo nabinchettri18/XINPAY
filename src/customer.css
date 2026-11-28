@@ -707,3 +707,14 @@
 .xp-shell .xp-crypto-payment-box code{color:#17243a!important}
 .xp-shell .xp-crypto-payment-box .xp-secondary{color:#2864e8!important;background:#fff!important}
 .xp-shell .xp-collect-view .xp-info-note{display:none!important}
+
+/* Transactions search: responsive mobile layout and light-theme contrast */
+.xp-shell .xp-transaction-tools{display:flex;flex-direction:column;align-items:stretch;gap:12px;width:100%;min-width:0}
+.xp-shell .xp-transaction-tools .xp-search{box-sizing:border-box;display:flex;align-items:center;width:100%;min-width:0;max-width:100%;padding:12px 14px;background:#fff!important;border:1px solid #d5dfeb!important;border-radius:12px;color:#64748b!important;overflow:hidden}
+.xp-shell .xp-transaction-tools .xp-search svg{flex:0 0 18px;color:#64748b!important}
+.xp-shell .xp-transaction-tools .xp-search input{box-sizing:border-box;flex:1 1 auto;width:0;min-width:0;max-width:100%;padding:0;border:0!important;background:transparent!important;color:#17243a!important;font-size:14px!important;line-height:1.5;outline:none;box-shadow:none!important}
+.xp-shell .xp-transaction-tools .xp-search input::placeholder{color:#94a3b8!important;opacity:1}
+.xp-shell .xp-transaction-tools .xp-filters{display:flex;flex-wrap:wrap;gap:8px;width:100%;min-width:0}
+.xp-shell .xp-transaction-tools .xp-filters button{padding:9px 16px;border-radius:9px;font-size:12px;background:#fff;color:#52657d;border:1px solid #d5dfeb}
+.xp-shell .xp-transaction-tools .xp-filters button.active{background:#2864e8;color:#fff;border-color:#2864e8}
+@media(max-width:600px){.xp-shell .xp-transaction-tools{gap:10px}.xp-shell .xp-transaction-tools .xp-search{min-height:48px;padding:11px 12px}.xp-shell .xp-transaction-tools .xp-search input{font-size:14px!important}.xp-shell .xp-transaction-tools .xp-filters button{min-height:40px}}
