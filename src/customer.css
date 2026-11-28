@@ -649,3 +649,15 @@
 .xp-breadcrumb{user-select:none;-webkit-user-select:none;touch-action:manipulation}
 .xp-breadcrumb-home{appearance:none;-webkit-appearance:none;border:0;background:transparent;padding:6px 2px;margin:0;color:inherit;font:inherit;cursor:pointer;border-radius:5px;user-select:none;-webkit-user-select:none;touch-action:manipulation}
 .xp-breadcrumb-home:hover,.xp-breadcrumb-home:focus-visible{color:#2563eb!important;text-decoration:underline;outline:none}
+
+/* Customer crypto payment checkout */
+.xp-payment-method-picker .xp-payment-method-option{width:100%;text-align:left;display:flex;align-items:center;gap:12px;cursor:pointer;background:var(--xp-panel,#fff);color:inherit;border:1px solid var(--xp-border,#dce4ec);border-radius:12px;padding:14px;margin-top:8px}
+.xp-payment-method-picker .xp-payment-method-option>span:nth-child(2){flex:1}
+.xp-payment-method-picker .xp-payment-method-option.active{border-color:#4779d9;background:#f2f6ff}
+.xp-payment-method-picker .xp-payment-method-option.disabled{opacity:.55;cursor:not-allowed}
+.xp-crypto-address{display:block;overflow-wrap:anywhere;word-break:break-all;white-space:normal;margin:8px 0}
+.xp-crypto-payment-box{display:flex;flex-direction:column;gap:12px;border:1px solid #d8e1ed;background:#f7faff;border-radius:14px;padding:16px}
+.xp-crypto-payment-box code{display:block;overflow-wrap:anywhere;word-break:break-all;background:#fff;border:1px solid #dce4ed;border-radius:10px;padding:12px;font-size:13px;line-height:1.6;color:#1d2c40}
+.xp-crypto-payment-box p{margin:0;line-height:1.6}
+.xp-crypto-warning{padding:12px;border-radius:10px;background:#fff6e6;color:#76531b;border:1px solid #f1dfb6;font-size:13px;line-height:1.55}
+.xp-payment-method-picker button{font:inherit}
