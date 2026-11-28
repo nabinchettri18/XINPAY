@@ -26,7 +26,7 @@ const money=(n:number)=>new Intl.NumberFormat("en-IN",{style:"currency",currency
 const stamp=(v:string|null)=>v?new Date(v).toLocaleString("en-IN",{dateStyle:"medium",timeStyle:"short"}):"—";
 
 export default function App(){
-  const [active,setActive]=useState<NavKey>("Overview");
+  const [active,setActive]=useState<NavKey>(()=>{const q=new URLSearchParams(window.location.search).get("section");return navItems.some(n=>n.label===q)?q as NavKey:"Overview";});
   const [mobileOpen,setMobileOpen]=useState(false);
   const [query,setQuery]=useState("");
   const [showNotice,setShowNotice]=useState(true);
