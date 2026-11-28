@@ -2,7 +2,7 @@ import {useState} from "react";
 import {LayoutDashboard,Activity,Wallet,Building2,Users,CircleHelp,FileCheck,ArrowUpRight,ClipboardList,Settings,Menu,X,LogOut,ShieldCheck} from "lucide-react";
 import EasePayLogo from "./EasePayLogo";
 import {supabase} from "./paymentConfig";
-const items=[["Overview","/admin236794"],["Transactions","/admin236794"],["Settlements","/admin236794"],["Accounts","/admin236794"],["Customers","/admin236794"],["Support","/admin236794"],["Payment Settings","/admin236794"],["Payment Proof Review","/admin236794/proofs"],["Withdrawal Requests","/admin236794/withdrawals"],["Wallet Top-ups","/admin236794/topups"],["Referrals","/admin236794/referrals"],["Audit Logs","/admin236794"],["Settings","/admin236794"]] as const;
+const items=[["Overview","/admin236794?section=Overview"],["Transactions","/admin236794?section=Transactions"],["Settlements","/admin236794?section=Settlements"],["Accounts","/admin236794?section=Accounts"],["Customers","/admin236794?section=Customers"],["Support","/admin236794?section=Support"],["Payment Settings","/admin236794?section=Payment Settings"],["Payment Proof Review","/admin236794/proofs"],["Withdrawal Requests","/admin236794/withdrawals"],["Wallet Top-ups","/admin236794/topups"],["Referrals","/admin236794/referrals"],["Audit Logs","/admin236794?section=Audit Logs"],["Settings","/admin236794?section=Settings"]] as const;
 const icons=[LayoutDashboard,Activity,Wallet,Building2,Users,CircleHelp,Wallet,FileCheck,Wallet,Wallet,Users,ClipboardList,Settings];
 export default function AdminModuleShell({active,children}:{active:string;children:React.ReactNode}){
  const [open,setOpen]=useState(false);
