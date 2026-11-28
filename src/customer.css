@@ -661,3 +661,24 @@
 .xp-crypto-payment-box p{margin:0;line-height:1.6}
 .xp-crypto-warning{padding:12px;border-radius:10px;background:#fff6e6;color:#76531b;border:1px solid #f1dfb6;font-size:13px;line-height:1.55}
 .xp-payment-method-picker button{font:inherit}
+
+/* Help & support form: responsive, readable customer-facing layout */
+.xp-shell .xp-help-form{background:#fff!important;border:1px solid #dbe4ee!important;border-radius:18px!important;padding:22px!important;color:#17243a!important;box-shadow:0 8px 28px rgba(26,45,72,.04)}
+.xp-shell .xp-help-form-intro{display:flex;align-items:flex-start;gap:12px;padding:0 0 18px;margin:0 0 18px;border-bottom:1px solid #edf1f6;color:#2563eb!important}
+.xp-shell .xp-help-form-intro>svg{flex:0 0 auto;margin-top:2px}
+.xp-shell .xp-help-form-intro>div{min-width:0}
+.xp-shell .xp-help-form-intro strong{display:block;color:#17243a!important;font-size:16px;line-height:1.4;font-weight:750}
+.xp-shell .xp-help-form-intro small{display:block;color:#64748b!important;font-size:13px;line-height:1.5;margin-top:4px;white-space:normal}
+.xp-shell .xp-help-form form{display:grid;grid-template-columns:1fr;gap:16px;width:100%;min-width:0}
+.xp-shell .xp-help-form form>label{display:grid;grid-template-columns:minmax(0,1fr);gap:7px;width:100%;min-width:0;margin:0;color:#40516a!important;font-size:13px;font-weight:650;line-height:1.45}
+.xp-shell .xp-help-form input,.xp-shell .xp-help-form select,.xp-shell .xp-help-form textarea{box-sizing:border-box;display:block;width:100%;max-width:100%;min-width:0;margin:0;padding:12px 13px;border:1px solid #cbd7e5!important;border-radius:10px;background:#fff!important;color:#17243a!important;font:inherit;font-size:14px;line-height:1.5;box-shadow:none;outline:none}
+.xp-shell .xp-help-form textarea{min-height:132px;resize:vertical}
+.xp-shell .xp-help-form input::placeholder,.xp-shell .xp-help-form textarea::placeholder{color:#94a3b8!important;opacity:1}
+.xp-shell .xp-help-form input:focus,.xp-shell .xp-help-form select:focus,.xp-shell .xp-help-form textarea:focus{border-color:#4779d9!important;box-shadow:0 0 0 3px rgba(71,121,217,.12)!important}
+.xp-shell .xp-help-form .xp-primary{width:100%;min-height:48px;padding:13px 16px;border-radius:10px;font-size:14px;background:#2864e8;color:#fff!important}
+.xp-shell .xp-help-form .xp-primary:disabled{opacity:.48}
+.xp-shell .xp-help-success{display:flex;align-items:flex-start;gap:12px;color:#16834c;padding:8px 0}
+.xp-shell .xp-help-success strong{display:block;color:#17243a;font-size:16px}
+.xp-shell .xp-help-success p{color:#64748b;line-height:1.6;margin:6px 0 14px}
+.xp-shell .xp-help-form .xp-proof-error{color:#b42340;background:#fff1f3;border:1px solid #fecdd6;border-radius:10px;padding:12px;font-size:13px;line-height:1.5}
+@media(max-width:600px){.xp-shell .xp-help-form{padding:17px!important}.xp-shell .xp-help-form form{gap:14px}.xp-shell .xp-help-form input,.xp-shell .xp-help-form select,.xp-shell .xp-help-form textarea{font-size:14px;padding:12px}.xp-shell .xp-help-form-intro strong{font-size:15px}}
