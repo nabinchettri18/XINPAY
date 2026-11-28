@@ -158,3 +158,20 @@ footer{color:#718096!important}
  .admin-module-shell .breadcrumbs{margin-left:8px;margin-right:auto}
  .admin-module-shell .admin-signout span{display:none}
 }
+
+/* Fix administrator profile footer contrast and native-button override */
+.admin-module-shell .sidebar-bottom{padding:0 0 max(12px,env(safe-area-inset-bottom));}
+.admin-module-shell .profile,
+.admin-module-shell .sidebar .profile{
+ width:100%;display:flex;align-items:center;gap:10px;padding:12px;
+ background:transparent!important;color:#e7eef9!important;border:1px solid #263a57!important;
+ border-radius:12px!important;box-shadow:none!important;text-align:left;appearance:none;-webkit-appearance:none;
+}
+.admin-module-shell .profile:hover{background:#142744!important;border-color:#34557d!important}
+.admin-module-shell .profile:focus-visible{outline:2px solid #4b91ff;outline-offset:2px}
+.admin-module-shell .profile strong{color:#e7eef9!important;font-size:12px;font-weight:700}
+.admin-module-shell .profile small{color:#9fb0c5!important;font-size:11px}
+.admin-module-shell .profile>svg{color:#9fb0c5!important;flex-shrink:0}
+.admin-module-shell .profile .avatar{background:#153454!important;color:#55baff!important}
+.admin-module-shell .security-note{background:#0f2038!important}
+@media(max-width:900px){.admin-module-shell .sidebar-bottom{padding-bottom:max(14px,env(safe-area-inset-bottom));}.admin-module-shell .profile{min-height:64px}}
