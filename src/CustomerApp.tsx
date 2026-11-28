@@ -68,7 +68,7 @@ export default function CustomerApp() {
   const [withdrawAmount,setWithdrawAmount] = useState("");
   const [withdrawMethod,setWithdrawMethod] = useState("UPI");
   const [withdrawDestination,setWithdrawDestination] = useState("");
-  const [paymentConfig,setPaymentConfig] = useState<PaymentConfig>({upiId:"",beneficiary:"",instructions:"",enabled:false,cryptoEnabled:false,cryptoAsset:"USDT",cryptoNetwork:"TRON (TRC20)",cryptoWalletAddress:"",cryptoMemo:"",cryptoInstructions:""};
+  const [paymentConfig,setPaymentConfig] = useState<PaymentConfig>({upiId:"",beneficiary:"",instructions:"",enabled:false,cryptoEnabled:false,cryptoAsset:"USDT",cryptoNetwork:"TRON (TRC20)",cryptoWalletAddress:"",cryptoMemo:"",cryptoInstructions:""});
   useEffect(()=>{const refresh=()=>loadPaymentConfig().then(setPaymentConfig);refresh();return subscribePaymentConfig(refresh)},[]);
   const upiId = paymentConfig.upiId;
   const upiName = paymentConfig.beneficiary;
