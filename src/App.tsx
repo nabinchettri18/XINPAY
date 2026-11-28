@@ -80,7 +80,7 @@ export default function App(){
     ...withdrawals.map(w=>({id:w.id,label:"Withdrawal request",customer:w.customer_email||"Customer",amount:Number(w.amount_minor||0),status:w.status,time:w.requested_at,type:"withdrawal"}))
   ].sort((a,b)=>new Date(b.time).getTime()-new Date(a.time).getTime()).slice(0,8),[proofs,topups,withdrawals]);
 
-  const go=(label:NavKey)=>{if(label==="Payment Proof Review"){window.location.href="/admin236794/proofs";return;}if(label==="Withdrawal Requests"){window.location.href="/admin236794/withdrawals";return;}if(label==="Wallet Top-ups"){window.location.href="/admin236794/topups";return;}if(label==="Referrals"){window.location.href="/admin236794/referrals";return;}setActive(label);setMobileOpen(false);setQuery("");};
+  const go=(label:NavKey)=>{setError("");if(label==="Payment Proof Review"){window.location.href="/admin236794/proofs";return;}if(label==="Withdrawal Requests"){window.location.href="/admin236794/withdrawals";return;}if(label==="Wallet Top-ups"){window.location.href="/admin236794/topups";return;}if(label==="Referrals"){window.location.href="/admin236794/referrals";return;}setActive(label);setMobileOpen(false);setQuery("");};
   return <div className="app-shell">
     <aside className={mobileOpen?"sidebar open":"sidebar"}>
       <div className="brand"><EasePayLogo inverse /></div>
