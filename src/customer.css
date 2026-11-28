@@ -700,3 +700,10 @@
 .xp-shell .xp-plan-summary{margin:12px 0!important;padding:12px!important}
 .xp-shell .xp-payment-method-picker{margin-top:12px}
 @media(max-width:600px){.xp-shell .xp-reference-card{padding:14px!important}.xp-shell .xp-reference-card .xp-plan-features{gap:5px 8px}.xp-shell .xp-reference-card .xp-plan-features li{font-size:10.5px!important}.xp-shell .xp-reference-card .xp-plan-price{font-size:26px!important}}
+
+/* Improve crypto payment readability and remove redundant notices */
+.xp-shell .xp-crypto-payment-box>strong{color:#17243a!important;font-size:15px!important;font-weight:700!important;line-height:1.5}
+.xp-shell .xp-crypto-payment-box .xp-method-label{color:#60758d!important}
+.xp-shell .xp-crypto-payment-box code{color:#17243a!important}
+.xp-shell .xp-crypto-payment-box .xp-secondary{color:#2864e8!important;background:#fff!important}
+.xp-shell .xp-collect-view .xp-info-note{display:none!important}
