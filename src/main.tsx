@@ -15,7 +15,15 @@ import "./styles.css";
 import "./customer.css";
 
 function Root(){
-  const [path,setPath]=useState(window.location.pathname);
+  const isAdminDomain = ["admin.easepay.shop","admin.easepay.in"].includes(window.location.hostname.toLowerCase());
+  const [path,setPath]=useState(()=>{
+    const currentPath=window.location.pathname;
+    if(isAdminDomain && currentPath==="/"){
+      window.history.replaceState({},"","/admin236794");
+      return "/admin236794";
+    }
+    return currentPath;
+  });
   const [rootSessionChecked,setRootSessionChecked]=useState(false);
   useEffect(()=>{const onPop=()=>setPath(window.location.pathname);window.addEventListener("popstate",onPop);return()=>window.removeEventListener("popstate",onPop);},[]);
   useEffect(()=>{
