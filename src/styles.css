@@ -138,3 +138,23 @@ td{background:#fff!important;color:#34445b!important;border-color:#edf1f6!import
 .no-results{color:#718096!important}
 .section-panel h2{color:#172337!important}.section-panel p{color:#718096!important}
 footer{color:#718096!important}
+
+/* Shared admin shell for standalone review modules */
+.admin-module-shell{min-height:100vh;background:#f4f7fb;color:#172337}
+.admin-module-main{min-width:0;flex:1;min-height:100vh;background:#f4f7fb}
+.admin-module-shell .sidebar{position:fixed;inset:0 auto 0 0;z-index:20;display:flex;flex-direction:column}
+.admin-module-shell .sidebar nav{overflow-y:auto;flex:1}
+.admin-module-shell .sidebar-bottom{margin-top:auto}
+.admin-module-shell .topbar{position:sticky;top:0;z-index:10}
+.admin-module-shell .mobile-menu{display:none}
+.admin-module-shell .scrim{display:none}
+.admin-module-shell .admin-signout{display:flex;align-items:center;gap:7px}
+@media(max-width:900px){
+ .admin-module-shell .sidebar{width:270px;transform:translateX(-100%);transition:transform .22s ease}
+ .admin-module-shell .sidebar.open{transform:translateX(0)}
+ .admin-module-shell .mobile-menu{display:grid}
+ .admin-module-shell .scrim{display:block;position:fixed;inset:0;background:rgba(8,16,30,.55);border:0;z-index:15}
+ .admin-module-shell .topbar{padding:0 14px;gap:8px}
+ .admin-module-shell .breadcrumbs{margin-left:8px;margin-right:auto}
+ .admin-module-shell .admin-signout span{display:none}
+}
