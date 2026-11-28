@@ -682,3 +682,21 @@
 .xp-shell .xp-help-success p{color:#64748b;line-height:1.6;margin:6px 0 14px}
 .xp-shell .xp-help-form .xp-proof-error{color:#b42340;background:#fff1f3;border:1px solid #fecdd6;border-radius:10px;padding:12px;font-size:13px;line-height:1.5}
 @media(max-width:600px){.xp-shell .xp-help-form{padding:17px!important}.xp-shell .xp-help-form form{gap:14px}.xp-shell .xp-help-form input,.xp-shell .xp-help-form select,.xp-shell .xp-help-form textarea{font-size:14px;padding:12px}.xp-shell .xp-help-form-intro strong{font-size:15px}}
+
+/* Compact mobile subscription cards so checkout methods follow immediately */
+.xp-shell .xp-reference-grid{gap:12px}
+.xp-shell .xp-reference-card{padding:16px!important;border-radius:15px!important;gap:9px!important}
+.xp-shell .xp-reference-card .xp-plan-badge{font-size:10px;padding:7px 11px;margin-bottom:2px}
+.xp-shell .xp-reference-card .xp-plan-top{gap:8px;align-items:center}
+.xp-shell .xp-reference-card .xp-plan-name{font-size:18px!important;line-height:1.3}
+.xp-shell .xp-reference-card .xp-plan-price{font-size:29px!important;line-height:1.15;margin:3px 0!important}
+.xp-shell .xp-reference-card .xp-plan-caption{font-size:12px!important}
+.xp-shell .xp-reference-card .xp-plan-features{display:grid;grid-template-columns:1fr 1fr;gap:6px 10px;margin:7px 0!important;padding:0!important}
+.xp-shell .xp-reference-card .xp-plan-features li{font-size:11px!important;line-height:1.4;padding-left:17px!important;margin:0!important}
+.xp-shell .xp-reference-card .xp-plan-select{padding:10px 12px!important;min-height:40px!important;font-size:12px!important;border-radius:9px!important}
+.xp-shell .xp-plan-intro{margin-bottom:10px}
+.xp-shell .xp-plan-intro h2{margin:5px 0 7px!important;font-size:27px!important}
+.xp-shell .xp-plan-intro p{margin:0!important;font-size:14px!important;line-height:1.5}
+.xp-shell .xp-plan-summary{margin:12px 0!important;padding:12px!important}
+.xp-shell .xp-payment-method-picker{margin-top:12px}
+@media(max-width:600px){.xp-shell .xp-reference-card{padding:14px!important}.xp-shell .xp-reference-card .xp-plan-features{gap:5px 8px}.xp-shell .xp-reference-card .xp-plan-features li{font-size:10.5px!important}.xp-shell .xp-reference-card .xp-plan-price{font-size:26px!important}}
