@@ -52,3 +52,9 @@
 @media(max-width:950px){.payment-settings-grid{grid-template-columns:1fr}.verification-steps{grid-template-columns:1fr}}
 @media(max-width:600px){.payment-settings-head{flex-direction:column}.payment-settings-head h2{font-size:22px}.payment-settings-card{padding:14px}.settings-toggle-row{align-items:flex-start;flex-direction:column}.verification-card .settings-card-title{flex-direction:column}.qr-preview{height:190px}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
+
+.crypto-settings-card{margin-top:16px}
+.crypto-fields-grid{grid-template-columns:1fr 1fr;gap:12px;margin:8px 0}
+.crypto-settings-card .settings-label textarea{min-height:76px;resize:vertical}
+.crypto-settings-card .payment-warning{margin:14px 0}
+@media(max-width:600px){.crypto-fields-grid{grid-template-columns:1fr}}
