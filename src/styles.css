@@ -180,3 +180,27 @@ footer{color:#718096!important}
 .breadcrumbs{user-select:none;-webkit-user-select:none;touch-action:manipulation}
 .breadcrumb-home{appearance:none;-webkit-appearance:none;border:0;background:transparent;padding:6px 2px;margin:0;color:inherit;font:inherit;cursor:pointer;border-radius:5px;user-select:none;-webkit-user-select:none;touch-action:manipulation}
 .breadcrumb-home:hover,.breadcrumb-home:focus-visible{color:#2563eb!important;text-decoration:underline;outline:none}
+
+/* Mobile admin drawer: contain touch scrolling inside the drawer, not the page behind it */
+@media(max-width:900px){
+ .admin-module-shell .sidebar{
+   height:100dvh;
+   max-height:100dvh;
+   overflow-y:auto;
+   overflow-x:hidden;
+   overscroll-behavior:contain;
+   -webkit-overflow-scrolling:touch;
+   touch-action:pan-y;
+   scrollbar-width:thin;
+   padding-bottom:max(20px,env(safe-area-inset-bottom));
+ }
+ .admin-module-shell .sidebar nav{
+   flex:0 0 auto;
+   min-height:0;
+   overflow:visible;
+   overscroll-behavior:contain;
+   touch-action:pan-y;
+ }
+ .admin-module-shell .sidebar-bottom{margin-top:20px;flex:0 0 auto}
+ .admin-module-shell .scrim{overscroll-behavior:contain;touch-action:none}
+}
