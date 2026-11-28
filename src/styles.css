@@ -175,3 +175,8 @@ footer{color:#718096!important}
 .admin-module-shell .profile .avatar{background:#153454!important;color:#55baff!important}
 .admin-module-shell .security-note{background:#0f2038!important}
 @media(max-width:900px){.admin-module-shell .sidebar-bottom{padding-bottom:max(14px,env(safe-area-inset-bottom));}.admin-module-shell .profile{min-height:64px}}
+
+/* Breadcrumb home is an actual navigation control; avoid Android text-selection popup */
+.breadcrumbs{user-select:none;-webkit-user-select:none;touch-action:manipulation}
+.breadcrumb-home{appearance:none;-webkit-appearance:none;border:0;background:transparent;padding:6px 2px;margin:0;color:inherit;font:inherit;cursor:pointer;border-radius:5px;user-select:none;-webkit-user-select:none;touch-action:manipulation}
+.breadcrumb-home:hover,.breadcrumb-home:focus-visible{color:#2563eb!important;text-decoration:underline;outline:none}
